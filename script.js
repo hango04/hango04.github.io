@@ -148,18 +148,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- CONTACT FORM SUBMISSION & VALIDATION ---
   const contactForm = document.getElementById('contact-form');
-  
   if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      // Retrieve values
       const name = document.getElementById('form-name').value.trim();
       const email = document.getElementById('form-email').value.trim();
       const subject = document.getElementById('form-subject').value.trim();
       const message = document.getElementById('form-message').value.trim();
 
-      // Simple email validation regex
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!name || !email || !subject || !message) {
@@ -172,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Simulate API call / success feedback
       const submitBtn = contactForm.querySelector('button[type="submit"]');
       const originalText = submitBtn.innerHTML;
       
@@ -180,6 +176,22 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.innerHTML = 'Đang gửi...';
 
       setTimeout(() => {
+        try {
+          const newMessage = {
+            name,
+            email,
+            subject,
+            message,
+            timestamp: new Date().toLocaleString()
+          };
+          const messages = JSON.parse(localStorage.getItem('contact_messages') || '[]');
+          messages.unshift(newMessage);
+          localStorage.setItem('contact_messages', JSON.stringify(messages));
+          window.dispatchEvent(new Event('contact_message_received'));
+        } catch (err) {
+          console.error(err);
+        }
+
         showToast('Gửi tin nhắn thành công! Tôi sẽ liên hệ lại sớm.');
         contactForm.reset();
         submitBtn.disabled = false;

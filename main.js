@@ -1,7 +1,15 @@
 /* ============================================================
-   main.js – Premium Immersive Interactions v7.0
-   Ngô Mạnh Hà Portfolio (Flame Blue AI style)
+   main.js – Premium Immersive Interactions v8.0 (Flame Blue AI style)
+   Ngô Mạnh Hà Portfolio
    ============================================================ */
+
+// Global config for interactive tweaks from Secret Admin Panel
+window._particleConfig = {
+  count: 65,
+  speed: 1.0,
+  grassOnline: true,
+  dawnOnline: true
+};
 
 /* ---------- 1. SUBTLE PARTICLES BACKGROUND ---------- */
 function initParticles() {
@@ -17,7 +25,6 @@ function initParticles() {
   resize();
   window.addEventListener('resize', resize);
 
-  const particleCount = Math.min(65, Math.floor((w * h) / 20000));
   const particles = [];
   const colors = ['rgba(0,82,255,', 'rgba(0,194,255,', 'rgba(0,112,243,'];
 
@@ -27,16 +34,17 @@ function initParticles() {
       this.x = Math.random() * w;
       this.y = init ? Math.random() * h : h + 10;
       this.r = Math.random() * 1.5 + 0.3;
-      this.vx = (Math.random() - 0.5) * 0.12;
-      this.vy = -(Math.random() * 0.18 + 0.05);
+      this.vx = (Math.random() - 0.5) * 0.12 * window._particleConfig.speed;
+      this.vy = -(Math.random() * 0.18 + 0.05) * window._particleConfig.speed;
       this.alpha = Math.random() * 0.4 + 0.15;
       this.color = colors[Math.floor(Math.random() * colors.length)];
       this.life = 0;
       this.maxLife = Math.random() * 600 + 400;
     }
     update() {
-      this.x += this.vx;
-      this.y += this.vy;
+      // Apply live speed multiplier
+      this.x += this.vx * window._particleConfig.speed;
+      this.y += this.vy * window._particleConfig.speed;
       this.life++;
       if (this.life > this.maxLife || this.y < -10 || this.x < -10 || this.x > w + 10) {
         this.reset(false);
@@ -51,7 +59,8 @@ function initParticles() {
     }
   }
 
-  for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+  // Initial load
+  for (let i = 0; i < window._particleConfig.count; i++) particles.push(new Particle());
 
   let mouse = { x: null, y: null };
   window.addEventListener('mousemove', e => {
@@ -100,6 +109,13 @@ function initParticles() {
   }
 
   (function loop() {
+    // Dynamic particle count adjustments via Admin Panel
+    if (particles.length < window._particleConfig.count) {
+      for (let i = particles.length; i < window._particleConfig.count; i++) particles.push(new Particle());
+    } else if (particles.length > window._particleConfig.count) {
+      particles.splice(window._particleConfig.count);
+    }
+
     ctx.clearRect(0, 0, w, h);
     drawConnections();
     particles.forEach(p => { p.update(); p.draw(); });
@@ -198,16 +214,15 @@ function initAudio() {
       osc.type = 'sine';
       osc.frequency.setValueAtTime(880, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.08);
-      gain.gain.setValueAtTime(0.1, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.3);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25);
       osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.3);
+      osc.stop(ctx.currentTime + 0.25);
     } catch(e) {}
   }
 
-  // Bind to buttons and active elements including chatbot/modals dynamically
   document.body.addEventListener('click', e => {
-    if (e.target.closest('.btn, .btn-icon, .filter-btn, .choice-btn, #chatbot-toggle')) {
+    if (e.target.closest('.btn, .btn-icon, .filter-btn, .choice-btn, #chatbot-toggle, .theme-btn, #monitor-toggle')) {
       playChime();
     }
   });
@@ -223,12 +238,10 @@ function initModal() {
     modal.classList.add('hidden');
     document.body.style.overflow = '';
     
-    // Stop MATLAB simulation animation loop if running
     if (window._matlabSimId) {
       cancelAnimationFrame(window._matlabSimId);
       window._matlabSimId = null;
     }
-    // Clear terminal timer
     if (window._terminalInterval) {
       clearInterval(window._terminalInterval);
       window._terminalInterval = null;
@@ -237,8 +250,6 @@ function initModal() {
   if (closeBtn) closeBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-  window._closeProjectModal = closeModal;
 }
 
 /* ---------- 6. PREMIUM BOOT LOADER ---------- */
@@ -357,7 +368,7 @@ function initCustomCursor() {
 
   const updateHoverListeners = () => {
     const interactiveElements = document.querySelectorAll(
-      'a, button, input, textarea, select, .project-card, .skills-card, .filter-btn, .timeline-card, .stat-item, .logo, .theme-toggle-btn, .choice-btn, #chatbot-toggle'
+      'a, button, input, textarea, select, .project-card, .skills-card, .filter-btn, .timeline-card, .stat-item, .logo, .theme-toggle-btn, .choice-btn, #chatbot-toggle, .theme-btn, #monitor-toggle'
     );
     interactiveElements.forEach(el => {
       el.removeEventListener('mouseenter', addHoverClass);
@@ -372,7 +383,6 @@ function initCustomCursor() {
 
   updateHoverListeners();
 
-  // Listen to changes in the DOM or clicks that spawn elements
   document.body.addEventListener('click', () => {
     setTimeout(updateHoverListeners, 100);
   });
@@ -386,7 +396,7 @@ function initGlassCards() {
 
   cards.forEach(card => {
     card.addEventListener('mousemove', e => {
-      if (card.id === 'chatbot-window') return; // skip chatbot container
+      if (card.id === 'chatbot-window' || card.id === 'depin-monitor-widget') return;
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
@@ -405,7 +415,7 @@ function initGlassCards() {
     card.style.transition = 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s ease, background-color 0.4s ease';
 
     card.addEventListener('mouseleave', () => {
-      if (card.id === 'chatbot-window') return;
+      if (card.id === 'chatbot-window' || card.id === 'depin-monitor-widget') return;
       card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
     });
   });
@@ -420,7 +430,6 @@ function initChatbot() {
 
   if (!toggleBtn || !chatWindow || !chatMessages || !choicesContainer) return;
 
-  // Toggle chat window visibility
   toggleBtn.addEventListener('click', () => {
     chatWindow.classList.toggle('hidden');
     const isClosed = chatWindow.classList.contains('hidden');
@@ -438,7 +447,6 @@ function initChatbot() {
     }
   });
 
-  // Chat Responses Configuration
   const responses = {
     gpm: {
       text: "Mạnh Hà có nhận viết script tự động hóa theo yêu cầu trên **GPM Browser** sử dụng **Node.js, Puppeteer/Playwright**. Các script hỗ trợ tự động cày farm tài khoản, auto airdrop/retroactive, và đồng bộ thao tác đa luồng quy mô lớn giúp tiết kiệm tối đa thời gian. Bạn có thể kết nối Zalo **0334383560** để đặt hàng code nhé!",
@@ -465,7 +473,6 @@ function initChatbot() {
     gaming: "Bạn có chơi TFT / Tốc Chiến không?"
   };
 
-  // Event delegation for choices buttons
   choicesContainer.addEventListener('click', e => {
     const button = e.target.closest('.choice-btn');
     if (!button) return;
@@ -476,10 +483,8 @@ function initChatbot() {
       return;
     }
 
-    // Append User message
     appendMessage(choiceTexts[choice] || button.innerText, 'user');
 
-    // Hide choices & Show typing indicator
     choicesContainer.style.pointerEvents = 'none';
     choicesContainer.style.opacity = '0.3';
     appendTypingIndicator();
@@ -487,7 +492,6 @@ function initChatbot() {
     setTimeout(() => {
       removeTypingIndicator();
       
-      // Append Bot message
       const res = responses[choice];
       if (res) {
         appendMessage(res.text, 'bot');
@@ -506,7 +510,6 @@ function initChatbot() {
     const msgDiv = document.createElement('div');
     msgDiv.className = `chat-message ${sender === 'user' ? 'user-msg' : 'bot-msg'}`;
     
-    // Format bold markdown **text** and links [text](url)
     let formattedText = text
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" style="text-decoration:underline;color:var(--color-primary);">$1</a>')
@@ -577,17 +580,14 @@ function initProjectModals() {
 
   if (!modal || !modalBody) return;
 
-  // Modal open helpers
   function openModal(htmlContent) {
     modalBody.innerHTML = htmlContent;
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
   }
 
-  // Card 1: Drone Project Click
   if (droneCard) {
     droneCard.addEventListener('click', e => {
-      // Allow direct link click without opening modal
       if (e.target.closest('.btn-icon, a')) return;
 
       const html = `
@@ -620,7 +620,6 @@ function initProjectModals() {
     });
   }
 
-  // Card 5: GPM Automation Script Click
   if (gpmCard) {
     gpmCard.addEventListener('click', e => {
       if (e.target.closest('.btn-icon, a')) return;
@@ -650,7 +649,7 @@ function initProjectModals() {
             </div>
             <p class="modal-proj-desc">Hệ thống kịch bản lập trình chạy đa luồng điều khiển hàng trăm luồng trình duyệt GPM. Tự động hóa điểm danh, claim token, làm airdrop retroactive và tương tác X kiếm tiền ad revenue.</p>
             <div class="modal-action-row">
-              <a href="assets/videoscriptgpm.mp4" target="_blank" class="btn btn-primary">Xem Full Video</a>
+              <a href="assets/videoscriptgpm.mp4" target="_blank" class="btn btn-primary">Xem Video</a>
               <a href="https://zalo.me/0334383560" target="_blank" class="btn btn-secondary">Đặt Hàng Code Tool</a>
             </div>
           </div>
@@ -661,7 +660,6 @@ function initProjectModals() {
     });
   }
 
-  // Card 3: TikTok Creators Click
   if (tiktokCard) {
     tiktokCard.addEventListener('click', e => {
       if (e.target.closest('.btn-icon, a')) return;
@@ -707,13 +705,11 @@ function initProjectModals() {
     });
   }
 
-  // --- MATLAB PID PLOT SIMULATION Core ---
   function runDroneSimulation() {
     const canvas = document.getElementById('sim-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
-    // Resize canvas
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
 
@@ -723,11 +719,10 @@ function initProjectModals() {
     const maxPoints = Math.floor(canvas.width - 60);
 
     function draw() {
-      if (!document.getElementById('sim-canvas')) return; // exit if modal closed
+      if (!document.getElementById('sim-canvas')) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw matlab-style background grid
       ctx.strokeStyle = '#102040';
       ctx.lineWidth = 0.5;
       for (let x = 40; x < canvas.width; x += 40) {
@@ -737,17 +732,14 @@ function initProjectModals() {
         ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
       }
 
-      // Draw Setpoint Line (dashed red)
       ctx.strokeStyle = 'rgba(239, 68, 68, 0.45)';
       ctx.setLineDash([4, 4]);
       ctx.beginPath();
       ctx.moveTo(40, setpoint);
       ctx.lineTo(canvas.width - 20, setpoint);
       ctx.stroke();
-      ctx.setLineDash([]); // reset
+      ctx.setLineDash([]);
 
-      // Math PID Damping equation simulation
-      // y(t) = Setpoint - e^(-zeta * w_n * t) * cos(w_d * t)
       const zeta = 0.12;
       const wn = 0.28;
       const amplitude = 90;
@@ -756,7 +748,6 @@ function initProjectModals() {
       points.push({ x: 40 + t * 4, y: val });
       if (points.length > maxPoints) points.shift();
 
-      // Render Trajectory Damping Line
       ctx.strokeStyle = '#00c2ff';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -766,7 +757,6 @@ function initProjectModals() {
       }
       ctx.stroke();
 
-      // Active scanning dot
       if (points.length > 0) {
         const last = points[points.length - 1];
         ctx.fillStyle = '#0052ff';
@@ -781,13 +771,11 @@ function initProjectModals() {
       }
 
       t += 0.2;
-      // Loop
       window._matlabSimId = requestAnimationFrame(draw);
     }
     window._matlabSimId = requestAnimationFrame(draw);
   }
 
-  // --- AUTOMATED LOGS TERMINAL Core ---
   function runTerminalSimulation() {
     const termBody = document.getElementById('modal-terminal-body');
     if (!termBody) return;
@@ -811,7 +799,7 @@ function initProjectModals() {
     ];
 
     let currentLine = 0;
-    termBody.innerHTML = ''; // reset terminal
+    termBody.innerHTML = '';
 
     window._terminalInterval = setInterval(() => {
       if (!document.getElementById('modal-terminal-body')) {
@@ -835,13 +823,239 @@ function initProjectModals() {
 
       lineDiv.innerText = text;
       termBody.appendChild(lineDiv);
-      termBody.scrollTop = termBody.scrollHeight; // autoscroll
+      termBody.scrollTop = termBody.scrollHeight;
 
       currentLine++;
       if (currentLine >= logLines.length) {
         clearInterval(window._terminalInterval);
       }
     }, 450);
+  }
+}
+
+/* ---------- 12. LIVE DEPIN SYSTEM MONITOR HUD ---------- */
+function initDepinMonitor() {
+  const widget = document.getElementById('depin-monitor-widget');
+  const toggleBtn = document.getElementById('monitor-toggle');
+  const earnRateText = document.getElementById('mon-earn-rate');
+  const totalEarnedText = document.getElementById('mon-total-earned');
+
+  if (!widget || !toggleBtn) return;
+
+  // Toggle HUD minimized/expanded state
+  toggleBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    widget.classList.toggle('minimized');
+  });
+
+  // Numeric count-up simulation for earnings
+  let totalEarned = parseFloat(localStorage.getItem('depin_points') || '2548.12');
+  const earnRate = 1.42; // points per second
+  earnRateText.innerText = `${earnRate} pts/s`;
+
+  setInterval(() => {
+    if (window._particleConfig.grassOnline || window._particleConfig.dawnOnline) {
+      // Scale earning rate based on active nodes
+      let multiplier = 0;
+      if (window._particleConfig.grassOnline) multiplier += 0.5;
+      if (window._particleConfig.dawnOnline) multiplier += 0.5;
+      
+      const currentRate = earnRate * multiplier;
+      earnRateText.innerText = `${currentRate.toFixed(2)} pts/s`;
+      
+      if (multiplier > 0) {
+        totalEarned += (currentRate / 10);
+        totalEarnedText.innerText = `${totalEarned.toFixed(2)} pts`;
+        localStorage.setItem('depin_points', totalEarned.toString());
+      }
+    } else {
+      earnRateText.innerText = `0.00 pts/s`;
+    }
+  }, 100);
+}
+
+/* ---------- 13. SECRET DEVELOPER CONSOLE (Easter Egg) ---------- */
+function initAdminConsole() {
+  const adminModal = document.getElementById('admin-dashboard-modal');
+  const closeBtn = document.getElementById('admin-modal-close');
+  const particleCountSlider = document.getElementById('admin-particle-count');
+  const particleCountVal = document.getElementById('admin-particle-count-val');
+  const particleSpeedSlider = document.getElementById('admin-particle-speed');
+  const particleSpeedVal = document.getElementById('admin-particle-speed-val');
+  const nodeGrassToggle = document.getElementById('node-toggle-grass');
+  const nodeDawnToggle = document.getElementById('node-toggle-dawn');
+  const themeBtns = document.querySelectorAll('.theme-btn');
+  const messagesList = document.getElementById('admin-messages-list');
+  const logo = document.querySelector('.logo');
+
+  if (!adminModal) return;
+
+  function openAdmin() {
+    adminModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    loadAdminMessages();
+  }
+
+  function closeAdmin() {
+    adminModal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  if (closeBtn) closeBtn.addEventListener('click', closeAdmin);
+
+  // Trigger 1: Typing 'admin' on keyboard
+  let keyHistory = "";
+  window.addEventListener('keydown', e => {
+    keyHistory += e.key.toLowerCase();
+    if (keyHistory.endsWith("admin")) {
+      openAdmin();
+      keyHistory = "";
+    }
+    if (keyHistory.length > 20) keyHistory = keyHistory.substring(10);
+  });
+
+  // Trigger 2: Clicking logo 5 times in 3 seconds
+  if (logo) {
+    let logoClicks = 0;
+    let logoTimeout = null;
+    logo.addEventListener('click', e => {
+      // Only trigger if clicking logo, not navigation links
+      if (e.target.closest('a') && e.target.getAttribute('href') !== '#hero') return;
+      
+      logoClicks++;
+      clearTimeout(logoTimeout);
+      
+      if (logoClicks >= 5) {
+        openAdmin();
+        logoClicks = 0;
+        // Visual indicator toast
+        showToast("System Console unlocked!");
+      }
+      
+      logoTimeout = setTimeout(() => { logoClicks = 0; }, 3000);
+    });
+  }
+
+  // Particle Count Controller
+  if (particleCountSlider && particleCountVal) {
+    particleCountSlider.addEventListener('input', () => {
+      const val = parseInt(particleCountSlider.value);
+      particleCountVal.innerText = val;
+      window._particleConfig.count = val;
+    });
+  }
+
+  // Particle Speed Controller
+  if (particleSpeedSlider && particleSpeedVal) {
+    particleSpeedSlider.addEventListener('input', () => {
+      const val = parseInt(particleSpeedSlider.value) / 10;
+      particleSpeedVal.innerText = `${val.toFixed(1)}x`;
+      window._particleConfig.speed = val;
+    });
+  }
+
+  // Node toggle controls
+  if (nodeGrassToggle) {
+    nodeGrassToggle.addEventListener('change', () => {
+      const isOnline = nodeGrassToggle.checked;
+      window._particleConfig.grassOnline = isOnline;
+      document.getElementById('mon-grass-val').innerText = isOnline ? "100% Quality" : "OFFLINE";
+      document.getElementById('mon-grass-val').style.color = isOnline ? "" : "#ef4444";
+      updateNodeActiveCount();
+    });
+  }
+
+  if (nodeDawnToggle) {
+    nodeDawnToggle.addEventListener('change', () => {
+      const isOnline = nodeDawnToggle.checked;
+      window._particleConfig.dawnOnline = isOnline;
+      document.getElementById('mon-dawn-val').innerText = isOnline ? "98% Online" : "OFFLINE";
+      document.getElementById('mon-dawn-val').style.color = isOnline ? "" : "#ef4444";
+      updateNodeActiveCount();
+    });
+  }
+
+  function updateNodeActiveCount() {
+    let activeCount = 0;
+    if (window._particleConfig.grassOnline) activeCount++;
+    if (window._particleConfig.dawnOnline) activeCount++;
+    document.getElementById('mon-node-status').innerText = `${activeCount} ACTIVE`;
+    document.getElementById('mon-node-status').className = `mon-status ${activeCount > 0 ? 'mon-active' : 'mon-inactive'}`;
+  }
+
+  // Theme customizer buttons
+  themeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      themeBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const theme = btn.getAttribute('data-theme-name');
+      
+      // Reset classes
+      document.body.classList.remove('theme-matrix-green', 'theme-cyber-purple', 'theme-solar-orange');
+
+      // Add corresponding theme class
+      if (theme === 'matrix') {
+        document.body.classList.add('theme-matrix-green');
+      } else if (theme === 'cyber') {
+        document.body.classList.add('theme-cyber-purple');
+      } else if (theme === 'solar') {
+        document.body.classList.add('theme-solar-orange');
+      }
+    });
+  });
+
+  // Load contact messages sent locally
+  function loadAdminMessages() {
+    if (!messagesList) return;
+    
+    const messages = JSON.parse(localStorage.getItem('contact_messages') || '[]');
+    if (messages.length === 0) {
+      messagesList.innerHTML = `<div class="admin-no-msg">Không có tin nhắn nào được gửi. Hãy thử gửi tin nhắn ở form liên hệ phía dưới nhé!</div>`;
+    } else {
+      messagesList.innerHTML = messages.map(msg => `
+        <div class="admin-msg-card">
+          <div class="admin-msg-header">
+            <span>👤 ${escapeHtml(msg.name)}</span>
+            <span style="font-size:0.65rem;color:var(--text-muted);">${msg.timestamp}</span>
+          </div>
+          <div style="font-size:0.7rem;margin-top:2px;">Email: <a href="mailto:${escapeHtml(msg.email)}" style="color:var(--color-secondary);text-decoration:underline;">${escapeHtml(msg.email)}</a></div>
+          <div class="admin-msg-subject">Tiêu đề: ${escapeHtml(msg.subject)}</div>
+          <div class="admin-msg-body">${escapeHtml(msg.message)}</div>
+        </div>
+      `).join('');
+    }
+  }
+
+  // Reload messages list when a new form message event is dispatched
+  window.addEventListener('contact_message_received', loadAdminMessages);
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+
+  // helper to print toast inside main
+  function showToast(message) {
+    // Check if container exists or create it
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-success glass-card show';
+    toast.innerHTML = `
+      <div class="toast-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      </div>
+      <div class="toast-message">${message}</div>
+    `;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 400);
+    }, 3500);
   }
 }
 
@@ -858,4 +1072,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initGlassCards();
   initChatbot();
   initProjectModals();
+  initDepinMonitor();
+  initAdminConsole();
 });

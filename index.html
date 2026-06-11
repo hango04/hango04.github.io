@@ -8,7 +8,7 @@
   <meta name="keywords" content="Ngô Mạnh Hà, Robotics, Đại học Thủy Lợi, MMO, Crypto, Video Editor, CapCut, Premiere, GPM Scripting, Hưng Yên">
   
   <!-- CSS Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=7.0">
+  <link rel="stylesheet" href="style.css?v=8.0">
 </head>
 <body>
   <!-- Premium System Loader Screen -->
@@ -506,7 +506,7 @@
   <section id="experience" class="section">
     <div class="container">
       <div class="section-title-wrapper reveal">
-        <h2 class="section-title">Kinh nghiệm & Học văn</h2>
+        <h2 class="section-title">Kinh nghiệm & Học vấn</h2>
         <p class="section-subtitle">Chặng đường học tập và làm việc của tôi</p>
       </div>
       
@@ -711,8 +711,98 @@
     </div>
   </div>
 
+  <!-- Live DePin & Automation System Monitor HUD -->
+  <div id="depin-monitor-widget" class="glass-card">
+    <button id="monitor-toggle" aria-label="Thu nhỏ giám sát">
+      <svg class="mon-icon-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+        <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+        <line x1="6" y1="6" x2="6.01" y2="6"></line>
+        <line x1="6" y1="18" x2="6.01" y2="18"></line>
+      </svg>
+      <svg class="mon-icon-close" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+    <div id="monitor-content">
+      <div class="monitor-header">
+        <span class="monitor-blinker"></span>
+        <h5>SYSTEM MONITOR v1.2</h5>
+      </div>
+      <div class="monitor-divider"></div>
+      <ul class="monitor-list">
+        <li>GPM Scripts: <span class="mon-status mon-active">RUNNING</span></li>
+        <li>DePin Nodes: <span class="mon-status mon-active" id="mon-node-status">2 ACTIVE</span></li>
+        <li>- Grass Node: <span class="mon-val" id="mon-grass-val">100% Quality</span></li>
+        <li>- Dawn Node: <span class="mon-val" id="mon-dawn-val">98% Online</span></li>
+        <li>Rate: <span id="mon-earn-rate" class="mon-val">1.42 pts/s</span></li>
+        <li>Total Earned: <span id="mon-total-earned" class="mon-highlight">0.00 pts</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Secret Admin Developer Console Dashboard -->
+  <div id="admin-dashboard-modal" class="modal glass-card hidden">
+    <div class="modal-content admin-modal-content">
+      <span class="close-btn" id="admin-modal-close">&times;</span>
+      <h3 class="admin-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+        MẠNH HÀ SYSTEM CONTROL CENTER
+      </h3>
+      
+      <div class="admin-grid">
+        <!-- Control panel column -->
+        <div class="admin-col">
+          <div class="admin-section-title">CẤU HÌNH HỆ THỐNG</div>
+          
+          <div class="admin-control-group">
+            <label>Màu sắc giao diện (Theme Colors)</label>
+            <div class="theme-buttons">
+              <button class="theme-btn active" data-theme-name="default">Flame Blue</button>
+              <button class="theme-btn" data-theme-name="matrix">Matrix Green</button>
+              <button class="theme-btn" data-theme-name="cyber">Cyber Purple</button>
+              <button class="theme-btn" data-theme-name="solar">Solar Orange</button>
+            </div>
+          </div>
+          
+          <div class="admin-control-group">
+            <label>Số lượng Sao nền (Particles Count): <span id="admin-particle-count-val">65</span></label>
+            <input type="range" id="admin-particle-count" min="10" max="150" value="65" class="admin-slider">
+          </div>
+
+          <div class="admin-control-group">
+            <label>Tốc độ bay của Sao (Speed Multiplier): <span id="admin-particle-speed-val">1.0x</span></label>
+            <input type="range" id="admin-particle-speed" min="2" max="40" value="10" class="admin-slider">
+          </div>
+          
+          <div class="admin-control-group">
+            <label>Trạng thái DePin Node (Simulated Nodes)</label>
+            <div style="display: flex; gap: 16px; margin-top: 6px;">
+              <label class="switch-label">
+                <input type="checkbox" id="node-toggle-grass" checked> Grass Node
+              </label>
+              <label class="switch-label">
+                <input type="checkbox" id="node-toggle-dawn" checked> Dawn Node
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Messages column -->
+        <div class="admin-col">
+          <div class="admin-section-title">HÒM THƯ LIÊN HỆ (LOCAL DATA)</div>
+          <div id="admin-messages-list" class="admin-messages-list">
+            <div class="admin-no-msg">Không có tin nhắn nào được gửi. Hãy gửi thử ở contact form!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
-  <script src="script.js?v=7.0"></script>
-  <script src="main.js?v=7.0"></script>
+  <script src="script.js?v=8.0"></script>
+  <script src="main.js?v=8.0"></script>
 </body>
 </html>
