@@ -1,5 +1,5 @@
 /* ============================================================
-   main.js – Premium Immersive Interactions v4.0
+   main.js – Premium Immersive Interactions v5.0 (Flame Blue AI style)
    Ngô Mạnh Hà Portfolio
    ============================================================ */
 
@@ -19,7 +19,7 @@ function initParticles() {
 
   const particleCount = Math.min(65, Math.floor((w * h) / 20000));
   const particles = [];
-  const colors = ['rgba(0,240,255,', 'rgba(189,0,255,', 'rgba(94,163,248,'];
+  const colors = ['rgba(0,82,255,', 'rgba(0,194,255,', 'rgba(0,112,243,'];
 
   class Particle {
     constructor() { this.reset(true); }
@@ -76,7 +76,7 @@ function initParticles() {
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(0, 240, 255, ${alpha})`;
+          ctx.strokeStyle = `rgba(0, 82, 255, ${alpha})`;
           ctx.lineWidth = 0.5;
           ctx.stroke();
         }
@@ -91,7 +91,7 @@ function initParticles() {
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(mouse.x, mouse.y);
-          ctx.strokeStyle = `rgba(189, 0, 255, ${malpha})`;
+          ctx.strokeStyle = `rgba(0, 194, 255, ${malpha})`;
           ctx.lineWidth = 0.5;
           ctx.stroke();
         }
@@ -107,110 +107,40 @@ function initParticles() {
   })();
 }
 
-/* ---------- 2. WAVE TRANSITION ---------- */
-function initWaveTransition() {
-  const overlay    = document.getElementById('wave-overlay');
-  const waveCanvas = document.getElementById('wave-canvas');
-  if (!overlay || !waveCanvas) return;
-  const ctx = waveCanvas.getContext('2d');
+/* ---------- 2. CURTAIN TRANSITION (Flame Blue style) ---------- */
+function initCurtainTransition() {
+  const curtain = document.getElementById('transition-curtain');
+  if (!curtain) return;
 
-  let animId    = null;
-  let progress  = 0;
-  let running   = false;
-
-  function resize() {
-    waveCanvas.width  = window.innerWidth;
-    waveCanvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  function drawWave(prog) {
-    const W = waveCanvas.width;
-    const H = waveCanvas.height;
-    ctx.clearRect(0, 0, W, H);
-
-    const fillY = prog * (H + 120) - 120;
-
-    ctx.beginPath();
-    ctx.moveTo(0, H);
-
-    const WAVES = [
-      { amp: 38, freq: 2.2, phase: Date.now() * 0.0012 },
-      { amp: 22, freq: 3.5, phase: Date.now() * 0.0018 + 1 },
-      { amp: 14, freq: 5.0, phase: Date.now() * 0.002  + 2.5 },
-    ];
-
-    for (let x = 0; x <= W; x += 2) {
-      let y = fillY;
-      WAVES.forEach(w => {
-        y += Math.sin((x / W) * Math.PI * w.freq + w.phase) * w.amp;
-      });
-      if (x === 0) ctx.lineTo(0, y);
-      else         ctx.lineTo(x, y);
-    }
-
-    ctx.lineTo(W, H);
-    ctx.closePath();
-
-    const grad = ctx.createLinearGradient(0, 0, W, H);
-    grad.addColorStop(0,   'rgba(0,8,24,0.97)');
-    grad.addColorStop(0.4, 'rgba(0,40,80,0.95)');
-    grad.addColorStop(0.7, 'rgba(20,0,60,0.95)');
-    grad.addColorStop(1,   'rgba(0,8,24,0.97)');
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.moveTo(0, fillY);
-    for (let x = 0; x <= W; x += 2) {
-      let y = fillY;
-      WAVES.forEach(w => {
-        y += Math.sin((x / W) * Math.PI * w.freq + w.phase) * w.amp;
-      });
-      ctx.lineTo(x, y);
-    }
-    ctx.strokeStyle = 'rgba(0,240,255,0.7)';
-    ctx.lineWidth   = 2.5;
-    ctx.shadowColor = 'rgba(0,240,255,1)';
-    ctx.shadowBlur  = 16;
-    ctx.stroke();
-    ctx.shadowBlur  = 0;
-  }
-
-  const DURATION = 620;
-
-  function animate(startTime, fromProg, toProg, onDone) {
-    function frame(now) {
-      const t   = Math.min((now - startTime) / DURATION, 1);
-      const ease = t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t;
-      progress = fromProg + (toProg - fromProg) * ease;
-      drawWave(progress);
-      if (t < 1) { animId = requestAnimationFrame(frame); }
-      else       { if (onDone) onDone(); }
-    }
-    animId = requestAnimationFrame(frame);
-  }
+  let running = false;
 
   function triggerTransition(targetHref) {
     if (running) return;
     running = true;
-    overlay.classList.add('active');
-    overlay.style.opacity = '1';
 
-    animate(performance.now(), 0, 1, () => {
+    // Slide in curtain and scale down current content
+    document.body.classList.add('page-transitioning');
+    curtain.classList.add('active-in');
+
+    setTimeout(() => {
+      // Navigate to target section instantly
       if (targetHref.startsWith('#')) {
         const target = document.querySelector(targetHref);
         if (target) target.scrollIntoView({ behavior: 'instant' });
       }
+
+      // Sweep curtain out and restore page scaling
       setTimeout(() => {
-        animate(performance.now(), 1, 0, () => {
-          overlay.style.opacity = '0';
-          overlay.classList.remove('active');
+        curtain.classList.remove('active-in');
+        curtain.classList.add('active-out');
+        document.body.classList.remove('page-transitioning');
+
+        setTimeout(() => {
+          curtain.classList.remove('active-out');
           running = false;
-        });
-      }, 80);
-    });
+        }, 600);
+      }, 150);
+    }, 600);
   }
 
   document.querySelectorAll('a[href^="#"]').forEach(a => {
@@ -234,7 +164,7 @@ function initCursorGlow() {
     width: '380px',
     height: '380px',
     borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(0,240,255,0.045) 0%, transparent 70%)',
+    background: 'radial-gradient(circle, rgba(0,82,255,0.045) 0%, transparent 70%)',
     pointerEvents: 'none',
     zIndex: '0',
     transform: 'translate(-50%,-50%)',
@@ -464,7 +394,7 @@ function initGlassCards() {
 document.addEventListener('DOMContentLoaded', () => {
   initLoader();
   initParticles();
-  initWaveTransition();
+  initCurtainTransition();
   initCursorGlow();
   initAudio();
   initModal();
