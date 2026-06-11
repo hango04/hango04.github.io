@@ -1,64 +1,97 @@
-/* ================================================
-   main.js – Particles + Wave Transition + Effects
-   ================================================ */
+/* ============================================================
+   main.js – Premium Immersive Interactions v4.0
+   Ngô Mạnh Hà Portfolio
+   ============================================================ */
 
-/* ---------- 1. PARTICLE BACKGROUND ---------- */
+/* ---------- 1. SUBTLE PARTICLES BACKGROUND ---------- */
 function initParticles() {
   const canvas = document.getElementById('bg-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
+  let w, h;
   function resize() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
+    w = canvas.width  = window.innerWidth;
+    h = canvas.height = window.innerHeight;
   }
   resize();
   window.addEventListener('resize', resize);
 
-  const PARTICLE_COUNT = 90;
+  const particleCount = Math.min(65, Math.floor((w * h) / 20000));
   const particles = [];
-  const COLORS = ['rgba(0,240,255,', 'rgba(189,0,255,', 'rgba(57,255,20,'];
+  const colors = ['rgba(0,240,255,', 'rgba(189,0,255,', 'rgba(94,163,248,'];
 
   class Particle {
     constructor() { this.reset(true); }
-    reset(random) {
-      this.x     = Math.random() * canvas.width;
-      this.y     = random ? Math.random() * canvas.height : canvas.height + 10;
-      this.r     = Math.random() * 1.6 + 0.4;
-      this.vy    = -(Math.random() * 0.4 + 0.15);
-      this.vx    = (Math.random() - 0.5) * 0.3;
-      this.alpha = Math.random() * 0.55 + 0.1;
-      this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
-      this.life  = 0;
-      this.maxLife = Math.random() * 400 + 200;
+    reset(init = false) {
+      this.x = Math.random() * w;
+      this.y = init ? Math.random() * h : h + 10;
+      this.r = Math.random() * 1.5 + 0.3;
+      this.vx = (Math.random() - 0.5) * 0.12;
+      this.vy = -(Math.random() * 0.18 + 0.05);
+      this.alpha = Math.random() * 0.4 + 0.15;
+      this.color = colors[Math.floor(Math.random() * colors.length)];
+      this.life = 0;
+      this.maxLife = Math.random() * 600 + 400;
     }
     update() {
-      this.x += this.vx; this.y += this.vy; this.life++;
-      if (this.life > this.maxLife || this.y < -5) this.reset(false);
+      this.x += this.vx;
+      this.y += this.vy;
+      this.life++;
+      if (this.life > this.maxLife || this.y < -10 || this.x < -10 || this.x > w + 10) {
+        this.reset(false);
+      }
     }
     draw() {
-      const a = this.alpha * Math.sin((this.life / this.maxLife) * Math.PI);
+      const currentAlpha = this.alpha * Math.sin((this.life / this.maxLife) * Math.PI);
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = this.color + a + ')';
+      ctx.fillStyle = this.color + currentAlpha + ')';
       ctx.fill();
     }
   }
 
-  for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+  for (let i = 0; i < particleCount; i++) particles.push(new Particle());
 
-  const MAX_DIST = 120;
-  function drawLinks() {
+  let mouse = { x: null, y: null };
+  window.addEventListener('mousemove', e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+  window.addEventListener('mouseleave', () => {
+    mouse.x = null;
+    mouse.y = null;
+  });
+
+  function drawConnections() {
+    const maxDist = 115;
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
         const dx = particles[i].x - particles[j].x;
         const dy = particles[i].y - particles[j].y;
-        const d  = Math.sqrt(dx * dx + dy * dy);
-        if (d < MAX_DIST) {
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < maxDist) {
+          const alpha = (1 - dist / maxDist) * 0.08;
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(0,240,255,${(1 - d / MAX_DIST) * 0.1})`;
+          ctx.strokeStyle = `rgba(0, 240, 255, ${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+
+      if (mouse.x !== null) {
+        const mdx = particles[i].x - mouse.x;
+        const mdy = particles[i].y - mouse.y;
+        const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+        if (mdist < 140) {
+          const malpha = (1 - mdist / 140) * 0.09;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.strokeStyle = `rgba(189, 0, 255, ${malpha})`;
           ctx.lineWidth = 0.5;
           ctx.stroke();
         }
@@ -67,8 +100,8 @@ function initParticles() {
   }
 
   (function loop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawLinks();
+    ctx.clearRect(0, 0, w, h);
+    drawConnections();
     particles.forEach(p => { p.update(); p.draw(); });
     requestAnimationFrame(loop);
   })();
@@ -82,9 +115,7 @@ function initWaveTransition() {
   const ctx = waveCanvas.getContext('2d');
 
   let animId    = null;
-  let progress  = 0;       // 0 → 1 covering, 1 → 0 uncovering
-  let direction = 'in';    // 'in' | 'out'
-  let pendingFn = null;
+  let progress  = 0;
   let running   = false;
 
   function resize() {
@@ -94,19 +125,16 @@ function initWaveTransition() {
   resize();
   window.addEventListener('resize', resize);
 
-  /* Draw a wavy fill from top, progress 0=empty 1=full */
   function drawWave(prog) {
     const W = waveCanvas.width;
     const H = waveCanvas.height;
     ctx.clearRect(0, 0, W, H);
 
-    // How far down the wave trough reaches
     const fillY = prog * (H + 120) - 120;
 
     ctx.beginPath();
     ctx.moveTo(0, H);
 
-    // Multiple overlapping waves for richness
     const WAVES = [
       { amp: 38, freq: 2.2, phase: Date.now() * 0.0012 },
       { amp: 22, freq: 3.5, phase: Date.now() * 0.0018 + 1 },
@@ -125,7 +153,6 @@ function initWaveTransition() {
     ctx.lineTo(W, H);
     ctx.closePath();
 
-    // Gradient fill
     const grad = ctx.createLinearGradient(0, 0, W, H);
     grad.addColorStop(0,   'rgba(0,8,24,0.97)');
     grad.addColorStop(0.4, 'rgba(0,40,80,0.95)');
@@ -134,7 +161,6 @@ function initWaveTransition() {
     ctx.fillStyle = grad;
     ctx.fill();
 
-    // Glowing wave edge
     ctx.beginPath();
     ctx.moveTo(0, fillY);
     for (let x = 0; x <= W; x += 2) {
@@ -152,12 +178,12 @@ function initWaveTransition() {
     ctx.shadowBlur  = 0;
   }
 
-  const DURATION = 620; // ms per phase
+  const DURATION = 620;
 
   function animate(startTime, fromProg, toProg, onDone) {
     function frame(now) {
       const t   = Math.min((now - startTime) / DURATION, 1);
-      const ease = t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t; // easeInOut
+      const ease = t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t;
       progress = fromProg + (toProg - fromProg) * ease;
       drawWave(progress);
       if (t < 1) { animId = requestAnimationFrame(frame); }
@@ -166,21 +192,17 @@ function initWaveTransition() {
     animId = requestAnimationFrame(frame);
   }
 
-  /* Public API – intercept nav link clicks */
   function triggerTransition(targetHref) {
     if (running) return;
     running = true;
     overlay.classList.add('active');
     overlay.style.opacity = '1';
 
-    // Phase 1: wave sweeps IN (covers screen)
     animate(performance.now(), 0, 1, () => {
-      // Navigate / scroll to target
       if (targetHref.startsWith('#')) {
         const target = document.querySelector(targetHref);
         if (target) target.scrollIntoView({ behavior: 'instant' });
       }
-      // Phase 2: wave sweeps OUT (reveals screen)
       setTimeout(() => {
         animate(performance.now(), 1, 0, () => {
           overlay.style.opacity = '0';
@@ -191,7 +213,6 @@ function initWaveTransition() {
     });
   }
 
-  /* Intercept all internal anchor links */
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       const href = a.getAttribute('href');
@@ -201,11 +222,10 @@ function initWaveTransition() {
     });
   });
 
-  /* Also intercept filter buttons & nav section jumps */
   window._waveTransition = triggerTransition;
 }
 
-/* ---------- 3. CURSOR GLOW ---------- */
+/* ---------- 3. AMBIENT CURSOR GLOW ---------- */
 function initCursorGlow() {
   const glow = document.createElement('div');
   glow.id = 'cursor-glow';
@@ -214,7 +234,7 @@ function initCursorGlow() {
     width: '380px',
     height: '380px',
     borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(0,240,255,0.055) 0%, transparent 70%)',
+    background: 'radial-gradient(circle, rgba(0,240,255,0.045) 0%, transparent 70%)',
     pointerEvents: 'none',
     zIndex: '0',
     transform: 'translate(-50%,-50%)',
@@ -270,11 +290,185 @@ function initModal() {
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 }
 
+/* ---------- 6. PREMIUM BOOT LOADER ---------- */
+function initLoader() {
+  const loader = document.getElementById('loader-screen');
+  if (!loader) return;
+  const bar = loader.querySelector('.loader-bar');
+  const percent = loader.querySelector('.status-percent');
+  const status = loader.querySelector('.status-text');
+  if (!bar || !percent) return;
+
+  const messages = [
+    "LOADING ASSETS...",
+    "RESOLVING DEPIN SERVICES...",
+    "COMPILING SCRIPTS...",
+    "SYSTEM ONLINE."
+  ];
+
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += Math.floor(Math.random() * 8) + 4;
+    if (progress >= 100) {
+      progress = 100;
+      clearInterval(interval);
+      bar.style.width = '100%';
+      percent.innerText = '100%';
+      status.innerText = "SYSTEM ONLINE.";
+      setTimeout(() => {
+        loader.classList.add('fade-out');
+        setTimeout(() => {
+          loader.style.display = 'none';
+        }, 1200);
+      }, 300);
+    } else {
+      bar.style.width = progress + '%';
+      percent.innerText = progress + '%';
+      if (progress < 25) status.innerText = messages[0];
+      else if (progress < 60) status.innerText = messages[1];
+      else status.innerText = messages[2];
+    }
+  }, 30);
+}
+
+/* ---------- 7. TYPEWRITER EFFECT ---------- */
+function initTypewriter() {
+  const element = document.querySelector('.typewriter-text');
+  if (!element) return;
+  const words = JSON.parse(element.getAttribute('data-words'));
+  let wordIndex = 0;
+  let txt = '';
+  let isDeleting = false;
+
+  function tick() {
+    const fullTxt = words[wordIndex];
+    if (isDeleting) {
+      txt = fullTxt.substring(0, txt.length - 1);
+    } else {
+      txt = fullTxt.substring(0, txt.length + 1);
+    }
+
+    element.innerHTML = txt;
+
+    let delta = 140 - Math.random() * 60;
+    if (isDeleting) { delta /= 2; }
+
+    if (!isDeleting && txt === fullTxt) {
+      delta = 2000;
+      isDeleting = true;
+    } else if (isDeleting && txt === '') {
+      isDeleting = false;
+      wordIndex = (wordIndex + 1) % words.length;
+      delta = 600;
+    }
+
+    setTimeout(tick, delta);
+  }
+  tick();
+}
+
+/* ---------- 8. CUSTOM MAGNETIC CURSOR ---------- */
+function initCustomCursor() {
+  if (!window.matchMedia('(pointer: fine)').matches) return;
+
+  const dot = document.createElement('div');
+  dot.id = 'custom-cursor-dot';
+  const ring = document.createElement('div');
+  ring.id = 'custom-cursor-ring';
+  document.body.appendChild(dot);
+  document.body.appendChild(ring);
+
+  dot.style.display = 'block';
+  ring.style.display = 'block';
+  document.body.style.cursor = 'none';
+
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let ringX = mouseX;
+  let ringY = mouseY;
+
+  window.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    dot.style.left = mouseX + 'px';
+    dot.style.top = mouseY + 'px';
+  });
+
+  function animateRing() {
+    const ease = 0.16;
+    ringX += (mouseX - ringX) * ease;
+    ringY += (mouseY - ringY) * ease;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  const updateHoverListeners = () => {
+    const interactiveElements = document.querySelectorAll(
+      'a, button, input, textarea, select, .project-card, .skills-card, .filter-btn, .timeline-card, .stat-item, .logo, .theme-toggle-btn'
+    );
+    interactiveElements.forEach(el => {
+      el.removeEventListener('mouseenter', addHoverClass);
+      el.removeEventListener('mouseleave', removeHoverClass);
+      el.addEventListener('mouseenter', addHoverClass);
+      el.addEventListener('mouseleave', removeHoverClass);
+    });
+  };
+
+  function addHoverClass() { document.body.classList.add('cursor-hover'); }
+  function removeHoverClass() { document.body.classList.remove('cursor-hover'); }
+
+  updateHoverListeners();
+
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      setTimeout(updateHoverListeners, 350);
+    });
+  });
+}
+
+/* ---------- 9. 3D GLASS CARDS TILT & GLOW ---------- */
+function initGlassCards() {
+  const cards = document.querySelectorAll('.glass-card');
+  const isHoverSupported = window.matchMedia('(any-hover: hover)').matches;
+  if (!isHoverSupported) return;
+
+  cards.forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = -(y - centerY) / (rect.height / 12);
+      const rotateY = (x - centerX) / (rect.width / 12);
+
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+    });
+
+    card.style.transition = 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s ease, background-color 0.4s ease';
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+    });
+  });
+}
+
 /* ---------- BOOT ---------- */
 document.addEventListener('DOMContentLoaded', () => {
+  initLoader();
   initParticles();
   initWaveTransition();
   initCursorGlow();
   initAudio();
   initModal();
+  initTypewriter();
+  initCustomCursor();
+  initGlassCards();
 });
