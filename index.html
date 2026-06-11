@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ngô Mạnh Hà | Kỹ sư Robotics & MMO Expert</title>
+  <meta name="description" content="Chào mừng bạn đến với trang web cá nhân của Ngô Mạnh Hà. Tôi là kỹ sư Robotics tốt nghiệp từ Đại học Thủy Lợi và nhà đầu tư MMO/Crypto chuyên nghiệp.">
+  <meta name="keywords" content="Ngô Mạnh Hà, Robotics, Đại học Thủy Lợi, MMO, Crypto, Video Editor, CapCut, Premiere, GPM Scripting, Hưng Yên">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css?v=2.0">
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+  <div id="wave-overlay"><canvas id="wave-canvas"></canvas></div>
+  <main class="content-wrapper">
+
+  <!-- Ambient Glow Background Blobs -->
+  <div class="ambient-wrapper">
+    <div class="ambient-blob blob-1"></div>
+    <div class="ambient-blob blob-2"></div>
+    <div class="ambient-blob blob-3"></div>
+  </div>
+  <div class="grid-overlay"></div>
+
+  <!-- Futuristic Side Tech Panels for Wide Monitors -->
+  <div class="side-panel side-panel-left">
+    <div class="side-panel-dot"></div>
+    <div class="tech-lines"></div>
+    <div class="side-text-vertical">SYSTEM ACTIVE // MANH HA BOT</div>
+    <div class="tech-lines" style="transform: rotate(180deg);"></div>
+    <div class="side-panel-dot"></div>
+  </div>
+  
+  <div class="side-panel side-panel-right">
+    <div class="side-panel-dot"></div>
+    <div class="tech-lines"></div>
+    <div class="side-text-vertical">MMO AUTOMATION // DEPIN NODE</div>
+    <div class="tech-lines" style="transform: rotate(180deg);"></div>
+    <div class="side-panel-dot"></div>
+  </div>
+
+  <!-- HEADER & NAVIGATION -->
+  <header id="header">
+    <div class="container nav-container">
+      <a href="#hero" class="logo">
+        <span class="logo-dot"></span>
+        Mạnh Hà
+      </a>
+      
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="#hero" class="nav-link active">Trang chủ</a></li>
+          <li><a href="#about" class="nav-link">Giới thiệu</a></li>
+          <li><a href="#skills" class="nav-link">Kỹ năng</a></li>
+          <li><a href="#projects" class="nav-link">Dự án</a></li>
+          <li><a href="#experience" class="nav-link">Kinh nghiệm</a></li>
+          <li><a href="#contact" class="nav-link">Liên hệ</a></li>
+        </ul>
+      </nav>
+      
+      <div class="nav-actions">
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Đổi giao diện">
+          <!-- Moon Icon (for dark mode) -->
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <!-- Sun Icon (for light mode) -->
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+        
+        <!-- Mobile Menu Hamburger Toggle -->
+        <button class="mobile-nav-toggle" aria-label="Mở Menu" aria-expanded="false">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section id="hero" class="section">
+    <div class="container hero-grid">
+      <div class="hero-content reveal">
+        <div class="hero-tagline">
+          <span class="hero-tagline-dot"></span>
+          Đam mê Tự động hóa & Thị trường Số
+        </div>
+        <h1 class="hero-title">
+          Xin chào, mình là <span class="gradient-text">Ngô Mạnh Hà</span><br>
+          Kỹ sư Robotics & MMO.
+        </h1>
+        <p class="hero-desc">
+          Tôi tốt nghiệp ngành Kỹ thuật Robot & Điều khiển thông minh từ Đại học Thủy Lợi, sở hữu 3 năm kinh nghiệm thực chiến trong thị trường MMO/Crypto, tự động hóa kịch bản GPM Browser và hoạt động tích cực trong lĩnh vực biên tập sản xuất video sáng tạo.
+        </p>
+        
+        <div class="hero-actions">
+          <a href="#projects" class="btn btn-primary">
+            Khám phá dự án
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+          <a href="#contact" class="btn btn-secondary">Liên hệ hợp tác</a>
+        </div>
+        
+        <div class="hero-socials">
+          <span>Kết nối:</span>
+          <a href="https://www.facebook.com/ngo.ha.591196/about" target="_blank" aria-label="Facebook" class="btn-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+          </a>
+          <a href="https://zalo.me/0334383560" target="_blank" aria-label="Zalo" class="btn-icon" style="font-family: var(--font-heading); font-size: 0.85rem; font-weight: 800;">
+            Zalo
+          </a>
+          <a href="mailto:ngomanhha2004@gmail.com" aria-label="Email" class="btn-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          </a>
+        </div>
+      </div>
+      
+      <div class="hero-visual reveal">
+        <div class="visual-canvas">
+          <div class="ring-2"></div>
+          <div class="canvas-rings"></div>
+          <div class="canvas-sphere">
+            <!-- Premium Waving 3D Robot Image -->
+            <img src="assets/robot_3d.png" alt="Ngô Mạnh Hà 3D Robot Mascot" class="robot-3d-img">
+          </div>
+          <div class="canvas-dots dot-1"></div>
+          <div class="canvas-dots dot-2"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT ME SECTION -->
+  <section id="about" class="section">
+    <div class="container">
+      <div class="section-title-wrapper reveal">
+        <h2 class="section-title">Giới thiệu</h2>
+        <p class="section-subtitle">Tư duy kỹ thuật và định hướng tương lai</p>
+      </div>
+      
+      <div class="about-grid">
+        <div class="about-visual glass-card reveal">
+          <img src="assets/avatar.jpg" alt="Ngô Mạnh Hà Avatar">
+          <div class="about-visual-overlay"></div>
+        </div>
+        
+        <div class="about-content reveal">
+          <h3 class="about-headline" style="font-size: 1.8rem; font-family: var(--font-heading);">Đưa tư duy lập trình tự động hóa vào thị trường MMO & Crypto.</h3>
+          <p class="about-text">
+            Tôi tốt nghiệp chuyên ngành Kỹ thuật Robot & Điều khiển thông minh tại Đại học Thủy Lợi (Khóa 2022 - 2026). Nền tảng học thuật về hệ thống nhúng, thiết kế robot tự hành (Drone) và thuật toán giúp tôi có tư duy phân tích hệ thống rất tốt.
+          </p>
+          <p class="about-text">
+            Bên cạnh đó, tôi đã có 3 năm kinh nghiệm thực chiến hoạt động trong lĩnh vực MMO (Kiếm tiền online) và đầu tư Crypto (Tiền mã hóa, DeFi, DePin). Đồng thời tôi cũng là một Freelance Editor thành thạo các công cụ chỉnh sửa video CapCut (sở hữu kênh short 57.9k followers), Adobe Premiere Pro và Photoshop.
+          </p>
+          
+          <div class="about-stats">
+            <div class="stat-item glass-card">
+              <div class="stat-number">3+</div>
+              <div class="stat-label">Năm MMO & Crypto</div>
+            </div>
+            <div class="stat-item glass-card">
+              <div class="stat-number">57k+</div>
+              <div class="stat-label">Followers TikTok</div>
+            </div>
+            <div class="stat-item glass-card">
+              <div class="stat-number">IELTS</div>
+              <div class="stat-label">Speaking 5.0</div>
+            </div>
+          </div>
+          
+          <div style="margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap;">
+            <a href="#contact" class="btn btn-primary">Liên hệ công việc</a>
+            <a href="assets/drone_thesis.pdf" target="_blank" class="btn btn-secondary">Đọc Đồ án / Bài báo</a>
+            <a href="https://www.facebook.com/ngo.ha.591196/about" target="_blank" class="btn btn-secondary">Facebook cá nhân</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS SECTION -->
+  <section id="skills" class="section">
+    <div class="container">
+      <div class="section-title-wrapper reveal">
+        <h2 class="section-title">Kỹ năng chuyên môn</h2>
+        <p class="section-subtitle">Sự kết hợp giữa công nghệ, tài chính số và truyền thông sáng tạo</p>
+      </div>
+      
+      <div class="skills-container reveal">
+        <!-- Card 1: Robotics & Tech -->
+        <div class="skills-card glass-card">
+          <div class="skills-card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="10" rx="2" />
+              <circle cx="12" cy="5" r="2" />
+              <path d="M12 7v4M8 16h8" />
+            </svg>
+          </div>
+          <h3 class="skills-card-title">Robotics & Kỹ thuật</h3>
+          <div class="skills-list">
+            <div class="skill-item">
+              <div class="skill-info">
+                <span class="skill-name">Động học & Thiết kế SolidWorks</span>
+                <span class="skill-percentage">90%</span>
+              </div>
+              <div class="skill-bar-outer">
+                <div class="skill-bar-inner" data-percentage="90"></div>
+              </div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-info">
+                <span class="skill-name">Lập trình Vi điều khiển (C/C++, Arduino)</span>
+                <span class="skill-percentage">80%</span>
+              </div>
+              <div class="skill-bar-outer">
+                <div class="skill-bar-inner" data-percentage="80"></div>
+              </div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-info">
+                <span class="skill-name">Hệ điều hành Robot (ROS) & IoT</span>
+                <span class="skill-percentage">70%</span>
+              </div>
+              <div class="skill-bar-outer">
+                <div class="skill-bar-inner" data-percentage="70"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: MMO & Crypto -->
+        <div class="skills-card glass-card">
+          <div class="skills-card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 8V16M8 12H16" />
+            </svg>
+          </div>
+          <h3 class="skills-card-title">MMO & Crypto</h3>
+          <div class="skills-list">
+            <div class="skill-item">
+              <div class="skill-info">
+                <span class="skill-name">Tự động hóa MMO (Scripting GPM Browser)</span>
+                <span class="skill-percentage">95%</span>
+              </div>
+              <div class="skill-bar-outer">
+                <div class="skill-bar-inner" data-percentage="95"></div>
+              </div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-info">
+                <span class="skill-name">Phân tích dự án (DeFi, DePin, Airdrop)</span>
+                <span class="skill-percentage">90%</span>
+              </div>
+              <div class="skill-bar-outer">
+                <div class="skill-bar-inner" data-percentage="90"></div>
+              </div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-info">
+                <span class="skill-name">Vận hành Node & Retroactive kiếm tiền</span>
+                <span class="skill-percentage">85%</span>
+              </div>
+              <div class="skill-bar-outer">
+                <div class="skill-bar-inner" data-percentage="85"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Media & Creative -->
+        <div class="skills-card glass-card">
+          <div class="skills-card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="23 7 16 12 23 17 23 7"></polygon>
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+            </svg>
+          </div>
+          <h3 class="skills-card-title">Video Editing & Design</h3>
+          <div class="skills-list">
+            <div class="skill-item">
+              <div class="skill-info">
+                <span class="skill-name">Biên tập CapCut (Kênh 57.9k follow)</span>
+                <span class="skill-percentage">95%</span>
+              </div>
+              <div class="skill-bar-outer">
+                <div class="skill-bar-inner" data-percentage="95"></div>
+              </div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-info">
+                <span class="skill-name">Adobe Premiere Pro & Whiteboard VideoScribe</span>
+                <span class="skill-percentage">85%</span>
+              </div>
+              <div class="skill-bar-outer">
+                <div class="skill-bar-inner" data-percentage="85"></div>
+              </div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-info">
+                <span class="skill-name">Tiếng Anh Giao tiếp (IELTS Speaking 5.0)</span>
+                <span class="skill-percentage">65%</span>
+              </div>
+              <div class="skill-bar-outer">
+                <div class="skill-bar-inner" data-percentage="65"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS SECTION -->
+  <section id="projects" class="section">
+    <div class="container">
+      <div class="section-title-wrapper reveal">
+        <h2 class="section-title">Dự án & Sản phẩm</h2>
+        <p class="section-subtitle">Các dự án trong lĩnh vực Robotics, Crypto Node và Sáng tạo Nội dung</p>
+      </div>
+      
+      <!-- Filter Controls -->
+      <div class="projects-filter reveal">
+        <button class="filter-btn active" data-filter="all">Tất cả sản phẩm</button>
+        <button class="filter-btn" data-filter="robotics">Robotics & Drone</button>
+        <button class="filter-btn" data-filter="crypto">MMO & Crypto</button>
+        <button class="filter-btn" data-filter="video">Video & Design</button>
+      </div>
+      
+      <!-- Projects Grid -->
+      <div class="projects-grid reveal">
+        <!-- Project 1: Drone -->
+        <article class="project-card glass-card" data-category="robotics">
+          <div class="project-image-wrapper">
+            <img src="assets/drone.png" alt="Đồ án Robot Drone Vận Tải">
+            <div class="project-overlay">
+              <a href="assets/drone_thesis.pdf" target="_blank" class="btn-icon" aria-label="Đọc Đồ án PDF">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              </a>
+            </div>
+          </div>
+          <div class="project-content">
+            <div class="project-tags">
+              <span class="project-tag">SolidWorks</span>
+              <span class="project-tag">MATLAB / Control</span>
+              <span class="project-tag">Drone</span>
+            </div>
+            <h3 class="project-title">Robot Drone Vận Tải - Thiết Kế Hệ Thống Điều Khiển</h3>
+            <p class="project-description">
+              Đồ án kỹ sư nghiên cứu chuyên sâu về thiết kế mô hình 3D trên SolidWorks, xây dựng mô hình toán học động lực học và thuật toán điều khiển vị trí cho Drone vận tải hàng hóa. Đã được xuất bản dạng bài báo khoa học.
+            </p>
+            <div class="project-links">
+              <a href="assets/drone_thesis.pdf" target="_blank" class="project-link">Đọc bài báo PDF <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 2: VideoScribe -->
+        <article class="project-card glass-card" data-category="video">
+          <div class="project-image-wrapper">
+            <img src="assets/project1.png" alt="VideoScribe Product Animation">
+            <div class="project-overlay">
+              <a href="https://drive.google.com/drive/u/0/folders/1bWmRbbtenoBenhs_f8C_v5IZssbX8hFo" target="_blank" class="btn-icon" aria-label="Xem Drive VideoScribe">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+              </a>
+            </div>
+          </div>
+          <div class="project-content">
+            <div class="project-tags">
+              <span class="project-tag">VideoScribe</span>
+              <span class="project-tag">Whiteboard Animation</span>
+              <span class="project-tag">Sản Phẩm</span>
+            </div>
+            <h3 class="project-title">Video Giới Thiệu Sản Phẩm Vẽ Tay VideoScribe</h3>
+            <p class="project-description">
+              Dựng hoạt cảnh vẽ tay (Whiteboard animation) chuyên nghiệp để truyền tải tính năng sản phẩm một cách hấp dẫn, trực quan. Link Drive chứa các sản phẩm hoạt hình vẽ tay đã hoàn thành.
+            </p>
+            <div class="project-links">
+              <a href="https://drive.google.com/drive/u/0/folders/1bWmRbbtenoBenhs_f8C_v5IZssbX8hFo" target="_blank" class="project-link">Xem Folder Drive <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 3: TikTok -->
+        <article class="project-card glass-card" data-category="video">
+          <div class="project-image-wrapper">
+            <img src="assets/mmo_tiktok.png" alt="Kênh TikTok 57.9K followers">
+            <div class="project-overlay">
+              <a href="https://drive.google.com/drive/u/0/folders/1wolWHnV8Jd8WzyQ_hO02gGZpXkKkeL3V" target="_blank" class="btn-icon" aria-label="Xem Drive TikTok">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+              </a>
+            </div>
+          </div>
+          <div class="project-content">
+            <div class="project-tags">
+              <span class="project-tag">CapCut</span>
+              <span class="project-tag">TikTok Beta</span>
+              <span class="project-tag">57.9K Followers</span>
+            </div>
+            <h3 class="project-title">Biên Tập Video Ngắn & TikTok (57.9K Followers)</h3>
+            <p class="project-description">
+              Sản xuất nội dung, chỉnh sửa video ngắn sử dụng hiệu ứng chuyển động keyframe, phối màu và ghép âm thanh chuyên nghiệp. Kênh TikTok Đạt 57.9K follower và 255.5K lượt thích.
+            </p>
+            <div class="project-links">
+              <a href="https://drive.google.com/drive/u/0/folders/1wolWHnV8Jd8WzyQ_hO02gGZpXkKkeL3V" target="_blank" class="project-link">Xem Folder Drive <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 4: YouTube -->
+        <article class="project-card glass-card" data-category="video">
+          <div class="project-image-wrapper">
+            <img src="assets/project3.png" alt="YouTube Harmony in Sound">
+            <div class="project-overlay">
+              <a href="https://www.youtube.com/@Harmony_in_Sound" target="_blank" class="btn-icon" aria-label="Xem Kênh YouTube">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"></path><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"></polygon></svg>
+              </a>
+            </div>
+          </div>
+          <div class="project-content">
+            <div class="project-tags">
+              <span class="project-tag">YouTube</span>
+              <span class="project-tag">Premiere Pro</span>
+              <span class="project-tag">Music / Sound</span>
+            </div>
+            <h3 class="project-title">Kênh YouTube Âm Nhạc: Harmony in Sound</h3>
+            <p class="project-description">
+              Thiết kế, biên tập âm thanh và sản xuất hình ảnh đồng bộ cho kênh âm nhạc cá nhân, mang lại trải nghiệm nghe nhìn chất lượng cao, sống động.
+            </p>
+            <div class="project-links">
+              <a href="https://www.youtube.com/@Harmony_in_Sound" target="_blank" class="project-link">Xem Kênh YouTube <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 5: GPM Automation & Crypto -->
+        <article class="project-card glass-card" data-category="crypto">
+          <div class="project-image-wrapper">
+            <!-- Autoplaying Video for GPM Script Automation -->
+            <video src="assets/videoscriptgpm.mp4" muted loop autoplay style="width: 100%; height: 100%; object-fit: cover;"></video>
+            <div class="project-overlay">
+              <a href="assets/videoscriptgpm.mp4" target="_blank" class="btn-icon" aria-label="Xem video tự động hóa">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              </a>
+            </div>
+          </div>
+          <div class="project-content">
+            <div class="project-tags">
+              <span class="project-tag">GPM Browser</span>
+              <span class="project-tag">Automation Script</span>
+              <span class="project-tag">Node & Airdrop</span>
+            </div>
+            <h3 class="project-title">Tự Động Hóa MMO - Viết Script GPM Browser</h3>
+            <p class="project-description">
+              Viết kịch bản tự động hóa điều khiển hàng loạt hồ sơ trình duyệt GPM Browser để cày cuốc tài khoản (account farming), tự động làm airdrop/retroactive (như Dogs airdrop 51K+ DOGS) và tối ưu hóa hệ thống kiếm tiền từ X Monetization.
+            </p>
+            <div class="project-links" style="display: flex; gap: 16px; flex-wrap: wrap;">
+              <a href="assets/mmo_x_payout.png" target="_blank" class="project-link">Xem doanh thu X <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+              <a href="assets/crypto_airdrop.png" target="_blank" class="project-link">Xem Airdrop DOGS <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE SECTION -->
+  <section id="experience" class="section">
+    <div class="container">
+      <div class="section-title-wrapper reveal">
+        <h2 class="section-title">Kinh nghiệm & Học văn</h2>
+        <p class="section-subtitle">Chặng đường học tập và làm việc của tôi</p>
+      </div>
+      
+      <div class="timeline reveal">
+        <!-- Job 1 -->
+        <div class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-card glass-card">
+            <div class="timeline-header">
+              <div>
+                <h3 class="timeline-title">Nhà đầu tư MMO, Crypto & Tự động hóa</h3>
+                <div class="timeline-company">Tự do thực chiến</div>
+              </div>
+              <span class="timeline-date">2023 - 2026</span>
+            </div>
+            <p class="timeline-desc">
+              Tham gia giao dịch, chạy node mạng phi tập trung (DePin). Đặc biệt, nghiên cứu viết các đoạn mã tự động hóa (GPM Browser scripting) để tự quản lý đa tài khoản, cày game/airdrop retroactive quy mô lớn (thắng airdrop DOGS), và tối ưu kênh tương tác kiếm tiền từ quảng cáo X (Twitter) Monetization.
+            </p>
+          </div>
+        </div>
+
+        <!-- Job 2 -->
+        <div class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-card glass-card">
+            <div class="timeline-header">
+              <div>
+                <h3 class="timeline-title">Freelancer Video Editor & Creator</h3>
+                <div class="timeline-company">vLance & CapCut / YouTube Creators</div>
+              </div>
+              <span class="timeline-date">11/2021 - 05/2022</span>
+            </div>
+            <p class="timeline-desc">
+              Biên tập video hoạt họa VideoScribe giới thiệu sản phẩm. Thiết kế, sản xuất nội dung video ngắn tiếng Nhật đạt mốc 57.9K người theo dõi và hơn 255K lượt thích trên TikTok. Xây dựng kênh YouTube cá nhân về âm nhạc và hiệu ứng âm thanh.
+            </p>
+          </div>
+        </div>
+
+        <!-- Education 1 -->
+        <div class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-card glass-card">
+            <div class="timeline-header">
+              <div>
+                <h3 class="timeline-title">Cử nhân Kỹ thuật Robot & Điều khiển thông minh</h3>
+                <div class="timeline-company">Trường Đại học Thủy Lợi</div>
+              </div>
+              <span class="timeline-date">10/2022 - 05/2026</span>
+            </div>
+            <p class="timeline-desc">
+              Đào tạo bài bản về lý thuyết điều khiển tự động, kỹ thuật cảm biến, xử lý ảnh robot, vi điều khiển Arduino/ESP, lập trình động học robot và thiết kế cơ điện tử. Đặc biệt đã thiết kế thành công mô hình động học Robot Drone vận tải hàng hóa bằng SolidWorks.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact" class="section">
+    <div class="container">
+      <div class="section-title-wrapper reveal">
+        <h2 class="section-title">Liên hệ</h2>
+        <p class="section-subtitle">Kết nối để bàn về công việc, dự án hoặc một trận đấu TFT/Tốc Chiến!</p>
+      </div>
+      
+      <div class="contact-grid reveal">
+        <!-- Contact Information -->
+        <div class="contact-info-list">
+          <div class="contact-info-card glass-card">
+            <div class="contact-info-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            </div>
+            <div class="contact-info-content">
+              <h4>Email trực tiếp</h4>
+              <p>ngomanhha2004@gmail.com</p>
+            </div>
+          </div>
+
+          <div class="contact-info-card glass-card">
+            <div class="contact-info-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            </div>
+            <div class="contact-info-content">
+              <h4>Zalo / Điện thoại</h4>
+              <p><a href="https://zalo.me/0334383560" target="_blank" style="text-decoration: underline; color: var(--color-primary);">0334383560</a></p>
+            </div>
+          </div>
+
+          <div class="contact-info-card glass-card">
+            <div class="contact-info-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            </div>
+            <div class="contact-info-content">
+              <h4>Khu vực làm việc</h4>
+              <p>Văn Lâm, Hưng Yên, Việt Nam</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="contact-form-card glass-card">
+          <form id="contact-form" class="contact-form" novalidate>
+            <div class="form-group">
+              <label for="form-name">Họ và Tên</label>
+              <input type="text" id="form-name" class="form-input" placeholder="Ví dụ: Nguyễn Văn A" required>
+            </div>
+            <div class="form-group">
+              <label for="form-email">Địa chỉ Email</label>
+              <input type="email" id="form-email" class="form-input" placeholder="Ví dụ: name@gmail.com" required>
+            </div>
+            <div class="form-group form-group-full">
+              <label for="form-subject">Tiêu đề</label>
+              <input type="text" id="form-subject" class="form-input" placeholder="Tin nhắn này liên quan đến vấn đề gì?" required>
+            </div>
+            <div class="form-group form-group-full">
+              <label for="form-message">Nội dung</label>
+              <textarea id="form-message" class="form-input" placeholder="Nhập nội dung lời nhắn tại đây..." required></textarea>
+            </div>
+            <div class="form-group form-group-full" style="margin-top: 8px;">
+              <button type="submit" class="btn btn-primary" style="width: auto;">
+                Gửi lời nhắn
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  </main>
+
+<!-- Project Modal -->
+<div id="project-modal" class="modal glass-card hidden">
+  <div class="modal-content">
+    <span class="close-btn" id="modal-close">&times;</span>
+    <div id="modal-body">
+      <!-- Dynamic content will be injected by JS -->
+    </div>
+  </div>
+</div>
+<footer>
+    <div class="container footer-container">
+      <div class="logo">
+        <span class="logo-dot"></span>
+        Mạnh Hà
+      </div>
+      <p class="footer-copy">
+        &copy; 2026 Ngô Mạnh Hà. Được thiết kế theo phong cách Robot AI Tương lai. Bảo lưu mọi quyền.
+      </p>
+      <div class="footer-socials">
+        <a href="https://www.facebook.com/ngo.ha.591196/about" target="_blank" aria-label="Facebook" class="btn-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
