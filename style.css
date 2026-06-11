@@ -1379,28 +1379,26 @@ footer {
 }
 
 /* ======================================
-   SHUTTER CURTAIN TRANSITION OVERLAY
+   PREMIUM TOP PROGRESS BAR & CROSSFADE
    ====================================== */
-#transition-curtain {
+#top-progress-bar {
   position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: linear-gradient(135deg, #040815 0%, #002b99 50%, #0052ff 100%);
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  box-shadow: 0 0 8px var(--color-primary);
+  z-index: 10001;
   pointer-events: none;
-  transform: scaleY(0);
-  transform-origin: bottom;
-  transition: transform 0.6s cubic-bezier(0.85, 0, 0.15, 1);
+  transition: width 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
 }
 
-#transition-curtain.active-in {
-  transform: scaleY(1);
-  transform-origin: bottom;
+#top-progress-bar.active {
+  opacity: 1;
 }
 
-#transition-curtain.active-out {
-  transform: scaleY(0);
-  transform-origin: top;
-}
 
 /* ======================================
    PARTICLE BACKGROUND CANVAS
@@ -1418,11 +1416,12 @@ footer {
 .content-wrapper {
   position: relative;
   z-index: 1;
-  transition: transform 0.6s cubic-bezier(0.85, 0, 0.15, 1), filter 0.6s cubic-bezier(0.85, 0, 0.15, 1);
+  transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), filter 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 body.page-transitioning .content-wrapper {
-  transform: scale(0.97);
+  opacity: 0.15;
+  transform: scale(0.985);
   filter: blur(4px);
 }
 

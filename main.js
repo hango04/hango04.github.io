@@ -1,5 +1,5 @@
 /* ============================================================
-   main.js – Premium Immersive Interactions v5.0 (Flame Blue AI style)
+   main.js – Premium Immersive Interactions v6.0 (Flame Blue AI style)
    Ngô Mạnh Hà Portfolio
    ============================================================ */
 
@@ -107,10 +107,15 @@ function initParticles() {
   })();
 }
 
-/* ---------- 2. CURTAIN TRANSITION (Flame Blue style) ---------- */
-function initCurtainTransition() {
-  const curtain = document.getElementById('transition-curtain');
-  if (!curtain) return;
+/* ---------- 2. SLEEK PAGE TRANSITION (Top Progress Bar + Crossfade) ---------- */
+function initPageTransition() {
+  // Dynamically create the progress bar
+  let bar = document.getElementById('top-progress-bar');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.id = 'top-progress-bar';
+    document.body.appendChild(bar);
+  }
 
   let running = false;
 
@@ -118,29 +123,33 @@ function initCurtainTransition() {
     if (running) return;
     running = true;
 
-    // Slide in curtain and scale down current content
+    // Start progress bar & fade/blur content wrapper
+    bar.classList.add('active');
+    bar.style.width = '30%';
     document.body.classList.add('page-transitioning');
-    curtain.classList.add('active-in');
 
     setTimeout(() => {
-      // Navigate to target section instantly
-      if (targetHref.startsWith('#')) {
-        const target = document.querySelector(targetHref);
-        if (target) target.scrollIntoView({ behavior: 'instant' });
-      }
+      bar.style.width = '70%';
 
-      // Sweep curtain out and restore page scaling
       setTimeout(() => {
-        curtain.classList.remove('active-in');
-        curtain.classList.add('active-out');
+        bar.style.width = '100%';
+
+        // Scroll to target instantly
+        if (targetHref.startsWith('#')) {
+          const target = document.querySelector(targetHref);
+          if (target) target.scrollIntoView({ behavior: 'instant' });
+        }
+
+        // Fade back in content wrapper
         document.body.classList.remove('page-transitioning');
 
         setTimeout(() => {
-          curtain.classList.remove('active-out');
+          bar.classList.remove('active');
+          bar.style.width = '0%';
           running = false;
-        }, 600);
+        }, 300);
       }, 150);
-    }, 600);
+    }, 150);
   }
 
   document.querySelectorAll('a[href^="#"]').forEach(a => {
@@ -152,6 +161,7 @@ function initCurtainTransition() {
     });
   });
 
+  // Keep compatibility name
   window._waveTransition = triggerTransition;
 }
 
@@ -394,7 +404,7 @@ function initGlassCards() {
 document.addEventListener('DOMContentLoaded', () => {
   initLoader();
   initParticles();
-  initCurtainTransition();
+  initPageTransition();
   initCursorGlow();
   initAudio();
   initModal();
