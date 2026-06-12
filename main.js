@@ -6,9 +6,7 @@
 // Global config for interactive tweaks from Secret Admin Panel
 window._particleConfig = {
   count: 35,
-  speed: 1.0,
-  grassOnline: true,
-  dawnOnline: true
+  speed: 1.0
 };
 
 /* ---------- 1. SUBTLE PARTICLES BACKGROUND ---------- */
@@ -1082,46 +1080,6 @@ function initProjectModals() {
   }
 }
 
-/* ---------- 12. LIVE DEPIN SYSTEM MONITOR HUD ---------- */
-function initDepinMonitor() {
-  const widget = document.getElementById('depin-monitor-widget');
-  const toggleBtn = document.getElementById('monitor-toggle');
-  const earnRateText = document.getElementById('mon-earn-rate');
-  const totalEarnedText = document.getElementById('mon-total-earned');
-
-  if (!widget || !toggleBtn) return;
-
-  // Toggle HUD minimized/expanded state
-  toggleBtn.addEventListener('click', e => {
-    e.stopPropagation();
-    widget.classList.toggle('minimized');
-  });
-
-  // Numeric count-up simulation for earnings
-  let totalEarned = parseFloat(localStorage.getItem('depin_points') || '2548.12');
-  const earnRate = 1.42; // points per second
-  earnRateText.innerText = `${earnRate} pts/s`;
-
-  setInterval(() => {
-    if (window._particleConfig.grassOnline || window._particleConfig.dawnOnline) {
-      // Scale earning rate based on active nodes
-      let multiplier = 0;
-      if (window._particleConfig.grassOnline) multiplier += 0.5;
-      if (window._particleConfig.dawnOnline) multiplier += 0.5;
-      
-      const currentRate = earnRate * multiplier;
-      earnRateText.innerText = `${currentRate.toFixed(2)} pts/s`;
-      
-      if (multiplier > 0) {
-        totalEarned += (currentRate / 10);
-        totalEarnedText.innerText = `${totalEarned.toFixed(2)} pts`;
-        localStorage.setItem('depin_points', totalEarned.toString());
-      }
-    } else {
-      earnRateText.innerText = `0.00 pts/s`;
-    }
-  }, 100);
-}
 
 /* ---------- 13. SECRET DEVELOPER CONSOLE (Easter Egg) ---------- */
 function initAdminConsole() {
@@ -1131,8 +1089,6 @@ function initAdminConsole() {
   const particleCountVal = document.getElementById('admin-particle-count-val');
   const particleSpeedSlider = document.getElementById('admin-particle-speed');
   const particleSpeedVal = document.getElementById('admin-particle-speed-val');
-  const nodeGrassToggle = document.getElementById('node-toggle-grass');
-  const nodeDawnToggle = document.getElementById('node-toggle-dawn');
   const themeBtns = document.querySelectorAll('.theme-btn');
   const messagesList = document.getElementById('admin-messages-list');
   const logo = document.querySelector('.logo');
@@ -1203,43 +1159,6 @@ function initAdminConsole() {
     });
   }
 
-  // Node toggle controls
-  if (nodeGrassToggle) {
-    nodeGrassToggle.addEventListener('change', () => {
-      const isOnline = nodeGrassToggle.checked;
-      window._particleConfig.grassOnline = isOnline;
-      const grassVal = document.getElementById('mon-grass-val');
-      if (grassVal) {
-        grassVal.innerText = isOnline ? "100% Quality" : "OFFLINE";
-        grassVal.style.color = isOnline ? "" : "#ef4444";
-      }
-      updateNodeActiveCount();
-    });
-  }
-
-  if (nodeDawnToggle) {
-    nodeDawnToggle.addEventListener('change', () => {
-      const isOnline = nodeDawnToggle.checked;
-      window._particleConfig.dawnOnline = isOnline;
-      const dawnVal = document.getElementById('mon-dawn-val');
-      if (dawnVal) {
-        dawnVal.innerText = isOnline ? "98% Online" : "OFFLINE";
-        dawnVal.style.color = isOnline ? "" : "#ef4444";
-      }
-      updateNodeActiveCount();
-    });
-  }
-
-  function updateNodeActiveCount() {
-    let activeCount = 0;
-    if (window._particleConfig.grassOnline) activeCount++;
-    if (window._particleConfig.dawnOnline) activeCount++;
-    const nodeStatus = document.getElementById('mon-node-status');
-    if (nodeStatus) {
-      nodeStatus.innerText = `${activeCount} ACTIVE`;
-      nodeStatus.className = `mon-status ${activeCount > 0 ? 'mon-active' : 'mon-inactive'}`;
-    }
-  }
 
   // Helper to apply and save color theme preset
   function applyColorTheme(themeName, showToastNotify = false) {
@@ -1374,14 +1293,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initGlassCards();
   initChatbot();
   initProjectModals();
-  initDepinMonitor();
   initAdminConsole();
   initBgMusic();
 });
 
 /* ---------- BACKGROUND MUSIC PLAYER (YouTube IFrame API) ---------- */
-// Playlist kênh Harmony in Sound (lấy từ channel uploads)
-const YT_CHANNEL_PLAYLIST = 'UUxtA0cEVWWutQyKJA_4mVEQ';
+// Playlist kênh Harmony in Sound
+const YT_CHANNEL_PLAYLIST = 'PLxuzG8hth2j222PUTeHsCdV_QwjwPHBiY';
 
 let ytPlayer = null;
 let ytMusicReady = false;
@@ -1405,6 +1323,7 @@ window.onYouTubeIframeAPIReady = function () {
       modestbranding: 1,
       playsinline: 1,
       rel: 0,
+      origin: window.location.origin
     },
     events: {
       onReady: function (e) {
