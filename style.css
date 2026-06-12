@@ -3049,3 +3049,21 @@ body.theme-solar-orange #custom-cursor-ring {
 .travel-link:hover {
   color: var(--color-primary);
 }
+
+/* --- TRAVEL CARD MICRO-ANIMATIONS --- */
+@keyframes kenburns {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    transform: scale(1.08) translate(-1%, -1%);
+  }
+  100% {
+    transform: scale(1) translate(0, 0);
+  }
+}
+
+.travel-image-wrapper.animate-bg img {
+  animation: kenburns 24s ease-in-out infinite;
+  transform-origin: center center;
+}
