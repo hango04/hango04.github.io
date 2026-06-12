@@ -640,14 +640,7 @@ function initChatbot() {
         chatHistory.push({ role: 'user', parts: [{ text: msg }] });
         if (chatHistory.length > 10) chatHistory.shift();
 
-        let apiKey = localStorage.getItem('gemini_api_key');
-        if (!apiKey) {
-          try {
-            apiKey = atob('QVEuQWI4Uk42SXpJR2NmSVctQlQ0V3dkYnktdGxRQ3VSM0QyMXlDWVhwS2tyVjZPZkpjUXc=');
-          } catch (e) {
-            console.error('Failed to decode default API key');
-          }
-        }
+        let apiKey = localStorage.getItem('gemini_api_key') || '';
 
         if (apiKey) {
           // ONLINE MODE: Call Gemini API
@@ -687,12 +680,12 @@ function initChatbot() {
               chatHistory.push({ role: 'model', parts: [{ text: localRes.text }] });
               if (chatHistory.length > 10) chatHistory.splice(0, 2);
             } else {
-              appendMessage("Chào bạn! Hiện tại API Key mặc định của hệ thống đang tạm hết hạn mức (Quota) ngày hôm nay. Để mở khóa tính năng AI tự do trò chuyện, bạn hãy bấm vào nút Cài đặt ⚙️ bên trên để điền Gemini API Key cá nhân của bạn nhé! Hoặc bạn có thể click nhanh các chủ đề dưới đây để tôi hỗ trợ ngay:", 'bot');
+              appendMessage("Chào bạn! Hiện tại tôi đang hoạt động ở chế độ **Trợ lý tự động** nên chỉ có thể trả lời các chủ đề về Robotics, Đồ án Drone, Script GPM Browser, Thông tin liên hệ, Học tập và Quê quán của Mạnh Hà.\n\nĐể kích hoạt **AI thông minh tự do trò chuyện**, bạn hãy nhấn nút cài đặt **⚙️** ở góc trên ô chat để điền **Gemini API Key** cá nhân nhé! Hoặc chọn nhanh các câu hỏi gợi ý phía dưới:", 'bot');
               showMainMenu();
             }
           }
         } else {
-          // OFFLINE FALLBACK MODE: Check local keywords (should not be reached unless decoding fails)
+          // OFFLINE FALLBACK MODE: Check local keywords
           const localRes = getLocalNLPResponse(msg);
           if (localRes) {
             appendMessage(localRes.text, 'bot');
@@ -700,7 +693,7 @@ function initChatbot() {
             chatHistory.push({ role: 'model', parts: [{ text: localRes.text }] });
             if (chatHistory.length > 10) chatHistory.splice(0, 2);
           } else {
-            appendMessage("Chào bạn! Hiện tại API Key mặc định của hệ thống đang tạm hết hạn mức (Quota) ngày hôm nay. Để mở khóa tính năng AI tự do trò chuyện, bạn hãy bấm vào nút Cài đặt ⚙️ bên trên để điền Gemini API Key cá nhân của bạn nhé! Hoặc bạn có thể click nhanh các chủ đề dưới đây để tôi hỗ trợ ngay:", 'bot');
+            appendMessage("Chào bạn! Hiện tại tôi đang hoạt động ở chế độ **Trợ lý tự động** nên chỉ có thể trả lời các chủ đề về Robotics, Đồ án Drone, Script GPM Browser, Thông tin liên hệ, Học tập và Quê quán của Mạnh Hà.\n\nĐể kích hoạt **AI thông minh tự do trò chuyện**, bạn hãy nhấn nút cài đặt **⚙️** ở góc trên ô chat để điền **Gemini API Key** cá nhân nhé! Hoặc chọn nhanh các câu hỏi gợi ý phía dưới:", 'bot');
             showMainMenu();
           }
         }
