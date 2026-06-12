@@ -464,6 +464,15 @@ function initChatbot() {
 
   let chatHistory = [];
 
+  // Clear old inactive keys from localStorage to force fallback to the new default key
+  const currentSavedKey = localStorage.getItem('gemini_api_key');
+  if (currentSavedKey && (
+    currentSavedKey.trim().startsWith('AQ.Ab8RN6KIOg') || 
+    currentSavedKey.trim().startsWith('AQ.Ab8RN6KiOg')
+  )) {
+    localStorage.removeItem('gemini_api_key');
+  }
+
   // Toggle chatbot window open/close
   toggleBtn.addEventListener('click', () => {
     chatWindow.classList.toggle('hidden');
@@ -633,7 +642,7 @@ function initChatbot() {
         let apiKey = localStorage.getItem('gemini_api_key');
         if (!apiKey) {
           try {
-            apiKey = atob('QVEuQWI4Uk42S2lPZ2h5WGR0M19zanNkMHQ0TjhHZ0M0Um1PUmtfdTNoSkhsN0tNdzFCNHc=');
+            apiKey = atob('QVEuQWI4Uk42SzIzQnh2RFFEMHA2WE1idWFzMkx0MEpuWUVWa0J3dTJJV0RHcFB2by1xd3c=');
           } catch (e) {
             console.error('Failed to decode default API key');
           }
