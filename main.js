@@ -1297,21 +1297,20 @@ document.addEventListener('DOMContentLoaded', () => {
   initBgMusic();
 });
 
-/* ---------- BACKGROUND MUSIC PLAYER (YouTube IFrame API) ---------- */
-// Playlist kênh Harmony in Sound
-const YT_CHANNEL_PLAYLIST = 'PLxuzG8hth2j222PUTeHsCdV_QwjwPHBiY';
+/* ---------- BACKGROUND MUSIC PLAYER (HTML5 Audio) ---------- */
+const MUSIC_TRACK = {
+  src: 'assets/noi-nay-co-anh-piano.mp3',
+  title: 'Nơi Này Có Anh - Sơn Tùng M-TP (Piano Cover)'
+};
 
-let ytPlayer = null;
-let ytMusicReady = false;
-let ytMusicPlaying = false;
+let bgAudio = null;
+let bgMusicPlaying = false;
 let progressInterval = null;
 let audioUnlocked = false;
 
 // Hiển thị overlay mời bật nhạc
 function showAudioOverlay() {
-  // Không hiện nếu user đã tắt nhạc thủ công trước đó
   if (localStorage.getItem('bgMusicPlaying') === 'false') return;
-  // Không hiện lại nếu đã unlock
   if (audioUnlocked) return;
 
   const overlay = document.createElement('div');
@@ -1324,7 +1323,7 @@ function showAudioOverlay() {
       </div>
       <div class="audio-overlay-text">
         <span class="audio-overlay-title">Nhấn để bật nhạc nền</span>
-        <span class="audio-overlay-sub">Background Music · Harmony in Sound</span>
+        <span class="audio-overlay-sub">Nơi Này Có Anh · Piano Cover</span>
       </div>
       <button class="audio-overlay-close" aria-label="Đóng" title="Tắt nhạc nền">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -1333,26 +1332,20 @@ function showAudioOverlay() {
   `;
   document.body.appendChild(overlay);
 
-  // Click nút X → tắt nhạc hẳn, không hỏi lại
-  const closeBtn = overlay.querySelector('.audio-overlay-close');
-  closeBtn.addEventListener('click', function(e) {
+  overlay.querySelector('.audio-overlay-close').addEventListener('click', function(e) {
     e.stopPropagation();
     localStorage.setItem('bgMusicPlaying', 'false');
     audioUnlocked = true;
     hideAudioOverlay();
-    if (ytPlayer && ytMusicReady) {
-      try { ytPlayer.pauseVideo(); } catch(_) {}
-    }
-    ytMusicPlaying = false;
+    if (bgAudio) bgAudio.pause();
+    bgMusicPlaying = false;
     updateMusicBtn();
   });
 
-  // Click bất kỳ đâu trên overlay (trừ X) → bật nhạc
   overlay.addEventListener('click', function() {
-    unlockAudio();
+    unlockAndPlay();
   });
 
-  // Tự ẩn sau 8 giây nếu user không tương tác (vẫn giữ nghe được khi click sau)
   setTimeout(() => {
     const el = document.getElementById('audio-enable-overlay');
     if (el) el.classList.add('fade-out-overlay');
@@ -1367,96 +1360,28 @@ function hideAudioOverlay() {
   }
 }
 
-function unlockAudio() {
+function unlockAndPlay() {
   if (audioUnlocked) return;
   audioUnlocked = true;
   hideAudioOverlay();
-  if (ytPlayer && ytMusicReady && localStorage.getItem('bgMusicPlaying') !== 'false') {
-    try {
-      ytPlayer.unMute();
-      ytPlayer.playVideo();
-      const savedVol = parseInt(localStorage.getItem('bgMusicVolume') || '30');
-      ytPlayer.setVolume(savedVol);
-      ytMusicPlaying = true;
+  if (bgAudio && localStorage.getItem('bgMusicPlaying') !== 'false') {
+    bgAudio.play().then(() => {
+      bgMusicPlaying = true;
       updateMusicBtn();
       updateVolumeIcon(false);
-    } catch(_) {}
+    }).catch(() => {});
   }
-}
-
-// Callback tự động gọi khi YouTube IFrame API load xong
-window.onYouTubeIframeAPIReady = function () {
-  ytPlayer = new YT.Player('yt-player-container', {
-    height: '1',
-    width: '1',
-    playerVars: {
-      listType: 'playlist',
-      list: YT_CHANNEL_PLAYLIST,
-      autoplay: 1,
-      mute: 1,        // Bắt buộc mute để bypass browser autoplay policy
-      loop: 1,
-      controls: 0,
-      disablekb: 1,
-      fs: 0,
-      iv_load_policy: 3,
-      modestbranding: 1,
-      playsinline: 1,
-      rel: 0,
-      origin: window.location.origin
-    },
-    events: {
-      onReady: function (e) {
-        ytMusicReady = true;
-        const savedVol = parseInt(localStorage.getItem('bgMusicVolume') || '30');
-        e.target.setVolume(savedVol);
-        try { e.target.setShuffle(true); } catch(_) {}
-
-        const shouldPlay = localStorage.getItem('bgMusicPlaying') !== 'false';
-        if (shouldPlay) {
-          e.target.playVideo();
-          ytMusicPlaying = true;
-          updateMusicBtn();
-          // Hiện overlay mời bật nhạc sau khi loader xong (~2s)
-          setTimeout(showAudioOverlay, 2200);
-        } else {
-          ytMusicPlaying = false;
-          updateMusicBtn();
-        }
-      },
-      onStateChange: function (e) {
-        if (e.data === YT.PlayerState.ENDED) {
-          try { ytPlayer.nextVideo(); } catch(_) {}
-        }
-        // Chỉ cập nhật playing state khi đã unlock audio
-        if (audioUnlocked) {
-          ytMusicPlaying = (e.data === YT.PlayerState.PLAYING);
-          updateMusicBtn();
-        }
-      },
-      onError: function (e) {
-        console.warn('YouTube Player Error:', e.data);
-        try { ytPlayer.nextVideo(); } catch(_) {}
-      }
-    }
-  });
-};
-
-// Nếu API đã load xong trước khi script này chạy (phòng ngừa race condition)
-if (window.YT && window.YT.Player) {
-  window.onYouTubeIframeAPIReady();
 }
 
 function updateMusicBtn() {
   const widget = document.getElementById('music-player-widget');
   if (!widget) return;
-
   const playPauseBtn = widget.querySelector('.ctrl-play-pause');
   if (!playPauseBtn) return;
-
   const iconPlay = playPauseBtn.querySelector('.icon-play');
   const iconPause = playPauseBtn.querySelector('.icon-pause');
 
-  if (ytMusicPlaying) {
+  if (bgMusicPlaying) {
     widget.classList.add('playing');
     if (iconPlay) iconPlay.style.display = 'none';
     if (iconPause) iconPause.style.display = 'block';
@@ -1481,65 +1406,74 @@ function updateTimelineProgress(current, total) {
   const currentText = document.querySelector('.music-time-current');
   const totalText = document.querySelector('.music-time-total');
   const fill = document.querySelector('.music-progress-bar-fill');
-
   if (currentText) currentText.innerText = formatTime(current || 0);
   if (totalText) totalText.innerText = formatTime(total || 0);
-
   if (fill && total > 0) {
-    const percent = ((current || 0) / total) * 100;
-    fill.style.width = `${percent}%`;
+    fill.style.width = `${((current || 0) / total) * 100}%`;
   }
 }
 
 function startProgressTicker() {
   if (progressInterval) clearInterval(progressInterval);
   progressInterval = setInterval(() => {
-    if (!ytPlayer || !ytMusicReady) return;
-    try {
-      const currentTime = ytPlayer.getCurrentTime();
-      const duration = ytPlayer.getDuration();
-
-      // Cập nhật timeline
-      updateTimelineProgress(currentTime, duration);
-
-      // Cập nhật tên bài hát
-      const videoData = ytPlayer.getVideoData();
-      if (videoData && videoData.title) {
-        const titleSpan = document.querySelector('.music-track-title');
-        if (titleSpan && titleSpan.innerText !== videoData.title) {
-          titleSpan.innerText = videoData.title;
-        }
-      }
-    } catch (_) {}
+    if (!bgAudio) return;
+    updateTimelineProgress(bgAudio.currentTime, bgAudio.duration || 0);
   }, 500);
 }
 
 function stopProgressTicker() {
-  if (progressInterval) {
-    clearInterval(progressInterval);
-    progressInterval = null;
-  }
+  if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
 }
 
 function updateVolumeIcon(muted) {
   const muteBtn = document.querySelector('.ctrl-volume-mute');
   const wavesPath = document.querySelector('.vol-waves');
-  if (muteBtn) {
-    if (muted) {
-      muteBtn.classList.add('muted');
-      if (wavesPath) wavesPath.style.display = 'none';
-      muteBtn.setAttribute('title', 'Bật tiếng');
-    } else {
-      muteBtn.classList.remove('muted');
-      if (wavesPath) wavesPath.style.display = '';
-      muteBtn.setAttribute('title', 'Tắt tiếng');
-    }
+  if (!muteBtn) return;
+  if (muted) {
+    muteBtn.classList.add('muted');
+    if (wavesPath) wavesPath.style.display = 'none';
+    muteBtn.setAttribute('title', 'Bật tiếng');
+  } else {
+    muteBtn.classList.remove('muted');
+    if (wavesPath) wavesPath.style.display = '';
+    muteBtn.setAttribute('title', 'Tắt tiếng');
   }
 }
 
 function initBgMusic() {
   const widget = document.getElementById('music-player-widget');
   if (!widget) return;
+
+  // Lấy hoặc tạo audio element
+  bgAudio = document.getElementById('bg-audio');
+  if (!bgAudio) return;
+
+  // Set volume từ localStorage
+  const savedVol = parseInt(localStorage.getItem('bgMusicVolume') || '30');
+  bgAudio.volume = savedVol / 100;
+
+  // Hiển thị tên bài
+  const titleSpan = document.querySelector('.music-track-title');
+  if (titleSpan) titleSpan.innerText = MUSIC_TRACK.title;
+
+  // Lắng nghe sự kiện audio
+  bgAudio.addEventListener('play', () => {
+    bgMusicPlaying = true;
+    updateMusicBtn();
+    updateVolumeIcon(bgAudio.muted);
+  });
+  bgAudio.addEventListener('pause', () => {
+    bgMusicPlaying = false;
+    updateMusicBtn();
+  });
+  bgAudio.addEventListener('ended', () => {
+    // loop đã set trong HTML, nhưng phòng ngừa
+    bgAudio.currentTime = 0;
+    bgAudio.play().catch(() => {});
+  });
+  bgAudio.addEventListener('loadedmetadata', () => {
+    updateTimelineProgress(0, bgAudio.duration);
+  });
 
   const header = widget.querySelector('.music-widget-header');
   const toggleBtn = widget.querySelector('.music-widget-toggle');
@@ -1550,144 +1484,110 @@ function initBgMusic() {
   const volumeSlider = document.getElementById('widget-volume-slider');
   const progressContainer = widget.querySelector('.music-progress-bar-container');
 
-  // Mở rộng/thu nhỏ khi click header
+  // Mở rộng/thu nhỏ widget
   const toggleMinimize = (e) => {
     if (e.target.closest('.music-widget-toggle') || !e.target.closest('.music-ctrl-btn, input')) {
       widget.classList.toggle('minimized');
       const isMinimized = widget.classList.contains('minimized');
-      if (toggleBtn) {
-        toggleBtn.setAttribute('aria-label', isMinimized ? "Mở rộng trình phát" : "Thu nhỏ trình phát");
-      }
+      if (toggleBtn) toggleBtn.setAttribute('aria-label', isMinimized ? 'Mở rộng trình phát' : 'Thu nhỏ trình phát');
     }
   };
   if (header) header.addEventListener('click', toggleMinimize);
 
-  // Khôi phục mức âm lượng đã lưu
-  if (volumeSlider) {
-    const savedVol = parseInt(localStorage.getItem('bgMusicVolume') || '30');
-    volumeSlider.value = savedVol;
-  }
-
-  // Nút Play / Pause
-  if (playPauseBtn) {
-    playPauseBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      if (!ytPlayer || !ytMusicReady) return;
-      try {
-        if (ytMusicPlaying) {
-          ytPlayer.pauseVideo();
-          ytMusicPlaying = false;
-          localStorage.setItem('bgMusicPlaying', 'false');
-        } else {
-          ytPlayer.unMute();
-          ytPlayer.playVideo();
-          ytMusicPlaying = true;
-          localStorage.setItem('bgMusicPlaying', 'true');
-        }
-        updateMusicBtn();
-      } catch (_) {}
-    });
-  }
-
-  // Nút bài trước
-  if (prevBtn) {
-    prevBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      if (ytPlayer && ytMusicReady) {
-        try { ytPlayer.previousVideo(); } catch (_) {}
-      }
-    });
-  }
-
-  // Nút bài tiếp theo
-  if (nextBtn) {
-    nextBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      if (ytPlayer && ytMusicReady) {
-        try { ytPlayer.nextVideo(); } catch (_) {}
-      }
-    });
-  }
-
-  // Nút bật/tắt tiếng
-  if (muteBtn) {
-    muteBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      if (ytPlayer && ytMusicReady) {
-        try {
-          const isMuted = ytPlayer.isMuted();
-          if (isMuted) {
-            ytPlayer.unMute();
-            updateVolumeIcon(false);
-          } else {
-            ytPlayer.mute();
-            updateVolumeIcon(true);
-          }
-        } catch (_) {}
-      }
-    });
-  }
-
   // Volume slider
   if (volumeSlider) {
-    volumeSlider.addEventListener('input', function (e) {
+    volumeSlider.value = savedVol;
+    volumeSlider.addEventListener('input', function(e) {
       e.stopPropagation();
       const vol = parseInt(e.target.value);
       localStorage.setItem('bgMusicVolume', String(vol));
-      if (ytPlayer && ytMusicReady) {
-        try {
-          ytPlayer.setVolume(vol);
-          if (vol > 0 && ytPlayer.isMuted()) {
-            ytPlayer.unMute();
-            updateVolumeIcon(false);
-          }
-        } catch (_) {}
+      if (bgAudio) {
+        bgAudio.volume = vol / 100;
+        if (vol > 0 && bgAudio.muted) {
+          bgAudio.muted = false;
+          updateVolumeIcon(false);
+        }
       }
     });
     volumeSlider.addEventListener('click', e => e.stopPropagation());
     volumeSlider.addEventListener('mousedown', e => e.stopPropagation());
   }
 
-  // Click tua nhạc trên thanh progress
-  if (progressContainer) {
-    progressContainer.addEventListener('click', function (e) {
+  // Play / Pause
+  if (playPauseBtn) {
+    playPauseBtn.addEventListener('click', function(e) {
       e.stopPropagation();
-      if (!ytPlayer || !ytMusicReady) return;
-      const rect = progressContainer.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const percentage = clickX / rect.width;
-      try {
-        const duration = ytPlayer.getDuration();
-        if (duration > 0) {
-          const newTime = duration * percentage;
-          ytPlayer.seekTo(newTime, true);
-          updateTimelineProgress(newTime, duration);
-        }
-      } catch (_) {}
+      if (!bgAudio) return;
+      if (bgMusicPlaying) {
+        bgAudio.pause();
+        localStorage.setItem('bgMusicPlaying', 'false');
+      } else {
+        bgAudio.play().catch(() => {});
+        localStorage.setItem('bgMusicPlaying', 'true');
+      }
     });
   }
 
-  // Các phím tắt
-  document.addEventListener('keydown', function (e) {
+  // Prev — restart bài (chỉ có 1 bài)
+  if (prevBtn) {
+    prevBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (bgAudio) { bgAudio.currentTime = 0; if (!bgMusicPlaying) bgAudio.play().catch(() => {}); }
+    });
+  }
+
+  // Next — cũng restart (chỉ có 1 bài)
+  if (nextBtn) {
+    nextBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (bgAudio) { bgAudio.currentTime = 0; if (!bgMusicPlaying) bgAudio.play().catch(() => {}); }
+    });
+  }
+
+  // Mute toggle
+  if (muteBtn) {
+    muteBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (!bgAudio) return;
+      bgAudio.muted = !bgAudio.muted;
+      updateVolumeIcon(bgAudio.muted);
+    });
+  }
+
+  // Click tua nhạc trên progress bar
+  if (progressContainer) {
+    progressContainer.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (!bgAudio || !bgAudio.duration) return;
+      const rect = progressContainer.getBoundingClientRect();
+      const pct = (e.clientX - rect.left) / rect.width;
+      bgAudio.currentTime = pct * bgAudio.duration;
+      updateTimelineProgress(bgAudio.currentTime, bgAudio.duration);
+    });
+  }
+
+  // Phím tắt
+  document.addEventListener('keydown', function(e) {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    
-    // M để Play/Pause
     if (e.key === 'm' || e.key === 'M') {
       if (playPauseBtn) playPauseBtn.click();
     }
-    
-    // Ctrl + Mũi tên trái để lùi bài
     if (e.ctrlKey && e.key === 'ArrowLeft') {
       e.preventDefault();
-      if (prevBtn) prevBtn.click();
+      if (bgAudio) bgAudio.currentTime = Math.max(0, bgAudio.currentTime - 10);
     }
-    
-    // Ctrl + Mũi tên phải để tiến bài
     if (e.ctrlKey && e.key === 'ArrowRight') {
       e.preventDefault();
-      if (nextBtn) nextBtn.click();
+      if (bgAudio) bgAudio.currentTime = Math.min(bgAudio.duration || 0, bgAudio.currentTime + 10);
     }
   });
 
   updateMusicBtn();
+
+  // Hiện overlay mời bật nhạc (sau khi loader xong)
+  const shouldPlay = localStorage.getItem('bgMusicPlaying') !== 'false';
+  if (shouldPlay) {
+    setTimeout(showAudioOverlay, 2200);
+  }
 }
+
