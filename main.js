@@ -5,7 +5,7 @@
 
 // Global config for interactive tweaks from Secret Admin Panel
 window._particleConfig = {
-  count: 65,
+  count: 35,
   speed: 1.0,
   grassOnline: true,
   dawnOnline: true
@@ -97,14 +97,19 @@ function initParticles() {
   });
 
   function drawConnections() {
-    const maxDist = 115;
+    const maxDist = 95;
+    const maxDistSq = maxDist * maxDist;
+    const mouseMaxDist = 125;
+    const mouseMaxDistSq = mouseMaxDist * mouseMaxDist;
+
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
         const dx = particles[i].x - particles[j].x;
         const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        const distSq = dx * dx + dy * dy;
 
-        if (dist < maxDist) {
+        if (distSq < maxDistSq) {
+          const dist = Math.sqrt(distSq);
           const alpha = (1 - dist / maxDist) * 0.08;
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
@@ -118,9 +123,10 @@ function initParticles() {
       if (mouse.x !== null) {
         const mdx = particles[i].x - mouse.x;
         const mdy = particles[i].y - mouse.y;
-        const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
-        if (mdist < 140) {
-          const malpha = (1 - mdist / 140) * 0.09;
+        const mdistSq = mdx * mdx + mdy * mdy;
+        if (mdistSq < mouseMaxDistSq) {
+          const mdist = Math.sqrt(mdistSq);
+          const malpha = (1 - mdist / mouseMaxDist) * 0.09;
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(mouse.x, mouse.y);
@@ -1202,8 +1208,11 @@ function initAdminConsole() {
     nodeGrassToggle.addEventListener('change', () => {
       const isOnline = nodeGrassToggle.checked;
       window._particleConfig.grassOnline = isOnline;
-      document.getElementById('mon-grass-val').innerText = isOnline ? "100% Quality" : "OFFLINE";
-      document.getElementById('mon-grass-val').style.color = isOnline ? "" : "#ef4444";
+      const grassVal = document.getElementById('mon-grass-val');
+      if (grassVal) {
+        grassVal.innerText = isOnline ? "100% Quality" : "OFFLINE";
+        grassVal.style.color = isOnline ? "" : "#ef4444";
+      }
       updateNodeActiveCount();
     });
   }
@@ -1212,8 +1221,11 @@ function initAdminConsole() {
     nodeDawnToggle.addEventListener('change', () => {
       const isOnline = nodeDawnToggle.checked;
       window._particleConfig.dawnOnline = isOnline;
-      document.getElementById('mon-dawn-val').innerText = isOnline ? "98% Online" : "OFFLINE";
-      document.getElementById('mon-dawn-val').style.color = isOnline ? "" : "#ef4444";
+      const dawnVal = document.getElementById('mon-dawn-val');
+      if (dawnVal) {
+        dawnVal.innerText = isOnline ? "98% Online" : "OFFLINE";
+        dawnVal.style.color = isOnline ? "" : "#ef4444";
+      }
       updateNodeActiveCount();
     });
   }
@@ -1222,8 +1234,11 @@ function initAdminConsole() {
     let activeCount = 0;
     if (window._particleConfig.grassOnline) activeCount++;
     if (window._particleConfig.dawnOnline) activeCount++;
-    document.getElementById('mon-node-status').innerText = `${activeCount} ACTIVE`;
-    document.getElementById('mon-node-status').className = `mon-status ${activeCount > 0 ? 'mon-active' : 'mon-inactive'}`;
+    const nodeStatus = document.getElementById('mon-node-status');
+    if (nodeStatus) {
+      nodeStatus.innerText = `${activeCount} ACTIVE`;
+      nodeStatus.className = `mon-status ${activeCount > 0 ? 'mon-active' : 'mon-inactive'}`;
+    }
   }
 
   // Helper to apply and save color theme preset
