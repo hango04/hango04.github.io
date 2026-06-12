@@ -25,8 +25,32 @@ function initParticles() {
   resize();
   window.addEventListener('resize', resize);
 
+  // Get colors dynamically from CSS variables to support color themes
+  function getThemeColors() {
+    const styles = getComputedStyle(document.body);
+    const primaryRGB = (styles.getPropertyValue('--color-primary-rgb') || '0, 82, 255').trim();
+    const secondaryRGB = (styles.getPropertyValue('--color-secondary-rgb') || '0, 194, 255').trim();
+    return {
+      particleColors: [
+        `rgba(${primaryRGB},`,
+        `rgba(${secondaryRGB},`,
+        `rgba(${primaryRGB},`
+      ],
+      connectionColor: `rgba(${primaryRGB},`,
+      mouseConnectionColor: `rgba(${secondaryRGB},`
+    };
+  }
+
+  let themeColors = getThemeColors();
+
+  // Observe theme changes to update particle colors instantly
+  const themeObserver = new MutationObserver(() => {
+    themeColors = getThemeColors();
+  });
+  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  themeObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
   const particles = [];
-  const colors = ['rgba(0,82,255,', 'rgba(0,194,255,', 'rgba(0,112,243,'];
 
   class Particle {
     constructor() { this.reset(true); }
@@ -37,7 +61,7 @@ function initParticles() {
       this.vx = (Math.random() - 0.5) * 0.12 * window._particleConfig.speed;
       this.vy = -(Math.random() * 0.18 + 0.05) * window._particleConfig.speed;
       this.alpha = Math.random() * 0.4 + 0.15;
-      this.color = colors[Math.floor(Math.random() * colors.length)];
+      this.colorIndex = Math.floor(Math.random() * 3);
       this.life = 0;
       this.maxLife = Math.random() * 600 + 400;
     }
@@ -54,7 +78,7 @@ function initParticles() {
       const currentAlpha = this.alpha * Math.sin((this.life / this.maxLife) * Math.PI);
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = this.color + currentAlpha + ')';
+      ctx.fillStyle = themeColors.particleColors[this.colorIndex] + currentAlpha + ')';
       ctx.fill();
     }
   }
@@ -85,7 +109,7 @@ function initParticles() {
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(0, 82, 255, ${alpha})`;
+          ctx.strokeStyle = themeColors.connectionColor + alpha + ')';
           ctx.lineWidth = 0.5;
           ctx.stroke();
         }
@@ -100,7 +124,7 @@ function initParticles() {
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(mouse.x, mouse.y);
-          ctx.strokeStyle = `rgba(0, 194, 255, ${malpha})`;
+          ctx.strokeStyle = themeColors.mouseConnectionColor + malpha + ')';
           ctx.lineWidth = 0.5;
           ctx.stroke();
         }
@@ -427,9 +451,20 @@ function initChatbot() {
   const chatWindow = document.getElementById('chatbot-window');
   const chatMessages = document.getElementById('chatbot-messages');
   const choicesContainer = document.getElementById('chatbot-choices');
+  
+  // New AI integration elements
+  const settingsBtn = document.getElementById('chatbot-settings-btn');
+  const settingsPanel = document.getElementById('chatbot-settings-panel');
+  const keyInput = document.getElementById('gemini-key-input');
+  const saveKeyBtn = document.getElementById('save-gemini-key');
+  const textInput = document.getElementById('chatbot-text-input');
+  const sendBtn = document.getElementById('chatbot-send-btn');
 
   if (!toggleBtn || !chatWindow || !chatMessages || !choicesContainer) return;
 
+  let chatHistory = [];
+
+  // Toggle chatbot window open/close
   toggleBtn.addEventListener('click', () => {
     chatWindow.classList.toggle('hidden');
     const isClosed = chatWindow.classList.contains('hidden');
@@ -440,6 +475,7 @@ function initChatbot() {
     if (isClosed) {
       chatIcon.style.display = 'block';
       closeIcon.style.display = 'none';
+      if (settingsPanel) settingsPanel.classList.add('hidden');
     } else {
       chatIcon.style.display = 'none';
       closeIcon.style.display = 'block';
@@ -447,6 +483,34 @@ function initChatbot() {
     }
   });
 
+  // Toggle settings panel
+  if (settingsBtn && settingsPanel) {
+    settingsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      settingsPanel.classList.toggle('hidden');
+      if (!settingsPanel.classList.contains('hidden')) {
+        const savedKey = localStorage.getItem('gemini_api_key') || '';
+        keyInput.value = savedKey;
+      }
+    });
+  }
+
+  // Save API Key
+  if (saveKeyBtn && keyInput) {
+    saveKeyBtn.addEventListener('click', () => {
+      const key = keyInput.value.trim();
+      if (key) {
+        localStorage.setItem('gemini_api_key', key);
+        showToast('Đã lưu Gemini API Key thành công!');
+      } else {
+        localStorage.removeItem('gemini_api_key');
+        showToast('Đã xóa Gemini API Key.', 'info');
+      }
+      if (settingsPanel) settingsPanel.classList.add('hidden');
+    });
+  }
+
+  // Custom static responses for local fallback NLP mode
   const responses = {
     gpm: {
       text: "Mạnh Hà có nhận viết script tự động hóa theo yêu cầu trên **GPM Browser** sử dụng **Node.js, Puppeteer/Playwright**. Các script hỗ trợ tự động cày farm tài khoản, auto airdrop/retroactive, và đồng bộ thao tác đa luồng quy mô lớn giúp tiết kiệm tối đa thời gian. Bạn có thể kết nối Zalo **0334383560** để đặt hàng code nhé!",
@@ -473,6 +537,44 @@ function initChatbot() {
     gaming: "Bạn có chơi TFT / Tốc Chiến không?"
   };
 
+  // Local static keyword search response
+  function getLocalNLPResponse(msg) {
+    const text = msg.toLowerCase();
+    
+    if (text.includes('gpm') || text.includes('script') || text.includes('auto') || text.includes('tool') || text.includes('trình duyệt')) {
+      return responses.gpm;
+    }
+    if (text.includes('drone') || text.includes('robot') || text.includes('simulink') || text.includes('matlab') || text.includes('đồ án') || text.includes('điều khiển')) {
+      return responses.drone;
+    }
+    if (text.includes('liên hệ') || text.includes('zalo') || text.includes('phone') || text.includes('sđt') || text.includes('email') || text.includes('hợp tác') || text.includes('fb') || text.includes('facebook')) {
+      return responses.contact;
+    }
+    if (text.includes('game') || text.includes('tft') || text.includes('tốc chiến') || text.includes('rank') || text.includes('leo')) {
+      return responses.gaming;
+    }
+    if (text.includes('học') || text.includes('trường') || text.includes('thủy lợi') || text.includes('tlu') || text.includes('đại học')) {
+      return {
+        text: "Ngô Mạnh Hà đã tốt nghiệp chuyên ngành **Kỹ thuật Robot & Điều khiển thông minh** tại **Trường Đại học Thủy Lợi** (Khóa 2022 - 2026). Nền tảng robotics giúp Hà thành thạo SolidWorks, MATLAB Simulink, vi điều khiển (C/C++, Arduino) và hệ thống nhúng.",
+        followups: ["drone", "gpm"]
+      };
+    }
+    if (text.includes('quê') || text.includes('sống') || text.includes('ở đâu') || text.includes('địa chỉ') || text.includes('hưng yên') || text.includes('văn lâm')) {
+      return {
+        text: "Mạnh Hà hiện tại sinh sống và hoạt động tại **Văn Lâm, Hưng Yên, Việt Nam**. Bạn có thể liên hệ Zalo **0334383560** trước để gặp gỡ trao đổi trực tiếp nhé!",
+        followups: ["contact", "main_menu"]
+      };
+    }
+    if (text.includes('tiktok') || text.includes('editor') || text.includes('capcut') || text.includes('video') || text.includes('dựng')) {
+      return {
+        text: "Hà là một **Freelance Video Editor** thành thạo CapCut, Premiere và Photoshop. Hà hiện đang xây dựng một kênh TikTok chia sẻ tiếng Nhật đạt mốc **57.9K followers** và **255.5K lượt thích**!",
+        followups: ["contact", "main_menu"]
+      };
+    }
+    return null;
+  }
+
+  // Handle Quick Choices Click
   choicesContainer.addEventListener('click', e => {
     const button = e.target.closest('.choice-btn');
     if (!button) return;
@@ -483,36 +585,147 @@ function initChatbot() {
       return;
     }
 
-    appendMessage(choiceTexts[choice] || button.innerText, 'user');
-
-    choicesContainer.style.pointerEvents = 'none';
-    choicesContainer.style.opacity = '0.3';
-    appendTypingIndicator();
-
-    setTimeout(() => {
-      removeTypingIndicator();
-      
+    const questionText = choiceTexts[choice] || button.innerText;
+    processMessageSequence(questionText, () => {
       const res = responses[choice];
       if (res) {
         appendMessage(res.text, 'bot');
         showFollowupChoices(res.followups);
+        chatHistory.push({ role: 'user', parts: [{ text: questionText }] });
+        chatHistory.push({ role: 'model', parts: [{ text: res.text }] });
+        if (chatHistory.length > 10) chatHistory.splice(0, 2);
       } else {
         appendMessage("Xin lỗi, tôi chưa hiểu câu hỏi này.", 'bot');
         showMainMenu();
       }
+    });
+  });
+
+  // Handle Free text input triggers
+  if (textInput && sendBtn) {
+    const handleSend = () => {
+      const msg = textInput.value.trim();
+      if (!msg) return;
+      textInput.value = '';
+
+      processMessageSequence(msg, async () => {
+        chatHistory.push({ role: 'user', parts: [{ text: msg }] });
+        if (chatHistory.length > 10) chatHistory.shift();
+
+        let apiKey = localStorage.getItem('gemini_api_key');
+        if (!apiKey) {
+          try {
+            apiKey = atob('QVEuQWI4Uk42S0lPZ2h5WGR0M19zanNkMHQ0TjhHZ0M0Um1PUmtfdTNoSkhJN0tNdzFCNHc=');
+          } catch (e) {
+            console.error('Failed to decode default API key');
+          }
+        }
+
+        if (apiKey) {
+          // ONLINE MODE: Call Gemini API
+          try {
+            const systemContext = "Bạn là Trợ lý ảo của anh Ngô Mạnh Hà. Hãy trả lời thân thiện, lịch sự và ngắn gọn bằng tiếng Việt. Hãy giới thiệu và trả lời các thông tin dựa trên hồ sơ của Hà: tốt nghiệp ĐH Thủy Lợi ngành Robotics & Điều khiển thông minh (khoá 2022-2026), 3 năm kinh nghiệm MMO/Crypto/GPM browser script tự động hóa (NodeJS/Puppeteer), có kênh Tiktok CapCut 57.9k followers và 255.5k likes, sống tại Văn Lâm, Hưng Yên. Zalo: 0334383560, email: ngomanhha2004@gmail.com, facebook: Ngo Ha. Hãy trả lời khoảng 2-3 câu và luôn trả lời dưới góc nhìn đại diện trợ lý của Hà.";
+            
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: chatHistory,
+                systemInstruction: { parts: [{ text: systemContext }] }
+              })
+            });
+
+            if (!response.ok) throw new Error('API request failed');
+            const data = await response.json();
+            
+            if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
+              const reply = data.candidates[0].content.parts[0].text;
+              appendMessage(reply, 'bot');
+              chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+              if (chatHistory.length > 10) chatHistory.splice(0, 2);
+              
+              // Clear choices container during custom AI chat
+              choicesContainer.innerHTML = '';
+            } else {
+              throw new Error('Invalid response payload');
+            }
+          } catch (err) {
+            console.error(err);
+            // Fallback to local keyword agent if API fails
+            const localRes = getLocalNLPResponse(msg);
+            if (localRes) {
+              appendMessage(localRes.text, 'bot');
+              showFollowupChoices(localRes.followups);
+              chatHistory.push({ role: 'model', parts: [{ text: localRes.text }] });
+              if (chatHistory.length > 10) chatHistory.splice(0, 2);
+            } else {
+              appendMessage("⚠️ Đã xảy ra lỗi khi kết nối với Gemini. Vui lòng kiểm tra lại API Key hoặc mạng internet của bạn. Bạn cũng có thể chọn nhanh các chủ đề dưới đây:", 'bot');
+              showMainMenu();
+            }
+          }
+        } else {
+          // OFFLINE FALLBACK MODE: Check local keywords (should not be reached unless decoding fails)
+          const localRes = getLocalNLPResponse(msg);
+          if (localRes) {
+            appendMessage(localRes.text, 'bot');
+            showFollowupChoices(localRes.followups);
+            chatHistory.push({ role: 'model', parts: [{ text: localRes.text }] });
+            if (chatHistory.length > 10) chatHistory.splice(0, 2);
+          } else {
+            appendMessage("Chào bạn! Hiện tại tôi đang chạy ở chế độ **Offline (Chưa cài API Key)** nên chỉ có thể trả lời các từ khóa về robot, đồ án, gpm script, liên hệ, quê quán, học tập. \n\nĐể kích hoạt AI thông minh trò chuyện tự do, bạn hãy nhấn nút cài đặt **⚙️** ở trên để nhập **Gemini API Key** nhé! Hoặc chọn nhanh các câu hỏi phía dưới:", 'bot');
+            showMainMenu();
+          }
+        }
+      });
+    };
+
+    sendBtn.addEventListener('click', handleSend);
+    textInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleSend();
+    });
+  }
+
+  // Unified animation and scroll helper for messaging
+  function processMessageSequence(userMsgText, fetchResponseCallback) {
+    appendMessage(userMsgText, 'user');
+
+    choicesContainer.style.pointerEvents = 'none';
+    choicesContainer.style.opacity = '0.3';
+    if (textInput) textInput.disabled = true;
+    if (sendBtn) sendBtn.disabled = true;
+    
+    appendTypingIndicator();
+
+    setTimeout(() => {
+      removeTypingIndicator();
+      fetchResponseCallback();
 
       choicesContainer.style.pointerEvents = 'all';
       choicesContainer.style.opacity = '1';
+      if (textInput) {
+        textInput.disabled = false;
+        textInput.focus();
+      }
+      if (sendBtn) sendBtn.disabled = false;
     }, 1200);
-  });
+  }
 
   function appendMessage(text, sender) {
     const msgDiv = document.createElement('div');
     msgDiv.className = `chat-message ${sender === 'user' ? 'user-msg' : 'bot-msg'}`;
     
-    let formattedText = text
+    // Safety escape HTML, then format bold, italic, inline code, and links
+    let escaped = text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+      
+    let formattedText = escaped
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
       .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" style="text-decoration:underline;color:var(--color-primary);">$1</a>')
+      .replace(/^\s*-\s+(.*?)$/gm, '• $1')
       .replace(/\n/g, '<br>');
 
     msgDiv.innerHTML = `
@@ -983,25 +1196,69 @@ function initAdminConsole() {
     document.getElementById('mon-node-status').className = `mon-status ${activeCount > 0 ? 'mon-active' : 'mon-inactive'}`;
   }
 
-  // Theme customizer buttons
+  // Helper to apply and save color theme preset
+  function applyColorTheme(themeName, showToastNotify = false) {
+    localStorage.setItem('color-theme', themeName);
+
+    // Update body classes
+    document.body.classList.remove('theme-matrix-green', 'theme-cyber-purple', 'theme-solar-orange');
+    if (themeName === 'matrix') {
+      document.body.classList.add('theme-matrix-green');
+    } else if (themeName === 'cyber') {
+      document.body.classList.add('theme-cyber-purple');
+    } else if (themeName === 'solar') {
+      document.body.classList.add('theme-solar-orange');
+    }
+
+    // Update active classes for Admin Console buttons
+    const consoleBtns = document.querySelectorAll('.theme-btn');
+    consoleBtns.forEach(btn => {
+      if (btn.getAttribute('data-theme-name') === themeName) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    // Update active classes for Header Customizer buttons
+    const headerBtns = document.querySelectorAll('.theme-preset-btn');
+    headerBtns.forEach(btn => {
+      if (btn.getAttribute('data-theme-preset') === themeName) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    if (showToastNotify) {
+      const names = {
+        default: 'Flame Blue',
+        matrix: 'Matrix Green',
+        cyber: 'Cyber Purple',
+        solar: 'Solar Orange'
+      };
+      showToast(`Đã chuyển sang tông màu ${names[themeName] || themeName}!`);
+    }
+  }
+
+  // Load and apply theme on start to sync buttons
+  const savedColorTheme = localStorage.getItem('color-theme') || 'default';
+  applyColorTheme(savedColorTheme, false);
+
+  // Theme customizer buttons (Admin Console)
   themeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      themeBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
       const theme = btn.getAttribute('data-theme-name');
-      
-      // Reset classes
-      document.body.classList.remove('theme-matrix-green', 'theme-cyber-purple', 'theme-solar-orange');
+      applyColorTheme(theme, true);
+    });
+  });
 
-      // Add corresponding theme class
-      if (theme === 'matrix') {
-        document.body.classList.add('theme-matrix-green');
-      } else if (theme === 'cyber') {
-        document.body.classList.add('theme-cyber-purple');
-      } else if (theme === 'solar') {
-        document.body.classList.add('theme-solar-orange');
-      }
+  // Theme preset buttons (Header Customizer Popup)
+  const headerThemeBtns = document.querySelectorAll('.theme-preset-btn');
+  headerThemeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const theme = btn.getAttribute('data-theme-preset');
+      applyColorTheme(theme, true);
     });
   });
 

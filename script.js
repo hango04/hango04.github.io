@@ -71,6 +71,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- THEME CUSTOMIZER POPUP ---
+  const themeMenuToggle = document.getElementById('theme-menu-toggle');
+  const themeCustomizerPopup = document.getElementById('theme-customizer-popup');
+
+  if (themeMenuToggle && themeCustomizerPopup) {
+    themeMenuToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      themeCustomizerPopup.classList.toggle('hidden');
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!themeCustomizerPopup.classList.contains('hidden') && !e.target.closest('.theme-customizer-wrapper')) {
+        themeCustomizerPopup.classList.add('hidden');
+      }
+    });
+  }
+
   // --- SCROLL REVEAL ANIMATIONS (Intersection Observer) ---
   const revealElements = document.querySelectorAll('.reveal');
   const revealObserver = new IntersectionObserver((entries, observer) => {
