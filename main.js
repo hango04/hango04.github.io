@@ -1584,10 +1584,23 @@ function initBgMusic() {
 
   updateMusicBtn();
 
-  // Hiện overlay mời bật nhạc (sau khi loader xong)
+  // Thử tự phát ngay khi trang load xong
   const shouldPlay = localStorage.getItem('bgMusicPlaying') !== 'false';
   if (shouldPlay) {
-    setTimeout(showAudioOverlay, 2200);
+    // Thử autoplay sau khi loader screen biến mất (~1.8s)
+    setTimeout(() => {
+      if (!bgAudio) return;
+      bgAudio.play().then(() => {
+        // Tự phát thành công! (Chrome đã có Media Engagement Index)
+        audioUnlocked = true;
+        bgMusicPlaying = true;
+        updateMusicBtn();
+        updateVolumeIcon(false);
+      }).catch(() => {
+        // Browser chặn autoplay → hiện banner mời bật nhạc
+        setTimeout(showAudioOverlay, 400);
+      });
+    }, 1800);
   }
 }
 
