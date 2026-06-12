@@ -392,7 +392,7 @@ function initCustomCursor() {
 
   const updateHoverListeners = () => {
     const interactiveElements = document.querySelectorAll(
-      'a, button, input, textarea, select, .project-card, .skills-card, .filter-btn, .timeline-card, .stat-item, .logo, .theme-toggle-btn, .choice-btn, #chatbot-toggle, .theme-btn, #monitor-toggle'
+      'a, button, input, textarea, select, .project-card, .travel-card, .skills-card, .filter-btn, .timeline-card, .stat-item, .logo, .theme-toggle-btn, .choice-btn, #chatbot-toggle, .theme-btn, #monitor-toggle'
     );
     interactiveElements.forEach(el => {
       el.removeEventListener('mouseenter', addHoverClass);
@@ -530,6 +530,10 @@ function initChatbot() {
       text: "Đồ án Drone là sản phẩm nghiên cứu chuyên sâu về **Thiết kế hệ thống điều khiển cho Robot Drone Vận tải**. Mô hình 3D được thiết kế chuẩn xác trên SolidWorks, viết phương trình toán học động lực học và mô phỏng cân bằng PID trên **MATLAB**. Đồ án đã được đăng thành bài báo khoa học. Bạn có thể nhấp vào phần Dự án để xem mô phỏng PID trực quan nhé!",
       followups: ["gpm", "contact"]
     },
+    travel: {
+      text: "Mạnh Hà rất yêu thích du lịch trải nghiệm! Một số chuyến đi ấn tượng gần đây của Hà bao gồm:\n- ⛰️ **Hà Giang**: Chinh phục đèo Mã Pí Lèng, sông Nho Quế, cao nguyên đá Đồng Văn.\n- 🛶 **Ninh Bình**: Chèo thuyền ở Tràng An, Tam Cốc, ngắm cảnh núi non hùng vĩ.\n- 🏝️ **Cát Bà**: Trải nghiệm Vịnh Lan Hạ hoang sơ, chèo thuyền Kayak và tận hưởng hải sản.\nBạn có thể cuộn xem phần **Du lịch** trên trang web hoặc click vào liên kết để xem trực tiếp các album ảnh trên Google Drive nhé!",
+      followups: ["contact", "main_menu"]
+    },
     contact: {
       text: "Bạn có thể liên hệ hợp tác làm việc với tôi qua các kênh trực tiếp sau:\n- 📞 Zalo/SĐT: **0334383560**\n- ✉️ Email: **ngomanhha2004@gmail.com**\n- 🌐 Facebook: [Ngo Ha](https://www.facebook.com/ngo.ha.591196/about)\nTôi thường online và phản hồi ngay lập tức!",
       followups: ["gpm", "gaming"]
@@ -543,6 +547,7 @@ function initChatbot() {
   const choiceTexts = {
     gpm: "Hỏi về Script GPM Browser?",
     drone: "Hỏi về Thiết kế Drone?",
+    travel: "Hỏi về sở thích Du lịch của Hà?",
     contact: "Làm sao để liên hệ hợp tác?",
     gaming: "Bạn có chơi TFT / Tốc Chiến không?"
   };
@@ -568,6 +573,9 @@ function initChatbot() {
         text: "Không có gì! Tôi rất vui được hỗ trợ bạn. Nếu có câu hỏi nào khác về robotics hay automation, cứ nhắn tôi nhé!",
         followups: ["contact", "main_menu"]
       };
+    }
+    if (text.includes('du lịch') || text.includes('du lich') || text.includes('đi chơi') || text.includes('di choi') || text.includes('hà giang') || text.includes('ha giang') || text.includes('ninh bình') || text.includes('ninh binh') || text.includes('cát bà') || text.includes('cat ba') || text.includes('đi phượt') || text.includes('phượt') || text.includes('album') || text.includes('ảnh')) {
+      return responses.travel;
     }
     if (text.includes('gpm') || text.includes('script') || text.includes('auto') || text.includes('tool') || text.includes('trình duyệt')) {
       return responses.gpm;
@@ -645,7 +653,7 @@ function initChatbot() {
         if (apiKey) {
           // ONLINE MODE: Call Gemini API
           try {
-            const systemContext = "Bạn là Trợ lý ảo của anh Ngô Mạnh Hà. Hãy trả lời thân thiện, lịch sự và ngắn gọn bằng tiếng Việt. Hãy giới thiệu và trả lời các thông tin dựa trên hồ sơ của Hà: tốt nghiệp ĐH Thủy Lợi ngành Robotics & Điều khiển thông minh (khoá 2022-2026), 3 năm kinh nghiệm MMO/Crypto/GPM browser script tự động hóa (NodeJS/Puppeteer), có kênh Tiktok CapCut 57.9k followers và 255.5k likes, sống tại Văn Lâm, Hưng Yên. Zalo: 0334383560, email: ngomanhha2004@gmail.com, facebook: Ngo Ha. Hãy trả lời khoảng 2-3 câu và luôn trả lời dưới góc nhìn đại diện trợ lý của Hà.";
+            const systemContext = "Bạn là Trợ lý ảo của anh Ngô Mạnh Hà. Hãy trả lời thân thiện, lịch sự và ngắn gọn bằng tiếng Việt. Hãy giới thiệu và trả lời các thông tin dựa trên hồ sơ của Hà: tốt nghiệp ĐH Thủy Lợi ngành Robotics & Điều khiển thông minh (khoá 2022-2026), 3 năm kinh nghiệm MMO/Crypto/GPM browser script tự động hóa (NodeJS/Puppeteer), có kênh Tiktok CapCut 57.9k followers và 255.5k likes, sống tại Văn Lâm, Hưng Yên. Hà cũng đam mê du lịch phượt và đã khám phá Hà Giang, Ninh Bình, Cát Bà (có các album ảnh Google Drive trên web). Zalo: 0334383560, email: ngomanhha2004@gmail.com, facebook: Ngo Ha. Hãy trả lời khoảng 2-3 câu và luôn trả lời dưới góc nhìn đại diện trợ lý của Hà.";
             
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
               method: 'POST',
@@ -793,6 +801,7 @@ function initChatbot() {
     choicesContainer.innerHTML = `
       <button class="choice-btn" data-choice="gpm">Hỏi về Script GPM Browser?</button>
       <button class="choice-btn" data-choice="drone">Hỏi về Thiết kế Drone?</button>
+      <button class="choice-btn" data-choice="travel">Hỏi về sở thích Du lịch của Hà?</button>
       <button class="choice-btn" data-choice="contact">Làm sao để liên hệ hợp tác?</button>
       <button class="choice-btn" data-choice="gaming">Bạn có chơi TFT / Tốc Chiến không?</button>
     `;
