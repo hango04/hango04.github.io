@@ -615,7 +615,7 @@ function initChatbot() {
         let apiKey = localStorage.getItem('gemini_api_key');
         if (!apiKey) {
           try {
-            apiKey = atob('QVEuQWI4Uk42S0lPZ2h5WGR0M19zanNkMHQ0TjhHZ0M0Um1PUmtfdTNoSkhJN0tNdzFCNHc=');
+            apiKey = atob('QVEuQWI4Uk42S2lPZ2h5WGR0M19zanNkMHQ0TjhHZ0M0Um1PUmtfdTNoSkhsN0tNdzFCNHc=');
           } catch (e) {
             console.error('Failed to decode default API key');
           }
