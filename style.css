@@ -2313,9 +2313,12 @@ body.cursor-hover #custom-cursor-ring {
 /* Responsive chatbot */
 @media (max-width: 480px) {
   #chatbot-window {
-    width: calc(100vw - 32px);
-    right: -12px;
-    height: 420px;
+    position: fixed;
+    bottom: 84px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+    height: 400px;
   }
 }
 
@@ -3066,4 +3069,448 @@ body.theme-solar-orange #custom-cursor-ring {
 .travel-image-wrapper.animate-bg img {
   animation: kenburns 24s ease-in-out infinite;
   transform-origin: center center;
+}
+
+/* ======================================
+   BACKGROUND MUSIC PLAYER
+   ====================================== */
+#music-player-btn {
+  position: fixed;
+  bottom: 96px;
+  right: 28px;
+  z-index: 1001;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  box-shadow: 0 6px 20px rgba(var(--color-primary-rgb), 0.35);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  transition: all var(--transition-fast);
+}
+
+#music-player-btn:hover {
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 10px 28px rgba(var(--color-primary-rgb), 0.5);
+}
+
+#music-player-btn.playing {
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+  box-shadow: 0 6px 20px rgba(var(--color-secondary-rgb), 0.4);
+  animation: music-pulse 2s ease-in-out infinite;
+}
+
+@keyframes music-pulse {
+  0%, 100% { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 0 0 rgba(var(--color-primary-rgb), 0.3); }
+  50% { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 0 8px rgba(var(--color-primary-rgb), 0); }
+}
+
+#music-player-btn svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Music bars animation (shown when playing) */
+.music-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 18px;
+}
+
+.music-bar {
+  width: 3px;
+  border-radius: 2px;
+  background: var(--color-primary);
+  transform-origin: bottom;
+}
+
+.music-bar:nth-child(1) { animation: bar-bounce 0.8s ease-in-out infinite; height: 8px; }
+.music-bar:nth-child(2) { animation: bar-bounce 0.8s ease-in-out infinite 0.15s; height: 14px; }
+.music-bar:nth-child(3) { animation: bar-bounce 0.8s ease-in-out infinite 0.3s; height: 10px; }
+.music-bar:nth-child(4) { animation: bar-bounce 0.8s ease-in-out infinite 0.45s; height: 16px; }
+
+@keyframes bar-bounce {
+  0%, 100% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1); }
+}
+
+/* Volume tooltip popup */
+#music-volume-popup {
+  position: absolute;
+  right: 54px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--bg-surface);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 10px 14px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+#music-player-btn:hover #music-volume-popup {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Music track label */
+.music-track-label {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  letter-spacing: 0.5px;
+}
+
+/* Volume slider inside popup */
+#music-volume-slider {
+  -webkit-appearance: none;
+  width: 72px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--border-color);
+  outline: none;
+  pointer-events: all;
+}
+
+#music-volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(var(--color-primary-rgb), 0.5);
+}
+
+/* ======================================
+   COMPREHENSIVE MOBILE IMPROVEMENTS
+   ====================================== */
+
+/* --- Smooth scrolling for iOS --- */
+@media (hover: none) and (pointer: coarse) {
+  * { -webkit-overflow-scrolling: touch; }
+
+  /* Disable heavy backdrop-filter on mobile for performance */
+  .glass-card {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Disable mouse-tracking glow on touch devices */
+  .glass-card::before {
+    display: none;
+  }
+
+  /* Custom cursor is irrelevant on touch */
+  #custom-cursor-dot,
+  #custom-cursor-ring {
+    display: none !important;
+  }
+
+  /* Travel overlay always partially visible on touch */
+  .travel-overlay {
+    opacity: 0.85;
+    backdrop-filter: none;
+    background: linear-gradient(to top, rgba(5,6,11,0.85) 0%, transparent 60%);
+    align-items: flex-end;
+    padding-bottom: 12px;
+  }
+}
+
+@media (max-width: 992px) {
+  .section {
+    padding: 80px 0;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .travel-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  #music-player-btn {
+    bottom: 90px;
+    right: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Section spacing */
+  .section {
+    padding: 64px 0;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  .section-title-wrapper {
+    margin-bottom: 40px;
+  }
+
+  .section-subtitle {
+    font-size: 0.95rem;
+  }
+
+  /* Hero improvements */
+  h1.hero-title {
+    font-size: 2.4rem;
+    line-height: 1.15;
+  }
+
+  .hero-desc {
+    font-size: 1rem;
+  }
+
+  #hero {
+    padding-top: 100px;
+  }
+
+  /* About section */
+  .about-grid {
+    gap: 32px;
+  }
+
+  /* Skills */
+  .skills-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Projects */
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .projects-filter {
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .filter-btn {
+    font-size: 0.8rem;
+    padding: 6px 14px;
+  }
+
+  /* Travel section */
+  .travel-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .travel-card {
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .travel-content {
+    padding: 20px;
+  }
+
+  /* DePin monitor widget */
+  #depin-monitor-widget {
+    width: 180px;
+    padding: 10px;
+    font-size: 0.65rem;
+    bottom: 16px;
+    left: 16px;
+  }
+
+  /* Music player */
+  #music-player-btn {
+    bottom: 82px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+  }
+
+  #music-volume-popup {
+    right: 50px;
+  }
+
+  /* Chatbot */
+  #chatbot-widget {
+    bottom: 20px;
+    right: 16px;
+  }
+
+  #chatbot-window {
+    position: fixed;
+    bottom: 84px;
+    right: 16px;
+    left: 16px;
+    width: auto;
+    height: 420px;
+    max-height: 75vh;
+  }
+
+  /* Contact form */
+  .contact-form-card {
+    padding: 20px;
+  }
+
+  /* Footer */
+  footer {
+    padding: 24px 0;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Container padding */
+  .container {
+    padding: 0 16px;
+  }
+
+  /* Hero */
+  h1.hero-title {
+    font-size: 1.95rem;
+  }
+
+  .hero-desc {
+    font-size: 0.95rem;
+  }
+
+  .hero-tagline {
+    font-size: 0.8rem;
+    padding: 5px 12px;
+  }
+
+  /* Section */
+  .section {
+    padding: 52px 0;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  /* Nav sidebar width on tiny screens */
+  .nav-menu {
+    width: 240px;
+    padding: 90px 28px;
+    gap: 20px;
+  }
+
+  .nav-link {
+    font-size: 1rem;
+  }
+
+  /* About stats */
+  .about-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .about-stat-card {
+    padding: 16px;
+  }
+
+  .about-stat-card .stat-value {
+    font-size: 1.6rem;
+  }
+
+  /* Skill bars */
+  .skill-card {
+    padding: 14px 16px;
+  }
+
+  /* Travel cards */
+  .travel-image-wrapper {
+    aspect-ratio: 16/9;
+  }
+
+  .travel-title {
+    font-size: 1.1rem;
+  }
+
+  /* Chatbot */
+  #chatbot-window {
+    height: 380px;
+  }
+
+  .chatbot-messages {
+    max-height: 220px;
+  }
+
+  /* Modal */
+  .modal-content {
+    padding: 20px;
+    margin: 16px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  /* Project cards */
+  .project-card {
+    padding: 20px;
+  }
+
+  /* Experience timeline */
+  .timeline-content {
+    padding: 16px;
+  }
+
+  /* Buttons */
+  .btn {
+    font-size: 0.9rem;
+    padding: 10px 20px;
+  }
+
+  /* DePin widget smaller */
+  #depin-monitor-widget {
+    display: none;
+  }
+}
+
+@media (max-width: 400px) {
+  h1.hero-title {
+    font-size: 1.7rem;
+  }
+
+  .section-title {
+    font-size: 1.35rem;
+  }
+
+  .hero-actions {
+    gap: 10px;
+  }
+
+  .about-stats {
+    grid-template-columns: 1fr;
+  }
+
+  #music-player-btn {
+    width: 40px;
+    height: 40px;
+    bottom: 76px;
+    right: 14px;
+  }
 }
