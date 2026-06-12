@@ -1305,6 +1305,84 @@ let ytPlayer = null;
 let ytMusicReady = false;
 let ytMusicPlaying = false;
 let progressInterval = null;
+let audioUnlocked = false;
+
+// Hiển thị overlay mời bật nhạc
+function showAudioOverlay() {
+  // Không hiện nếu user đã tắt nhạc thủ công trước đó
+  if (localStorage.getItem('bgMusicPlaying') === 'false') return;
+  // Không hiện lại nếu đã unlock
+  if (audioUnlocked) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'audio-enable-overlay';
+  overlay.innerHTML = `
+    <div class="audio-overlay-inner">
+      <div class="audio-overlay-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+        <span class="audio-pulse-ring"></span>
+      </div>
+      <div class="audio-overlay-text">
+        <span class="audio-overlay-title">Nhấn để bật nhạc nền</span>
+        <span class="audio-overlay-sub">Background Music · Harmony in Sound</span>
+      </div>
+      <button class="audio-overlay-close" aria-label="Đóng" title="Tắt nhạc nền">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  // Click nút X → tắt nhạc hẳn, không hỏi lại
+  const closeBtn = overlay.querySelector('.audio-overlay-close');
+  closeBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    localStorage.setItem('bgMusicPlaying', 'false');
+    audioUnlocked = true;
+    hideAudioOverlay();
+    if (ytPlayer && ytMusicReady) {
+      try { ytPlayer.pauseVideo(); } catch(_) {}
+    }
+    ytMusicPlaying = false;
+    updateMusicBtn();
+  });
+
+  // Click bất kỳ đâu trên overlay (trừ X) → bật nhạc
+  overlay.addEventListener('click', function() {
+    unlockAudio();
+  });
+
+  // Tự ẩn sau 8 giây nếu user không tương tác (vẫn giữ nghe được khi click sau)
+  setTimeout(() => {
+    const el = document.getElementById('audio-enable-overlay');
+    if (el) el.classList.add('fade-out-overlay');
+  }, 8000);
+}
+
+function hideAudioOverlay() {
+  const overlay = document.getElementById('audio-enable-overlay');
+  if (overlay) {
+    overlay.classList.add('fade-out-overlay');
+    setTimeout(() => overlay.remove(), 600);
+  }
+}
+
+function unlockAudio() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  hideAudioOverlay();
+  if (ytPlayer && ytMusicReady && localStorage.getItem('bgMusicPlaying') !== 'false') {
+    try {
+      ytPlayer.unMute();
+      ytPlayer.playVideo();
+      const savedVol = parseInt(localStorage.getItem('bgMusicVolume') || '30');
+      ytPlayer.setVolume(savedVol);
+      ytMusicPlaying = true;
+      updateMusicBtn();
+      updateVolumeIcon(false);
+    } catch(_) {}
+  }
+}
 
 // Callback tự động gọi khi YouTube IFrame API load xong
 window.onYouTubeIframeAPIReady = function () {
@@ -1315,7 +1393,7 @@ window.onYouTubeIframeAPIReady = function () {
       listType: 'playlist',
       list: YT_CHANNEL_PLAYLIST,
       autoplay: 1,
-      mute: 1,        // Phải mute để bypass autoplay policy
+      mute: 1,        // Bắt buộc mute để bypass browser autoplay policy
       loop: 1,
       controls: 0,
       disablekb: 1,
@@ -1331,31 +1409,15 @@ window.onYouTubeIframeAPIReady = function () {
         ytMusicReady = true;
         const savedVol = parseInt(localStorage.getItem('bgMusicVolume') || '30');
         e.target.setVolume(savedVol);
-        // Shuffle ngẫu nhiên
         try { e.target.setShuffle(true); } catch(_) {}
 
         const shouldPlay = localStorage.getItem('bgMusicPlaying') !== 'false';
         if (shouldPlay) {
           e.target.playVideo();
-          // Sau 1.5s tự unmute — nghe được nhạc
-          setTimeout(() => {
-            if (localStorage.getItem('bgMusicPlaying') !== 'false') {
-              try { e.target.unMute(); } catch(_) {}
-              ytMusicPlaying = true;
-              updateMusicBtn();
-            }
-          }, 1500);
-
-          // Lắng nghe tương tác lần đầu để chủ động unmute nếu trình duyệt chặn tự động unmute
-          const unmuteOnInteraction = () => {
-            if (ytPlayer && ytMusicReady && ytMusicPlaying && localStorage.getItem('bgMusicPlaying') !== 'false') {
-              try { ytPlayer.unMute(); } catch(_) {}
-            }
-            document.removeEventListener('click', unmuteOnInteraction);
-            document.removeEventListener('touchstart', unmuteOnInteraction);
-          };
-          document.addEventListener('click', unmuteOnInteraction, { once: true });
-          document.addEventListener('touchstart', unmuteOnInteraction, { once: true });
+          ytMusicPlaying = true;
+          updateMusicBtn();
+          // Hiện overlay mời bật nhạc sau khi loader xong (~2s)
+          setTimeout(showAudioOverlay, 2200);
         } else {
           ytMusicPlaying = false;
           updateMusicBtn();
@@ -1365,12 +1427,14 @@ window.onYouTubeIframeAPIReady = function () {
         if (e.data === YT.PlayerState.ENDED) {
           try { ytPlayer.nextVideo(); } catch(_) {}
         }
-        ytMusicPlaying = (e.data === YT.PlayerState.PLAYING);
-        updateMusicBtn();
+        // Chỉ cập nhật playing state khi đã unlock audio
+        if (audioUnlocked) {
+          ytMusicPlaying = (e.data === YT.PlayerState.PLAYING);
+          updateMusicBtn();
+        }
       },
       onError: function (e) {
         console.warn('YouTube Player Error:', e.data);
-        // Tự động chuyển bài tiếp theo nếu lỗi (ví dụ video bị xóa hoặc không cho phép embed)
         try { ytPlayer.nextVideo(); } catch(_) {}
       }
     }

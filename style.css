@@ -3074,6 +3074,121 @@ body.theme-solar-orange #custom-cursor-ring {
 /* ======================================
    PREMIUM GLASSMORPHIC MUSIC WIDGET
    ====================================== */
+
+/* --- AUDIO ENABLE OVERLAY --- */
+#audio-enable-overlay {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  z-index: 1200;
+  cursor: pointer;
+  animation: audioOverlaySlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+#audio-enable-overlay.fade-out-overlay {
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+  pointer-events: none;
+}
+
+@keyframes audioOverlaySlideUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(30px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.audio-overlay-inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px 14px 16px;
+  background: linear-gradient(135deg, rgba(0, 82, 255, 0.18), rgba(0, 194, 255, 0.12));
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(0, 194, 255, 0.35);
+  border-radius: 50px;
+  box-shadow: 0 8px 32px rgba(0, 82, 255, 0.25), 0 0 0 1px rgba(255,255,255,0.05) inset;
+  white-space: nowrap;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.audio-overlay-inner:hover {
+  background: linear-gradient(135deg, rgba(0, 82, 255, 0.28), rgba(0, 194, 255, 0.20));
+  box-shadow: 0 12px 40px rgba(0, 82, 255, 0.4), 0 0 0 1px rgba(255,255,255,0.08) inset;
+  transform: scale(1.03);
+}
+
+.audio-overlay-icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  border-radius: 50%;
+  color: #fff;
+}
+
+.audio-pulse-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 194, 255, 0.5);
+  animation: audioPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes audioPulse {
+  0%   { transform: scale(1);    opacity: 0.8; }
+  70%  { transform: scale(1.35); opacity: 0; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+.audio-overlay-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.audio-overlay-title {
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.01em;
+}
+
+.audio-overlay-sub {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--color-secondary);
+  opacity: 0.85;
+}
+
+.audio-overlay-close {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.07);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  padding: 0;
+  margin-left: 4px;
+}
+
+.audio-overlay-close:hover {
+  background: rgba(255, 60, 60, 0.25);
+  color: #ff6b6b;
+  border-color: rgba(255, 60, 60, 0.3);
+}
 #music-player-widget {
   position: fixed;
   bottom: 96px;
