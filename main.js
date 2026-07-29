@@ -463,19 +463,21 @@ function initChatbot() {
   const saveKeyBtn = document.getElementById('save-gemini-key');
   const textInput = document.getElementById('chatbot-text-input');
   const sendBtn = document.getElementById('chatbot-send-btn');
+  const modelSelect = document.getElementById('ai-model-select');
 
   if (!toggleBtn || !chatWindow || !chatMessages || !choicesContainer) return;
 
   let chatHistory = [];
 
   // Clear old inactive keys from localStorage to force fallback to the new default key
-  const currentSavedKey = localStorage.getItem('gemini_api_key');
+  const currentSavedKey = localStorage.getItem('github_api_key');
   if (currentSavedKey && (
     currentSavedKey.trim().startsWith('AQ.Ab8RN6KIOg') || 
     currentSavedKey.trim().startsWith('AQ.Ab8RN6KiOg') ||
-    currentSavedKey.trim().startsWith('AQ.Ab8RN6K23B')
+    currentSavedKey.trim().startsWith('AQ.Ab8RN6K23B') ||
+    currentSavedKey.trim().startsWith('github_pat_') === false
   )) {
-    localStorage.removeItem('gemini_api_key');
+    localStorage.removeItem('github_api_key');
   }
 
   // Toggle chatbot window open/close
@@ -503,9 +505,18 @@ function initChatbot() {
       e.stopPropagation();
       settingsPanel.classList.toggle('hidden');
       if (!settingsPanel.classList.contains('hidden')) {
-        const savedKey = localStorage.getItem('gemini_api_key') || '';
+        if (modelSelect) {
+          modelSelect.value = localStorage.getItem('ai_model') || 'gpt-4o';
+        }
+        const savedKey = localStorage.getItem('custom_api_key') || '';
         keyInput.value = savedKey;
       }
+    });
+  }
+
+  if (modelSelect) {
+    modelSelect.addEventListener('change', () => {
+      localStorage.setItem('ai_model', modelSelect.value);
     });
   }
 
@@ -514,11 +525,11 @@ function initChatbot() {
     saveKeyBtn.addEventListener('click', () => {
       const key = keyInput.value.trim();
       if (key) {
-        localStorage.setItem('gemini_api_key', key);
-        showToast('Đã lưu Gemini API Key thành công!');
+        localStorage.setItem('custom_api_key', key);
+        showToast('Đã lưu Token cá nhân thành công!');
       } else {
-        localStorage.removeItem('gemini_api_key');
-        showToast('Đã xóa Gemini API Key.', 'info');
+        localStorage.removeItem('custom_api_key');
+        showToast('Đã xóa Token cá nhân.', 'info');
       }
       if (settingsPanel) settingsPanel.classList.add('hidden');
     });
@@ -568,7 +579,7 @@ function initChatbot() {
     }
     if (text.includes('sao vậy') || text.includes('sao thế') || text.includes('lỗi') || text.includes('sao vay') || text.includes('sao the') || text.includes('chạy') || text.includes('chay')) {
       return {
-        text: "API Key hệ thống của Mạnh Hà hiện đã hết hạn mức (Quota) miễn phí hôm nay hoặc đang được cấu hình lại. Để kích hoạt AI trò chuyện tự do, bạn hãy nhấn vào bánh răng cài đặt ⚙️ ở trên ô chat để dán Gemini API Key của riêng bạn nhé! Hoặc click nhanh các chủ đề dưới đây:",
+        text: "API Key hệ thống của Mạnh Hà hiện đã hết hạn mức (Quota) miễn phí hôm nay hoặc đang được cấu hình lại. Để kích hoạt AI trò chuyện tự do, bạn hãy nhấn vào bánh răng cài đặt ⚙️ ở trên ô chat để dán GitHub PAT của riêng bạn nhé! Hoặc click nhanh các chủ đề dưới đây:",
         followups: ["gpm", "drone", "contact"]
       };
     }
@@ -631,8 +642,8 @@ function initChatbot() {
       if (res) {
         appendMessage(res.text, 'bot');
         showFollowupChoices(res.followups);
-        chatHistory.push({ role: 'user', parts: [{ text: questionText }] });
-        chatHistory.push({ role: 'model', parts: [{ text: res.text }] });
+        chatHistory.push({ role: 'user', content: questionText });
+        chatHistory.push({ role: 'assistant', content: res.text });
         if (chatHistory.length > 10) chatHistory.splice(0, 2);
       } else {
         appendMessage("Xin lỗi, tôi chưa hiểu câu hỏi này.", 'bot');
@@ -649,38 +660,74 @@ function initChatbot() {
       textInput.value = '';
 
       processMessageSequence(msg, async () => {
-        chatHistory.push({ role: 'user', parts: [{ text: msg }] });
+        chatHistory.push({ role: 'user', content: msg });
         if (chatHistory.length > 10) chatHistory.shift();
 
-        let apiKey = localStorage.getItem('gemini_api_key') || '';
+        let aiModel = localStorage.getItem('ai_model') || 'gpt-4o';
+        let customKey = localStorage.getItem('custom_api_key');
+        let apiKey = '';
+        
+        if (customKey) {
+          apiKey = customKey;
+        }
 
         if (apiKey) {
-          // ONLINE MODE: Call Gemini API
+          // ONLINE MODE
           try {
             const systemContext = "Bạn là Trợ lý ảo của anh Ngô Mạnh Hà. Hãy trả lời thân thiện, lịch sự và ngắn gọn bằng tiếng Việt. Hãy giới thiệu và trả lời các thông tin dựa trên hồ sơ của Hà: tốt nghiệp ĐH Thủy Lợi ngành Robotics & Điều khiển thông minh (khoá 2022-2026), 3 năm kinh nghiệm MMO/Crypto/GPM browser script tự động hóa (NodeJS/Puppeteer), có kênh Tiktok CapCut 57.9k followers và 255.5k likes, sống tại Văn Lâm, Hưng Yên. Hà cũng đam mê du lịch phượt và đã khám phá Hà Giang, Ninh Bình, Cát Bà (có các album ảnh Google Drive trên web). Zalo: 0334383560, email: ngomanhha2004@gmail.com, facebook: Ngo Ha. Hãy trả lời khoảng 2-3 câu và luôn trả lời dưới góc nhìn đại diện trợ lý của Hà.";
+            let reply = "";
             
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                contents: chatHistory,
-                systemInstruction: { parts: [{ text: systemContext }] }
-              })
-            });
-
-            if (!response.ok) throw new Error('API request failed');
-            const data = await response.json();
-            
-            if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
-              const reply = data.candidates[0].content.parts[0].text;
-              appendMessage(reply, 'bot');
-              chatHistory.push({ role: 'model', parts: [{ text: reply }] });
-              if (chatHistory.length > 10) chatHistory.splice(0, 2);
+            if (aiModel === 'gpt-4o') {
+              const response = await fetch("https://models.inference.ai.azure.com/chat/completions", {
+                method: 'POST',
+                headers: { 
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                  model: "gpt-4o",
+                  messages: [
+                    { role: "system", content: systemContext },
+                    ...chatHistory
+                  ]
+                })
+              });
+              if (!response.ok) throw new Error('API request failed');
+              const data = await response.json();
+              if (data.choices && data.choices[0].message && data.choices[0].message.content) {
+                reply = data.choices[0].message.content;
+              } else {
+                throw new Error('Invalid response payload');
+              }
+            } else if (aiModel === 'gemini-flash-lite') {
+              // Convert chatHistory to Gemini format
+              const geminiHistory = chatHistory.map(m => ({
+                role: m.role === 'user' ? 'user' : 'model',
+                parts: [{ text: m.content }]
+              }));
               
-              // Clear choices container during custom AI chat
-              choicesContainer.innerHTML = '';
-            } else {
-              throw new Error('Invalid response payload');
+              const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite-preview-02-05:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  contents: geminiHistory,
+                  systemInstruction: { parts: [{ text: systemContext }] }
+                })
+              });
+              if (!response.ok) throw new Error('API request failed');
+              const data = await response.json();
+              if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
+                reply = data.candidates[0].content.parts[0].text;
+              } else {
+                throw new Error('Invalid response payload');
+              }
+            }
+
+            if (reply) {
+              appendMessage(reply, 'bot');
+              chatHistory.push({ role: 'assistant', content: reply });
+              if (chatHistory.length > 10) chatHistory.splice(0, 2);
+              choicesContainer.innerHTML = ''; // Clear choices
             }
           } catch (err) {
             console.error(err);
@@ -689,10 +736,10 @@ function initChatbot() {
             if (localRes) {
               appendMessage(localRes.text, 'bot');
               showFollowupChoices(localRes.followups);
-              chatHistory.push({ role: 'model', parts: [{ text: localRes.text }] });
+              chatHistory.push({ role: 'assistant', content: localRes.text });
               if (chatHistory.length > 10) chatHistory.splice(0, 2);
             } else {
-              appendMessage("Chào bạn! Hiện tại tôi đang hoạt động ở chế độ **Trợ lý tự động** nên chỉ có thể trả lời các chủ đề về Robotics, Đồ án Drone, Script GPM Browser, Thông tin liên hệ, Học tập và Quê quán của Mạnh Hà.\n\nĐể kích hoạt **AI thông minh tự do trò chuyện**, bạn hãy nhấn nút cài đặt **⚙️** ở góc trên ô chat để điền **Gemini API Key** cá nhân nhé! Hoặc chọn nhanh các câu hỏi gợi ý phía dưới:", 'bot');
+              appendMessage("Chào bạn! Hiện tại tôi đang hoạt động ở chế độ **Trợ lý tự động** nên chỉ có thể trả lời các chủ đề về Robotics, Đồ án Drone, Script GPM Browser, Thông tin liên hệ, Học tập và Quê quán của Mạnh Hà.\n\nĐể kích hoạt **AI thông minh tự do trò chuyện**, bạn hãy nhấn nút cài đặt **⚙️** ở góc trên ô chat để điền **GitHub PAT** cá nhân nhé! Hoặc chọn nhanh các câu hỏi gợi ý phía dưới:", 'bot');
               showMainMenu();
             }
           }
@@ -702,10 +749,10 @@ function initChatbot() {
           if (localRes) {
             appendMessage(localRes.text, 'bot');
             showFollowupChoices(localRes.followups);
-            chatHistory.push({ role: 'model', parts: [{ text: localRes.text }] });
+            chatHistory.push({ role: 'assistant', content: localRes.text });
             if (chatHistory.length > 10) chatHistory.splice(0, 2);
           } else {
-            appendMessage("Chào bạn! Hiện tại tôi đang hoạt động ở chế độ **Trợ lý tự động** nên chỉ có thể trả lời các chủ đề về Robotics, Đồ án Drone, Script GPM Browser, Thông tin liên hệ, Học tập và Quê quán của Mạnh Hà.\n\nĐể kích hoạt **AI thông minh tự do trò chuyện**, bạn hãy nhấn nút cài đặt **⚙️** ở góc trên ô chat để điền **Gemini API Key** cá nhân nhé! Hoặc chọn nhanh các câu hỏi gợi ý phía dưới:", 'bot');
+            appendMessage("Chào bạn! Hiện tại tôi đang hoạt động ở chế độ **Trợ lý tự động** nên chỉ có thể trả lời các chủ đề về Robotics, Đồ án Drone, Script GPM Browser, Thông tin liên hệ, Học tập và Quê quán của Mạnh Hà.\n\nĐể kích hoạt **AI thông minh tự do trò chuyện**, bạn hãy nhấn nút cài đặt **⚙️** ở góc trên ô chat để điền **GitHub PAT** cá nhân nhé! Hoặc chọn nhanh các câu hỏi gợi ý phía dưới:", 'bot');
             showMainMenu();
           }
         }

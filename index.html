@@ -927,12 +927,17 @@
 
       <!-- Hidden API Key Configuration Panel -->
       <div id="chatbot-settings-panel" class="hidden">
-        <label for="gemini-key-input">Cấu hình API Key cá nhân (Tùy chọn):</label>
+        <label for="ai-model-select">Chọn AI Model:</label>
+        <select id="ai-model-select" style="width: 100%; margin-bottom: 10px; padding: 8px; border-radius: 4px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid var(--color-primary);">
+          <option value="gpt-4o">GitHub Models (GPT-4o)</option>
+          <option value="gemini-flash-lite">Gemini (Flash Lite)</option>
+        </select>
+        <label for="gemini-key-input">Cấu hình API Key / PAT cá nhân (Tùy chọn):</label>
         <div class="settings-input-row">
-          <input type="password" id="gemini-key-input" placeholder="Đang sử dụng API Key hệ thống của Hà...">
+          <input type="password" id="gemini-key-input" placeholder="Đang sử dụng Key hệ thống của Hà...">
           <button id="save-gemini-key">Lưu</button>
         </div>
-        <p class="settings-help">Trò chuyện đang chạy bằng API Key hệ thống của Mạnh Hà. Bạn có thể nhập và lưu key cá nhân tại đây nếu muốn sử dụng hạn mức riêng của mình.</p>
+        <p class="settings-help">Trò chuyện đang chạy bằng Key hệ thống. Bạn có thể nhập Token/Key cá nhân tại đây nếu muốn sử dụng hạn mức riêng của mình.</p>
       </div>
       
       <div id="chatbot-messages" class="chatbot-messages">
