@@ -1537,10 +1537,10 @@ function initThreeJS() {
   geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
   
   const material = new THREE.PointsMaterial({
-    size: 0.05,
-    color: 0x0052ff,
+    size: 0.08, // Increased size
+    color: 0x00a8ff, // Brighter blue
     transparent: true,
-    opacity: 0.8,
+    opacity: 1,
     blending: THREE.AdditiveBlending
   });
   
@@ -1549,12 +1549,13 @@ function initThreeJS() {
   
   // Add some connecting lines for a wireframe look
   const wireframeGeo = new THREE.IcosahedronGeometry(10, 2);
-  const wireframeMat = new THREE.LineBasicMaterial({ color: 0x0052ff, transparent: true, opacity: 0.1 });
+  const wireframeMat = new THREE.LineBasicMaterial({ color: 0x00a8ff, transparent: true, opacity: 0.15 });
   const wireframe = new THREE.LineSegments(new THREE.WireframeGeometry(wireframeGeo), wireframeMat);
   scene.add(wireframe);
 
   camera.position.z = 25;
-  camera.position.x = 10; // Shifted slightly right to fit the hero layout
+  camera.position.x = 8; 
+  camera.lookAt(scene.position); // Ensure camera points at the globe
 
   // Mouse interaction
   let mouseX = 0;
