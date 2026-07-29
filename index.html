@@ -6,9 +6,27 @@
   <title>Ngô Mạnh Hà | Kỹ sư Robotics & MMO Expert</title>
   <meta name="description" content="Chào mừng bạn đến với trang web cá nhân của Ngô Mạnh Hà. Tôi là kỹ sư Robotics tốt nghiệp từ Đại học Thủy Lợi và nhà đầu tư MMO/Crypto chuyên nghiệp.">
   <meta name="keywords" content="Ngô Mạnh Hà, Robotics, Đại học Thủy Lợi, MMO, Crypto, Video Editor, CapCut, Premiere, GPM Scripting, Hưng Yên">
+  <meta name="author" content="Ngô Mạnh Hà">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ngomanhha.xyz/">
+  <meta property="og:title" content="Ngô Mạnh Hà | Kỹ sư Robotics & MMO Expert">
+  <meta property="og:description" content="Khám phá Portfolio chuyên nghiệp của Ngô Mạnh Hà - Kỹ sư Robotics, lập trình viên MMO/Crypto và tự động hóa.">
+  <meta property="og:image" content="https://ngomanhha.xyz/assets/avatar.jpg">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://ngomanhha.xyz/">
+  <meta property="twitter:title" content="Ngô Mạnh Hà | Kỹ sư Robotics & MMO Expert">
+  <meta property="twitter:description" content="Khám phá Portfolio chuyên nghiệp của Ngô Mạnh Hà - Kỹ sư Robotics, lập trình viên MMO/Crypto và tự động hóa.">
+  <meta property="twitter:image" content="https://ngomanhha.xyz/assets/avatar.jpg">
   
   <!-- CSS Stylesheet -->
   <link rel="stylesheet" href="style.css?v=9.7">
+
+  <!-- Three.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   
   <!-- Inline Flash-prevention Theme Initializer Script -->
   <script>
@@ -86,17 +104,22 @@
       
       <nav>
         <ul class="nav-menu">
-          <li><a href="#hero" class="nav-link active">Trang chủ</a></li>
-          <li><a href="#about" class="nav-link">Giới thiệu</a></li>
-          <li><a href="#skills" class="nav-link">Kỹ năng</a></li>
-          <li><a href="#projects" class="nav-link">Dự án</a></li>
-          <li><a href="#experience" class="nav-link">Kinh nghiệm</a></li>
-          <li><a href="#travel" class="nav-link">Du lịch</a></li>
-          <li><a href="#contact" class="nav-link">Liên hệ</a></li>
+          <li><a href="#hero" class="nav-link active" data-i18n="nav-home">Trang chủ</a></li>
+          <li><a href="#about" class="nav-link" data-i18n="nav-about">Giới thiệu</a></li>
+          <li><a href="#skills" class="nav-link" data-i18n="nav-skills">Kỹ năng</a></li>
+          <li><a href="#projects" class="nav-link" data-i18n="nav-projects">Dự án</a></li>
+          <li><a href="#experience" class="nav-link" data-i18n="nav-experience">Kinh nghiệm</a></li>
+          <li><a href="#travel" class="nav-link" data-i18n="nav-travel">Du lịch</a></li>
+          <li><a href="#contact" class="nav-link" data-i18n="nav-contact">Liên hệ</a></li>
         </ul>
       </nav>
       
       <div class="nav-actions">
+        <!-- Language Toggle Button -->
+        <button id="lang-toggle-btn" class="theme-toggle-btn" aria-label="Đổi ngôn ngữ" title="Đổi ngôn ngữ">
+          <span id="lang-icon">🇻🇳</span>
+        </button>
+
         <!-- Theme Toggle Button -->
         <button id="theme-toggle" class="theme-toggle-btn" aria-label="Đổi giao diện">
           <!-- Moon Icon (for dark mode) -->
@@ -160,30 +183,32 @@
 
   <!-- HERO SECTION -->
   <section id="hero" class="section">
+    <!-- 3D Canvas Background -->
+    <div id="canvas-container"></div>
+    
     <div class="container hero-grid">
       <div class="hero-content reveal">
         <div class="hero-tagline">
           <span class="hero-tagline-dot"></span>
-          Đam mê Tự động hóa & Thị trường Số
+          <span data-i18n="about-tag-1">Đam mê Tự động hóa & Thị trường Số</span>
         </div>
-        <h1 class="hero-title">
+        <h1 class="hero-title" data-i18n="hero-title">
           Xin chào, mình là <span class="gradient-text">Ngô Mạnh Hà</span><br>
-          <span class="typewriter-text" data-words='["Kỹ sư Robotics", "MMO Expert", "Freelance Video Editor", "Crypto Node Runner"]'>Kỹ sư Robotics</span>
+          Kỹ sư Robotics
         </h1>
-        <p class="hero-desc">
+        <p class="hero-desc" data-i18n="hero-desc">
           Tôi tốt nghiệp ngành Kỹ thuật Robot & Điều khiển thông minh từ Đại học Thủy Lợi, sở hữu 3 năm kinh nghiệm thực chiến trong thị trường MMO/Crypto, tự động hóa kịch bản GPM Browser và hoạt động tích cực trong lĩnh vực biên tập sản xuất video sáng tạo.
         </p>
         
         <div class="hero-actions">
           <a href="#projects" class="btn btn-primary">
-            Khám phá dự án
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            <span data-i18n="hero-btn-projects">Khám phá dự án ➔</span>
           </a>
-          <a href="#contact" class="btn btn-secondary">Liên hệ hợp tác</a>
+          <a href="#contact" class="btn btn-secondary" data-i18n="hero-btn-contact">Liên hệ hợp tác</a>
         </div>
         
         <div class="hero-socials">
-          <span>Kết nối:</span>
+          <span data-i18n="hero-connect">Kết nối:</span>
           <a href="https://www.facebook.com/ngo.ha.591196/about" target="_blank" aria-label="Facebook" class="btn-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
           </a>
@@ -223,8 +248,8 @@
   <section id="about" class="section">
     <div class="container">
       <div class="section-title-wrapper reveal">
-        <h2 class="section-title">Giới thiệu</h2>
-        <p class="section-subtitle">Tư duy kỹ thuật và định hướng tương lai</p>
+        <h2 class="section-title" data-i18n="about-title">Giới thiệu</h2>
+        <p class="section-subtitle" data-i18n="about-tag-2">Tư duy kỹ thuật và định hướng tương lai</p>
       </div>
       
       <div class="about-grid">
@@ -234,33 +259,33 @@
         </div>
         
         <div class="about-content reveal">
-          <h3 class="about-headline" style="font-size: 1.8rem; font-family: var(--font-heading);">Đưa tư duy lập trình tự động hóa vào thị trường MMO & Crypto.</h3>
-          <p class="about-text">
+          <h3 class="about-headline" style="font-size: 1.8rem; font-family: var(--font-heading);" data-i18n="about-desc-1">Đưa tư duy lập trình tự động hóa vào thị trường MMO & Crypto.</h3>
+          <p class="about-text" data-i18n="about-desc-2">
             Tôi tốt nghiệp chuyên ngành Kỹ thuật Robot & Điều khiển thông minh tại Đại học Thủy Lợi (Khóa 2022 - 2026). Nền tảng học thuật về hệ thống nhúng, thiết kế robot tự hành (Drone) và thuật toán giúp tôi có tư duy phân tích hệ thống rất tốt.
           </p>
-          <p class="about-text">
+          <p class="about-text" data-i18n="about-desc-3">
             Bên cạnh đó, tôi đã có 3 năm kinh nghiệm thực chiến hoạt động trong lĩnh vực MMO (Kiếm tiền online) và đầu tư Crypto (Tiền mã hóa, DeFi, DePin). Đồng thời tôi cũng là một Freelance Editor thành thạo các công cụ chỉnh sửa video CapCut (sở hữu kênh short 57.9k followers), Adobe Premiere Pro và Photoshop.
           </p>
           
           <div class="about-stats">
             <div class="stat-item glass-card">
               <div class="stat-number">3+</div>
-              <div class="stat-label">Năm MMO & Crypto</div>
+              <div class="stat-label" data-i18n="stat-1-title">Năm MMO & Crypto</div>
             </div>
             <div class="stat-item glass-card">
               <div class="stat-number">57k+</div>
-              <div class="stat-label">Followers TikTok</div>
+              <div class="stat-label" data-i18n="stat-2-title">Followers TikTok</div>
             </div>
             <div class="stat-item glass-card">
               <div class="stat-number">IELTS</div>
-              <div class="stat-label">Speaking 5.0</div>
+              <div class="stat-label" data-i18n="stat-3-title">Speaking 5.0</div>
             </div>
           </div>
           
           <div style="margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap;">
-            <a href="#contact" class="btn btn-primary">Liên hệ công việc</a>
-            <a href="assets/drone_thesis.pdf" target="_blank" class="btn btn-secondary">Đọc Đồ án / Bài báo</a>
-            <a href="https://www.facebook.com/ngo.ha.591196/about" target="_blank" class="btn btn-secondary">Facebook cá nhân</a>
+            <a href="#contact" class="btn btn-primary" data-i18n="btn-contact-work">Liên hệ công việc</a>
+            <a href="assets/drone_thesis.pdf" target="_blank" class="btn btn-secondary" data-i18n="btn-read-thesis">Đọc Đồ án / Bài báo</a>
+            <a href="https://www.facebook.com/ngo.ha.591196/about" target="_blank" class="btn btn-secondary" data-i18n="btn-fb">Facebook cá nhân</a>
           </div>
         </div>
       </div>
@@ -271,8 +296,8 @@
   <section id="skills" class="section">
     <div class="container">
       <div class="section-title-wrapper reveal">
-        <h2 class="section-title">Kỹ năng chuyên môn</h2>
-        <p class="section-subtitle">Sự kết hợp giữa công nghệ, tài chính số và truyền thông sáng tạo</p>
+        <h2 class="section-title" data-i18n="skills-title">Kỹ năng chuyên môn</h2>
+        <p class="section-subtitle" data-i18n="skills-subtitle">Sự kết hợp giữa công nghệ, tài chính số và truyền thông sáng tạo</p>
       </div>
       
       <div class="skills-container reveal">
@@ -285,7 +310,7 @@
               <path d="M12 7v4M8 16h8" />
             </svg>
           </div>
-          <h3 class="skills-card-title">Robotics & Kỹ thuật</h3>
+          <h3 class="skills-card-title" data-i18n="skill-robotics">Robotics & Kỹ thuật</h3>
           <div class="skills-list">
             <div class="skill-item">
               <div class="skill-info">
@@ -325,7 +350,7 @@
               <path d="M12 8V16M8 12H16" />
             </svg>
           </div>
-          <h3 class="skills-card-title">MMO & Crypto</h3>
+          <h3 class="skills-card-title" data-i18n="skill-crypto">MMO & Crypto</h3>
           <div class="skills-list">
             <div class="skill-item">
               <div class="skill-info">
@@ -365,7 +390,7 @@
               <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
             </svg>
           </div>
-          <h3 class="skills-card-title">Video Editing & Design</h3>
+          <h3 class="skills-card-title" data-i18n="skill-video">Video Editing & Design</h3>
           <div class="skills-list">
             <div class="skill-item">
               <div class="skill-info">
@@ -404,16 +429,16 @@
   <section id="projects" class="section">
     <div class="container">
       <div class="section-title-wrapper reveal">
-        <h2 class="section-title">Dự án & Sản phẩm</h2>
-        <p class="section-subtitle">Các dự án trong lĩnh vực Robotics, Crypto Node và Sáng tạo Nội dung</p>
+        <h2 class="section-title" data-i18n="projects-title">Dự án & Sản phẩm</h2>
+        <p class="section-subtitle" data-i18n="projects-subtitle">Các dự án trong lĩnh vực Robotics, Crypto Node và Sáng tạo Nội dung</p>
       </div>
       
       <!-- Filter Controls -->
       <div class="projects-filter reveal">
-        <button class="filter-btn active" data-filter="all">Tất cả sản phẩm</button>
-        <button class="filter-btn" data-filter="robotics">Robotics & Drone</button>
-        <button class="filter-btn" data-filter="crypto">MMO & Crypto</button>
-        <button class="filter-btn" data-filter="video">Video & Design</button>
+        <button class="filter-btn active" data-filter="all" data-i18n="filter-all">Tất cả sản phẩm</button>
+        <button class="filter-btn" data-filter="robotics" data-i18n="filter-robotics">Robotics & Drone</button>
+        <button class="filter-btn" data-filter="crypto" data-i18n="filter-mmo">MMO & Crypto</button>
+        <button class="filter-btn" data-filter="video" data-i18n="filter-media">Video & Design</button>
       </div>
       
       <!-- Projects Grid -->
@@ -434,12 +459,12 @@
               <span class="project-tag">MATLAB / Control</span>
               <span class="project-tag">Drone</span>
             </div>
-            <h3 class="project-title">Robot Drone Vận Tải - Thiết Kế Hệ Thống Điều Khiển</h3>
-            <p class="project-description">
+            <h3 class="project-title" data-i18n="proj-1-title">Robot Drone Vận Tải - Thiết Kế Hệ Thống Điều Khiển</h3>
+            <p class="project-description" data-i18n="proj-1-desc">
               Đồ án kỹ sư nghiên cứu chuyên sâu về thiết kế mô hình 3D trên SolidWorks, xây dựng mô hình toán học động lực học và thuật toán điều khiển vị trí cho Drone vận tải hàng hóa. Đã được xuất bản dạng bài báo khoa học.
             </p>
             <div class="project-links">
-              <a href="assets/drone_thesis.pdf" target="_blank" class="project-link">Đọc bài báo PDF <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+              <a href="assets/drone_thesis.pdf" target="_blank" class="project-link"><span data-i18n="btn-read-thesis">Đọc bài báo PDF</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
             </div>
           </div>
         </article>
@@ -486,8 +511,8 @@
               <span class="project-tag">TikTok Beta</span>
               <span class="project-tag">57.9K Followers</span>
             </div>
-            <h3 class="project-title">Biên Tập Video Ngắn & TikTok (57.9K Followers)</h3>
-            <p class="project-description">
+            <h3 class="project-title" data-i18n="proj-3-title">Biên Tập Video Ngắn & TikTok (57.9K Followers)</h3>
+            <p class="project-description" data-i18n="proj-3-desc">
               Sản xuất nội dung, chỉnh sửa video ngắn sử dụng hiệu ứng chuyển động keyframe, phối màu và ghép âm thanh chuyên nghiệp. Kênh TikTok Đạt 57.9K follower và 255.5K lượt thích.
             </p>
             <div class="project-links">
@@ -539,8 +564,8 @@
               <span class="project-tag">Automation Script</span>
               <span class="project-tag">Node & Airdrop</span>
             </div>
-            <h3 class="project-title">Tự Động Hóa MMO - Viết Script GPM Browser</h3>
-            <p class="project-description">
+            <h3 class="project-title" data-i18n="proj-2-title">Tự Động Hóa MMO - Viết Script GPM Browser</h3>
+            <p class="project-description" data-i18n="proj-2-desc">
               Viết kịch bản tự động hóa điều khiển hàng loạt hồ sơ trình duyệt GPM Browser để cày cuốc tài khoản (account farming), tự động làm airdrop/retroactive (như Dogs airdrop 51K+ DOGS) và tối ưu hóa hệ thống kiếm tiền từ X Monetization.
             </p>
             <div class="project-links" style="display: flex; gap: 16px; flex-wrap: wrap;">
@@ -550,6 +575,18 @@
           </div>
         </article>
       </div>
+      
+      <!-- Github Open Source Section -->
+      <div style="margin-top: 80px;" class="reveal">
+        <h3 style="font-family: var(--font-heading); font-size: 1.5rem; text-align: center; margin-bottom: 30px;">
+          <span class="gradient-text">Mã Nguồn Mở Github</span>
+        </h3>
+        <div id="github-projects-container" class="projects-grid">
+          <!-- JS will inject Github repos here -->
+          <div style="text-align: center; width: 100%; color: var(--text-secondary);">Đang tải dự án từ Github...</div>
+        </div>
+      </div>
+      
     </div>
   </section>
 
@@ -557,7 +594,7 @@
   <section id="experience" class="section">
     <div class="container">
       <div class="section-title-wrapper reveal">
-        <h2 class="section-title">Kinh nghiệm & Học vấn</h2>
+        <h2 class="section-title" data-i18n="exp-title">Kinh nghiệm & Học vấn</h2>
         <p class="section-subtitle">Chặng đường học tập và làm việc của tôi</p>
       </div>
       
@@ -568,12 +605,12 @@
           <div class="timeline-card glass-card">
             <div class="timeline-header">
               <div>
-                <h3 class="timeline-title">Nhà đầu tư MMO, Crypto & Tự động hóa</h3>
-                <div class="timeline-company">Tự do thực chiến</div>
+                <h3 class="timeline-title" data-i18n="exp-3-title">Nhà đầu tư MMO, Crypto & Tự động hóa</h3>
+                <div class="timeline-company" data-i18n="exp-3-company">Tự do thực chiến</div>
               </div>
               <span class="timeline-date">2023 - 2026</span>
             </div>
-            <p class="timeline-desc">
+            <p class="timeline-desc" data-i18n="exp-3-desc">
               Tham gia giao dịch, chạy node mạng phi tập trung (DePin). Đặc biệt, nghiên cứu viết các đoạn mã tự động hóa (GPM Browser scripting) để tự quản lý đa tài khoản, cày game/airdrop retroactive quy mô lớn (thắng airdrop DOGS), và tối ưu kênh tương tác kiếm tiền từ quảng cáo X (Twitter) Monetization.
             </p>
           </div>
@@ -585,12 +622,12 @@
           <div class="timeline-card glass-card">
             <div class="timeline-header">
               <div>
-                <h3 class="timeline-title">Freelancer Video Editor & Creator</h3>
-                <div class="timeline-company">vLance & CapCut / YouTube Creators</div>
+                <h3 class="timeline-title" data-i18n="exp-2-title">Freelancer Video Editor & Creator</h3>
+                <div class="timeline-company" data-i18n="exp-2-company">vLance & CapCut / YouTube Creators</div>
               </div>
               <span class="timeline-date">11/2021 - 05/2022</span>
             </div>
-            <p class="timeline-desc">
+            <p class="timeline-desc" data-i18n="exp-2-desc">
               Biên tập video hoạt họa VideoScribe giới thiệu sản phẩm. Thiết kế, sản xuất nội dung video ngắn tiếng Nhật đạt mốc 57.9K người theo dõi và hơn 255K lượt thích trên TikTok. Xây dựng kênh YouTube cá nhân về âm nhạc và hiệu ứng âm thanh.
             </p>
           </div>
@@ -620,8 +657,8 @@
   <section id="travel" class="section reveal">
     <div class="container">
       <div class="section-title-wrapper reveal">
-        <h2 class="section-title">Hành trình Du lịch</h2>
-        <p class="section-subtitle">Khám phá vẻ đẹp Việt Nam qua những chuyến đi của tôi</p>
+        <h2 class="section-title" data-i18n="travel-title">Hành trình Du lịch</h2>
+        <p class="section-subtitle" data-i18n="travel-subtitle">Khám phá vẻ đẹp Việt Nam qua những chuyến đi của tôi</p>
       </div>
       
       <div class="travel-grid">
@@ -642,16 +679,16 @@
           </div>
           <div class="travel-content">
             <div class="travel-tags">
-              <span class="travel-tag">Hà Giang</span>
+              <span class="travel-tag" data-i18n="travel-loc-1">Hà Giang</span>
               <span class="travel-tag">Đông Bắc</span>
             </div>
-            <h3 class="travel-title">Hà Giang</h3>
-            <p class="travel-description">
+            <h3 class="travel-title" data-i18n="travel-loc-1">Hà Giang</h3>
+            <p class="travel-description" data-i18n="travel-desc">
               Chinh phục cung đường đèo hiểm trở, cao nguyên đá Đồng Văn hùng vĩ, đèo Mã Pí Lèng tráng lệ và dòng sông Nho Quế xanh biếc.
             </p>
             <div class="travel-links">
               <a href="https://drive.google.com/drive/u/8/folders/1opLN1hiv1F8QqYhsFx4-7N2KNtg1wIRh" target="_blank" class="travel-link">
-                Xem Album Ảnh
+                <span data-i18n="travel-btn">Xem Album Ảnh</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
@@ -738,8 +775,8 @@
   <section id="contact" class="section">
     <div class="container">
       <div class="section-title-wrapper reveal">
-        <h2 class="section-title">Liên hệ</h2>
-        <p class="section-subtitle">Kết nối để bàn về công việc, dự án hoặc một trận đấu TFT/Tốc Chiến!</p>
+        <h2 class="section-title" data-i18n="contact-title">Liên hệ</h2>
+        <p class="section-subtitle" data-i18n="contact-subtitle">Kết nối để bàn về công việc, dự án hoặc một trận đấu TFT/Tốc Chiến!</p>
       </div>
       
       <div class="contact-grid reveal">
@@ -780,24 +817,24 @@
         <div class="contact-form-card glass-card">
           <form id="contact-form" class="contact-form" novalidate>
             <div class="form-group">
-              <label for="form-name">Họ và Tên</label>
-              <input type="text" id="form-name" class="form-input" placeholder="Ví dụ: Nguyễn Văn A" required>
+              <label for="form-name" data-i18n="contact-name-label">Họ và Tên</label>
+              <input type="text" id="form-name" class="form-input" data-i18n="contact-name-label" placeholder="Ví dụ: Nguyễn Văn A" required>
             </div>
             <div class="form-group">
-              <label for="form-email">Địa chỉ Email</label>
-              <input type="email" id="form-email" class="form-input" placeholder="Ví dụ: name@gmail.com" required>
+              <label for="form-email" data-i18n="contact-email-label">Địa chỉ Email</label>
+              <input type="email" id="form-email" class="form-input" data-i18n="contact-email-label" placeholder="Ví dụ: name@gmail.com" required>
             </div>
             <div class="form-group form-group-full">
-              <label for="form-subject">Tiêu đề</label>
-              <input type="text" id="form-subject" class="form-input" placeholder="Tin nhắn này liên quan đến vấn đề gì?" required>
+              <label for="form-subject" data-i18n="contact-subject-label">Tiêu đề</label>
+              <input type="text" id="form-subject" class="form-input" data-i18n="contact-subject-label" placeholder="Tin nhắn này liên quan đến vấn đề gì?" required>
             </div>
             <div class="form-group form-group-full">
-              <label for="form-message">Nội dung</label>
-              <textarea id="form-message" class="form-input" placeholder="Nhập nội dung lời nhắn tại đây..." required></textarea>
+              <label for="form-message" data-i18n="contact-message-label">Nội dung</label>
+              <textarea id="form-message" class="form-input" data-i18n="contact-message-label" placeholder="Nhập nội dung lời nhắn tại đây..." required></textarea>
             </div>
             <div class="form-group form-group-full" style="margin-top: 8px;">
               <button type="submit" class="btn btn-primary" style="width: auto;">
-                Gửi lời nhắn
+                <span data-i18n="contact-submit">Gửi lời nhắn</span>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
               </button>
             </div>
@@ -825,7 +862,7 @@
         <span class="logo-dot"></span>
         Mạnh Hà
       </div>
-      <p class="footer-copy">
+      <p class="footer-copy" data-i18n="footer-text">
         &copy; 2026 Ngô Mạnh Hà. Được thiết kế theo phong cách Robot AI Tương lai. Bảo lưu mọi quyền.
       </p>
       <div class="footer-socials">
@@ -840,55 +877,44 @@
     <source src="assets/noi-nay-co-anh-piano.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- Premium Music Control Widget -->
-  <div id="music-player-widget" class="glass-card minimized" aria-label="Trình quản lý nhạc">
-    <!-- Collapsed mini player / Header -->
-    <div class="music-widget-header" role="button" tabindex="0" title="Click để mở rộng/thu nhỏ">
-      <div class="music-status-indicator">
-        <div class="music-bars active-visualizer">
-          <div class="music-bar"></div>
-          <div class="music-bar"></div>
-          <div class="music-bar"></div>
-          <div class="music-bar"></div>
+  <!-- Spotify-like Lofi Music Player -->
+  <div id="lofi-player-widget" class="glass-card minimized">
+    <div class="lofi-player-inner">
+      
+      <!-- Vinyl Cover -->
+      <div class="lofi-cover-container">
+        <div class="lofi-vinyl">
+          <img id="lofi-cover-img" src="assets/lofi_cover_1.jpg" alt="Lofi Cover">
+          <div class="lofi-vinyl-hole"></div>
         </div>
       </div>
-      <div class="music-marquee-container">
-        <span class="music-track-title">Đang tải nhạc...</span>
+      
+      <!-- Track Info -->
+      <div class="lofi-track-info">
+        <div class="lofi-track-name" id="lofi-track-name">Lofi Chill 1</div>
+        <div class="lofi-track-artist" id="lofi-track-artist">Ngô Mạnh Hà Playlist</div>
       </div>
-      <button class="music-widget-toggle" aria-label="Mở rộng trình phát" tabindex="0">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon"><polyline points="18 15 12 9 6 15"></polyline></svg>
-      </button>
-    </div>
-    
-    <!-- Expanded dashboard body -->
-    <div class="music-widget-body">
-      <div class="music-progress-wrapper">
-        <span class="music-time-current">0:00</span>
-        <div class="music-progress-bar-container" title="Click để tua nhạc">
-          <div class="music-progress-bar-fill"></div>
-        </div>
-        <span class="music-time-total">0:00</span>
-      </div>
-      <div class="music-controls">
-        <button class="music-ctrl-btn ctrl-prev" title="Bài trước (Ctrl+Trái)" aria-label="Bài trước">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></svg>
+      
+      <!-- Controls -->
+      <div class="lofi-controls">
+        <button class="lofi-btn" id="lofi-prev-btn" title="Bài trước">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></svg>
         </button>
-        <button class="music-ctrl-btn ctrl-play-pause" title="Phát/Tạm dừng (M)" aria-label="Phát hoặc Tạm dừng">
-          <!-- Play icon (shown when paused) -->
-          <svg class="icon-play" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-          <!-- Pause icon (shown when playing) -->
-          <svg class="icon-pause" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+        <button class="lofi-btn lofi-play-btn" id="lofi-play-btn" title="Phát/Tạm dừng">
+          <svg class="icon-play" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          <svg class="icon-pause" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
         </button>
-        <button class="music-ctrl-btn ctrl-next" title="Bài tiếp theo (Ctrl+Phải)" aria-label="Bài tiếp theo">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
+        <button class="lofi-btn" id="lofi-next-btn" title="Bài tiếp">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
         </button>
       </div>
-      <div class="music-volume-row">
-        <button class="music-ctrl-btn ctrl-volume-mute" title="Bật/Tắt tiếng" aria-label="Tắt tiếng">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="vol-icon"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path class="vol-waves" d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-        </button>
-        <input type="range" id="widget-volume-slider" min="0" max="100" value="30" aria-label="Âm lượng" title="Điều chỉnh âm lượng">
+
+      <!-- Volume -->
+      <div class="lofi-volume">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+        <input type="range" id="lofi-volume-slider" min="0" max="100" value="30">
       </div>
+      
     </div>
   </div>
 
@@ -1018,6 +1044,7 @@
   </div>
 
   <!-- Scripts -->
+  <script src="i18n.js?v=1.0"></script>
   <script src="script.js?v=9.7"></script>
   <script src="main.js?v=9.7"></script>
 </body>

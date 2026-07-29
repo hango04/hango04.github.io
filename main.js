@@ -1375,312 +1375,298 @@ document.addEventListener('DOMContentLoaded', () => {
   initProjectModals();
   initAdminConsole();
   initBgMusic();
+  initThreeJS();
+  initGithubProjects();
 });
 
-/* ---------- BACKGROUND MUSIC PLAYER (HTML5 Audio) ---------- */
-const MUSIC_TRACK = {
-  src: 'assets/noi-nay-co-anh-piano.mp3',
-  title: 'Nơi Này Có Anh - Sơn Tùng M-TP (Piano Cover)'
-};
+/* ---------- LOFI PLAYER ---------- */
+// Danh sách nhạc Lofi
+const LOFI_PLAYLIST = [
+  { title: "Nơi Này Có Anh (Piano)", artist: "Mạnh Hà Playlist", src: "assets/noi-nay-co-anh-piano.mp3", cover: "assets/avatar.jpg" },
+  { title: "Chill Lofi 1", artist: "Mạnh Hà Playlist", src: "https://github.com/hoannguyenvip/lofi-music/raw/main/music/lofi-study.mp3", cover: "assets/avatar.jpg" },
+  { title: "Chill Lofi 2", artist: "Mạnh Hà Playlist", src: "https://github.com/hoannguyenvip/lofi-music/raw/main/music/lofi-chill.mp3", cover: "assets/avatar.jpg" }
+];
 
-let bgAudio = null;
-let bgMusicPlaying = false;
-let progressInterval = null;
-let audioUnlocked = false;
-
-// Hiển thị overlay mời bật nhạc
-function showAudioOverlay() {
-  if (localStorage.getItem('bgMusicPlaying') === 'false') return;
-  if (audioUnlocked) return;
-
-  const overlay = document.createElement('div');
-  overlay.id = 'audio-enable-overlay';
-  overlay.innerHTML = `
-    <div class="audio-overlay-inner">
-      <div class="audio-overlay-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
-        <span class="audio-pulse-ring"></span>
-      </div>
-      <div class="audio-overlay-text">
-        <span class="audio-overlay-title">Nhấn để bật nhạc nền</span>
-        <span class="audio-overlay-sub">Nơi Này Có Anh · Piano Cover</span>
-      </div>
-      <button class="audio-overlay-close" aria-label="Đóng" title="Tắt nhạc nền">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-      </button>
-    </div>
-  `;
-  document.body.appendChild(overlay);
-
-  overlay.querySelector('.audio-overlay-close').addEventListener('click', function(e) {
-    e.stopPropagation();
-    localStorage.setItem('bgMusicPlaying', 'false');
-    audioUnlocked = true;
-    hideAudioOverlay();
-    if (bgAudio) bgAudio.pause();
-    bgMusicPlaying = false;
-    updateMusicBtn();
-  });
-
-  overlay.addEventListener('click', function() {
-    unlockAndPlay();
-  });
-
-  setTimeout(() => {
-    const el = document.getElementById('audio-enable-overlay');
-    if (el) el.classList.add('fade-out-overlay');
-  }, 8000);
-}
-
-function hideAudioOverlay() {
-  const overlay = document.getElementById('audio-enable-overlay');
-  if (overlay) {
-    overlay.classList.add('fade-out-overlay');
-    setTimeout(() => overlay.remove(), 600);
-  }
-}
-
-function unlockAndPlay() {
-  if (audioUnlocked) return;
-  audioUnlocked = true;
-  hideAudioOverlay();
-  if (bgAudio && localStorage.getItem('bgMusicPlaying') !== 'false') {
-    bgAudio.play().then(() => {
-      bgMusicPlaying = true;
-      updateMusicBtn();
-      updateVolumeIcon(false);
-    }).catch(() => {});
-  }
-}
-
-function updateMusicBtn() {
-  const widget = document.getElementById('music-player-widget');
-  if (!widget) return;
-  const playPauseBtn = widget.querySelector('.ctrl-play-pause');
-  if (!playPauseBtn) return;
-  const iconPlay = playPauseBtn.querySelector('.icon-play');
-  const iconPause = playPauseBtn.querySelector('.icon-pause');
-
-  if (bgMusicPlaying) {
-    widget.classList.add('playing');
-    if (iconPlay) iconPlay.style.display = 'none';
-    if (iconPause) iconPause.style.display = 'block';
-    playPauseBtn.setAttribute('title', 'Tạm dừng (M)');
-    startProgressTicker();
-  } else {
-    widget.classList.remove('playing');
-    if (iconPlay) iconPlay.style.display = 'block';
-    if (iconPause) iconPause.style.display = 'none';
-    playPauseBtn.setAttribute('title', 'Phát (M)');
-    stopProgressTicker();
-  }
-}
-
-function formatTime(secs) {
-  const m = Math.floor(secs / 60);
-  const s = Math.floor(secs % 60);
-  return `${m}:${s < 10 ? '0' : ''}${s}`;
-}
-
-function updateTimelineProgress(current, total) {
-  const currentText = document.querySelector('.music-time-current');
-  const totalText = document.querySelector('.music-time-total');
-  const fill = document.querySelector('.music-progress-bar-fill');
-  if (currentText) currentText.innerText = formatTime(current || 0);
-  if (totalText) totalText.innerText = formatTime(total || 0);
-  if (fill && total > 0) {
-    fill.style.width = `${((current || 0) / total) * 100}%`;
-  }
-}
-
-function startProgressTicker() {
-  if (progressInterval) clearInterval(progressInterval);
-  progressInterval = setInterval(() => {
-    if (!bgAudio) return;
-    updateTimelineProgress(bgAudio.currentTime, bgAudio.duration || 0);
-  }, 500);
-}
-
-function stopProgressTicker() {
-  if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
-}
-
-function updateVolumeIcon(muted) {
-  const muteBtn = document.querySelector('.ctrl-volume-mute');
-  const wavesPath = document.querySelector('.vol-waves');
-  if (!muteBtn) return;
-  if (muted) {
-    muteBtn.classList.add('muted');
-    if (wavesPath) wavesPath.style.display = 'none';
-    muteBtn.setAttribute('title', 'Bật tiếng');
-  } else {
-    muteBtn.classList.remove('muted');
-    if (wavesPath) wavesPath.style.display = '';
-    muteBtn.setAttribute('title', 'Tắt tiếng');
-  }
-}
+let currentSongIndex = 0;
+let lofiAudio = null;
+let isPlaying = false;
 
 function initBgMusic() {
-  const widget = document.getElementById('music-player-widget');
+  const widget = document.getElementById('lofi-player-widget');
   if (!widget) return;
+  
+  // Show widget with animation
+  setTimeout(() => {
+    widget.classList.add('visible');
+  }, 2000);
 
-  // Lấy hoặc tạo audio element
-  bgAudio = document.getElementById('bg-audio');
-  if (!bgAudio) return;
+  lofiAudio = new Audio();
+  lofiAudio.volume = parseInt(localStorage.getItem('bgMusicVolume') || '30') / 100;
+  
+  const playBtn = document.getElementById('lofi-play-btn');
+  const prevBtn = document.getElementById('lofi-prev-btn');
+  const nextBtn = document.getElementById('lofi-next-btn');
+  const volSlider = document.getElementById('lofi-volume-slider');
+  
+  const trackName = document.getElementById('lofi-track-name');
+  const trackArtist = document.getElementById('lofi-track-artist');
+  const coverImg = document.getElementById('lofi-cover-img');
+  
+  const iconPlay = playBtn.querySelector('.icon-play');
+  const iconPause = playBtn.querySelector('.icon-pause');
 
-  // Set volume từ localStorage
-  const savedVol = parseInt(localStorage.getItem('bgMusicVolume') || '30');
-  bgAudio.volume = savedVol / 100;
+  function loadSong(index) {
+    const song = LOFI_PLAYLIST[index];
+    lofiAudio.src = song.src;
+    trackName.innerText = song.title;
+    trackArtist.innerText = song.artist;
+    coverImg.src = song.cover;
+  }
 
-  // Hiển thị tên bài
-  const titleSpan = document.querySelector('.music-track-title');
-  if (titleSpan) titleSpan.innerText = MUSIC_TRACK.title;
-
-  // Lắng nghe sự kiện audio
-  bgAudio.addEventListener('play', () => {
-    bgMusicPlaying = true;
-    updateMusicBtn();
-    updateVolumeIcon(bgAudio.muted);
-  });
-  bgAudio.addEventListener('pause', () => {
-    bgMusicPlaying = false;
-    updateMusicBtn();
-  });
-  bgAudio.addEventListener('ended', () => {
-    // loop đã set trong HTML, nhưng phòng ngừa
-    bgAudio.currentTime = 0;
-    bgAudio.play().catch(() => {});
-  });
-  bgAudio.addEventListener('loadedmetadata', () => {
-    updateTimelineProgress(0, bgAudio.duration);
-  });
-
-  const header = widget.querySelector('.music-widget-header');
-  const toggleBtn = widget.querySelector('.music-widget-toggle');
-  const prevBtn = widget.querySelector('.ctrl-prev');
-  const nextBtn = widget.querySelector('.ctrl-next');
-  const playPauseBtn = widget.querySelector('.ctrl-play-pause');
-  const muteBtn = widget.querySelector('.ctrl-volume-mute');
-  const volumeSlider = document.getElementById('widget-volume-slider');
-  const progressContainer = widget.querySelector('.music-progress-bar-container');
-
-  // Mở rộng/thu nhỏ widget
-  const toggleMinimize = (e) => {
-    if (e.target.closest('.music-widget-toggle') || !e.target.closest('.music-ctrl-btn, input')) {
-      widget.classList.toggle('minimized');
-      const isMinimized = widget.classList.contains('minimized');
-      if (toggleBtn) toggleBtn.setAttribute('aria-label', isMinimized ? 'Mở rộng trình phát' : 'Thu nhỏ trình phát');
+  function togglePlay() {
+    if (isPlaying) {
+      lofiAudio.pause();
+    } else {
+      lofiAudio.play().catch(e => console.log("Autoplay blocked:", e));
     }
-  };
-  if (header) header.addEventListener('click', toggleMinimize);
-
-  // Volume slider
-  if (volumeSlider) {
-    volumeSlider.value = savedVol;
-    volumeSlider.addEventListener('input', function(e) {
-      e.stopPropagation();
-      const vol = parseInt(e.target.value);
-      localStorage.setItem('bgMusicVolume', String(vol));
-      if (bgAudio) {
-        bgAudio.volume = vol / 100;
-        if (vol > 0 && bgAudio.muted) {
-          bgAudio.muted = false;
-          updateVolumeIcon(false);
-        }
-      }
-    });
-    volumeSlider.addEventListener('click', e => e.stopPropagation());
-    volumeSlider.addEventListener('mousedown', e => e.stopPropagation());
   }
 
-  // Play / Pause
-  if (playPauseBtn) {
-    playPauseBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      if (!bgAudio) return;
-      if (bgMusicPlaying) {
-        bgAudio.pause();
-        localStorage.setItem('bgMusicPlaying', 'false');
-      } else {
-        bgAudio.play().catch(() => {});
-        localStorage.setItem('bgMusicPlaying', 'true');
-      }
-    });
+  function updatePlayState() {
+    if (isPlaying) {
+      widget.classList.add('playing');
+      if (iconPlay) iconPlay.style.display = 'none';
+      if (iconPause) iconPause.style.display = 'block';
+      localStorage.setItem('bgMusicPlaying', 'true');
+    } else {
+      widget.classList.remove('playing');
+      if (iconPlay) iconPlay.style.display = 'block';
+      if (iconPause) iconPause.style.display = 'none';
+      localStorage.setItem('bgMusicPlaying', 'false');
+    }
   }
 
-  // Prev — restart bài (chỉ có 1 bài)
-  if (prevBtn) {
-    prevBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      if (bgAudio) { bgAudio.currentTime = 0; if (!bgMusicPlaying) bgAudio.play().catch(() => {}); }
+  function nextSong() {
+    currentSongIndex = (currentSongIndex + 1) % LOFI_PLAYLIST.length;
+    loadSong(currentSongIndex);
+    if (isPlaying) lofiAudio.play();
+  }
+
+  function prevSong() {
+    currentSongIndex = (currentSongIndex - 1 + LOFI_PLAYLIST.length) % LOFI_PLAYLIST.length;
+    loadSong(currentSongIndex);
+    if (isPlaying) lofiAudio.play();
+  }
+
+  // Event Listeners
+  if (playBtn) playBtn.addEventListener('click', togglePlay);
+  if (nextBtn) nextBtn.addEventListener('click', nextSong);
+  if (prevBtn) prevBtn.addEventListener('click', prevSong);
+  
+  if (volSlider) {
+    volSlider.value = lofiAudio.volume * 100;
+    volSlider.addEventListener('input', (e) => {
+      const vol = e.target.value;
+      lofiAudio.volume = vol / 100;
+      localStorage.setItem('bgMusicVolume', vol);
     });
   }
 
-  // Next — cũng restart (chỉ có 1 bài)
-  if (nextBtn) {
-    nextBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      if (bgAudio) { bgAudio.currentTime = 0; if (!bgMusicPlaying) bgAudio.play().catch(() => {}); }
-    });
-  }
+  lofiAudio.addEventListener('play', () => { isPlaying = true; updatePlayState(); });
+  lofiAudio.addEventListener('pause', () => { isPlaying = false; updatePlayState(); });
+  lofiAudio.addEventListener('ended', nextSong);
 
-  // Mute toggle
-  if (muteBtn) {
-    muteBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      if (!bgAudio) return;
-      bgAudio.muted = !bgAudio.muted;
-      updateVolumeIcon(bgAudio.muted);
-    });
-  }
-
-  // Click tua nhạc trên progress bar
-  if (progressContainer) {
-    progressContainer.addEventListener('click', function(e) {
-      e.stopPropagation();
-      if (!bgAudio || !bgAudio.duration) return;
-      const rect = progressContainer.getBoundingClientRect();
-      const pct = (e.clientX - rect.left) / rect.width;
-      bgAudio.currentTime = pct * bgAudio.duration;
-      updateTimelineProgress(bgAudio.currentTime, bgAudio.duration);
-    });
-  }
-
-  // Phím tắt
+  // Keyboard shortcuts
   document.addEventListener('keydown', function(e) {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
     if (e.key === 'm' || e.key === 'M') {
-      if (playPauseBtn) playPauseBtn.click();
+      togglePlay();
     }
     if (e.ctrlKey && e.key === 'ArrowLeft') {
       e.preventDefault();
-      if (bgAudio) bgAudio.currentTime = Math.max(0, bgAudio.currentTime - 10);
+      prevSong();
     }
     if (e.ctrlKey && e.key === 'ArrowRight') {
       e.preventDefault();
-      if (bgAudio) bgAudio.currentTime = Math.min(bgAudio.duration || 0, bgAudio.currentTime + 10);
+      nextSong();
     }
   });
 
-  updateMusicBtn();
+  // Khởi tạo bài đầu tiên
+  loadSong(currentSongIndex);
 
-  // Thử tự phát ngay khi trang load xong
-  const shouldPlay = localStorage.getItem('bgMusicPlaying') !== 'false';
-  if (shouldPlay) {
-    // Thử autoplay sau khi loader screen biến mất (~1.8s)
+  // Tự động phát nếu user đã từng bật
+  if (localStorage.getItem('bgMusicPlaying') === 'true') {
     setTimeout(() => {
-      if (!bgAudio) return;
-      bgAudio.play().then(() => {
-        // Tự phát thành công! (Chrome đã có Media Engagement Index)
-        audioUnlocked = true;
-        bgMusicPlaying = true;
-        updateMusicBtn();
-        updateVolumeIcon(false);
-      }).catch(() => {
-        // Browser chặn autoplay → hiện banner mời bật nhạc
-        setTimeout(showAudioOverlay, 400);
+      lofiAudio.play().catch(() => {
+        isPlaying = false;
+        updatePlayState();
       });
-    }, 1800);
+    }, 2500);
   }
 }
+
+/* ---------- THREE.JS CYBER GLOBE ---------- */
+function initThreeJS() {
+  const container = document.getElementById('canvas-container');
+  if (!container || typeof THREE === 'undefined') return;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  container.appendChild(renderer.domElement);
+
+  // Create Particles Globe
+  const geometry = new THREE.BufferGeometry();
+  const particlesCount = 1500;
+  const posArray = new Float32Array(particlesCount * 3);
+  
+  for(let i = 0; i < particlesCount * 3; i+=3) {
+    // Generate points on a sphere
+    const r = 10;
+    const theta = 2 * Math.PI * Math.random();
+    const phi = Math.acos(2 * Math.random() - 1);
+    
+    posArray[i] = r * Math.sin(phi) * Math.cos(theta);
+    posArray[i+1] = r * Math.sin(phi) * Math.sin(theta);
+    posArray[i+2] = r * Math.cos(phi);
+  }
+  
+  geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+  
+  const material = new THREE.PointsMaterial({
+    size: 0.05,
+    color: 0x0052ff,
+    transparent: true,
+    opacity: 0.8,
+    blending: THREE.AdditiveBlending
+  });
+  
+  const particlesMesh = new THREE.Points(geometry, material);
+  scene.add(particlesMesh);
+  
+  // Add some connecting lines for a wireframe look
+  const wireframeGeo = new THREE.IcosahedronGeometry(10, 2);
+  const wireframeMat = new THREE.LineBasicMaterial({ color: 0x0052ff, transparent: true, opacity: 0.1 });
+  const wireframe = new THREE.LineSegments(new THREE.WireframeGeometry(wireframeGeo), wireframeMat);
+  scene.add(wireframe);
+
+  camera.position.z = 25;
+  camera.position.x = 10; // Shifted slightly right to fit the hero layout
+
+  // Mouse interaction
+  let mouseX = 0;
+  let mouseY = 0;
+  let targetX = 0;
+  let targetY = 0;
+  const windowHalfX = window.innerWidth / 2;
+  const windowHalfY = window.innerHeight / 2;
+
+  document.addEventListener('mousemove', (event) => {
+    mouseX = (event.clientX - windowHalfX);
+    mouseY = (event.clientY - windowHalfY);
+  });
+
+  // Handle Resize
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  const clock = new THREE.Clock();
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const elapsedTime = clock.getElapsedTime();
+
+    // Auto rotation
+    particlesMesh.rotation.y = elapsedTime * 0.05;
+    wireframe.rotation.y = elapsedTime * 0.05;
+    wireframe.rotation.x = elapsedTime * 0.02;
+
+    // Mouse interaction rotation
+    targetX = mouseX * 0.001;
+    targetY = mouseY * 0.001;
+    
+    particlesMesh.rotation.x += 0.05 * (targetY - particlesMesh.rotation.x);
+    particlesMesh.rotation.y += 0.05 * (targetX - particlesMesh.rotation.y);
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+}
+
+/* ---------- GITHUB API PROJECTS ---------- */
+async function initGithubProjects() {
+  const container = document.getElementById('github-projects-container');
+  if (!container) return;
+
+  try {
+    const response = await fetch('https://api.github.com/users/hango04/repos?sort=updated&per_page=6');
+    if (!response.ok) throw new Error('Network response was not ok');
+    const repos = await response.json();
+    
+    if (repos.length === 0) {
+      container.innerHTML = '<div style="text-align: center; width: 100%; color: var(--text-secondary);">Chưa có dự án mã nguồn mở nào.</div>';
+      return;
+    }
+
+    container.innerHTML = '';
+    
+    repos.forEach(repo => {
+      const card = document.createElement('a');
+      card.href = repo.html_url;
+      card.target = '_blank';
+      card.className = 'github-repo-card glass-card';
+      card.style.textDecoration = 'none';
+
+      // Lang color map
+      const langColors = {
+        JavaScript: '#f1e05a',
+        Python: '#3572A5',
+        HTML: '#e34c26',
+        CSS: '#563d7c',
+        TypeScript: '#3178c6',
+        Vue: '#41b883',
+        Java: '#b07219',
+        C: '#555555',
+        'C++': '#f34b7d',
+        Shell: '#89e051'
+      };
+      
+      const langColor = langColors[repo.language] || '#8b949e';
+      const langDot = repo.language ? `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background-color:${langColor};margin-right:4px;"></span>${repo.language}` : '';
+
+      card.innerHTML = `
+        <div class="github-repo-header">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+          <div class="github-repo-title">${repo.name}</div>
+        </div>
+        <div class="github-repo-desc">${repo.description || 'Không có mô tả.'}</div>
+        <div class="github-repo-footer">
+          <div class="github-repo-lang">${langDot}</div>
+          <div class="github-repo-stats">
+            <span class="github-repo-stat">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              ${repo.stargazers_count}
+            </span>
+            <span class="github-repo-stat">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"></circle><circle cx="6" cy="6" r="3"></circle><path d="M13 6h3a2 2 0 0 1 2 2v7"></path><line x1="6" y1="9" x2="6" y2="21"></line></svg>
+              ${repo.forks_count}
+            </span>
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  } catch (error) {
+    console.error("Github API Error:", error);
+    container.innerHTML = '<div style="text-align: center; width: 100%; color: #ff6b6b;">Không thể tải dự án Github lúc này. Vui lòng thử lại sau.</div>';
+  }
+}
+
 
