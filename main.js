@@ -738,7 +738,10 @@ function initChatbot() {
                 ]
               })
             });
-            if (!response.ok) throw new Error('API request failed');
+            if (!response.ok) {
+              const errText = await response.text();
+              throw new Error(`Lỗi OpenRouter (${response.status}): ${errText}`);
+            }
             const data = await response.json();
             if (data.choices && data.choices[0].message && data.choices[0].message.content) {
               reply = data.choices[0].message.content;
@@ -800,7 +803,7 @@ function initChatbot() {
               chatHistory.push({ role: 'assistant', content: localRes.text });
               if (chatHistory.length > 10) chatHistory.splice(0, 2);
             } else {
-              appendMessage("⚠️ Xin lỗi bạn, hiện tại AI đang bị lỗi kết nối hoặc **API Key không hợp lệ**.\n\nVui lòng nhấn vào biểu tượng Cài đặt **⚙️** ở góc trên cùng để cập nhật lại API Key chuẩn. \n*(Lưu ý: Gemini Key luôn bắt đầu bằng chữ `AIzaSy...`)*", 'bot');
+              appendMessage(`⚠️ Xin lỗi bạn, hiện tại AI đang bị lỗi:\n\n**${err.message}**\n\n*(Chi tiết fallback: ${fallbackErr.message})*`, 'bot');
               showMainMenu();
             }
           }
