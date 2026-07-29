@@ -671,18 +671,17 @@ function initChatbot() {
           apiKey = customKey;
         }
 
-        if (apiKey) {
-          // ONLINE MODE
-          try {
-            const systemContext = "Bạn là Trợ lý ảo của anh Ngô Mạnh Hà. Hãy trả lời thân thiện, lịch sự và ngắn gọn bằng tiếng Việt. Hãy giới thiệu và trả lời các thông tin dựa trên hồ sơ của Hà: tốt nghiệp ĐH Thủy Lợi ngành Robotics & Điều khiển thông minh (khoá 2022-2026), 3 năm kinh nghiệm MMO/Crypto/GPM browser script tự động hóa (NodeJS/Puppeteer), có kênh Tiktok CapCut 57.9k followers và 255.5k likes, sống tại Văn Lâm, Hưng Yên. Hà cũng đam mê du lịch phượt và đã khám phá Hà Giang, Ninh Bình, Cát Bà (có các album ảnh Google Drive trên web). Zalo: 0334383560, email: ngomanhha2004@gmail.com, facebook: Ngo Ha. Hãy trả lời khoảng 2-3 câu và luôn trả lời dưới góc nhìn đại diện trợ lý của Hà.";
-            let reply = "";
-            
+        try {
+          const systemContext = "Bạn là Trợ lý ảo của anh Ngô Mạnh Hà. Hãy trả lời thân thiện, lịch sự và ngắn gọn bằng tiếng Việt. Hãy giới thiệu và trả lời các thông tin dựa trên hồ sơ của Hà: tốt nghiệp ĐH Thủy Lợi ngành Robotics & Điều khiển thông minh (khoá 2022-2026), 3 năm kinh nghiệm MMO/Crypto/GPM browser script tự động hóa (NodeJS/Puppeteer), có kênh Tiktok CapCut 57.9k followers và 255.5k likes, sống tại Văn Lâm, Hưng Yên. Hà cũng đam mê du lịch phượt và đã khám phá Hà Giang, Ninh Bình, Cát Bà (có các album ảnh Google Drive trên web). Zalo: 0334383560, email: ngomanhha2004@gmail.com, facebook: Ngo Ha. Hãy trả lời khoảng 2-3 câu và luôn trả lời dưới góc nhìn đại diện trợ lý của Hà.";
+          let reply = "";
+
+          if (customKey) {
             if (aiModel === 'gpt-4o') {
               const response = await fetch("https://models.inference.ai.azure.com/chat/completions", {
                 method: 'POST',
                 headers: { 
                   'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${apiKey}`
+                  'Authorization': `Bearer ${customKey}`
                 },
                 body: JSON.stringify({
                   model: "gpt-4o",
@@ -700,13 +699,12 @@ function initChatbot() {
                 throw new Error('Invalid response payload');
               }
             } else if (aiModel === 'gemini-flash-lite') {
-              // Convert chatHistory to Gemini format
               const geminiHistory = chatHistory.map(m => ({
                 role: m.role === 'user' ? 'user' : 'model',
                 parts: [{ text: m.content }]
               }));
               
-              const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite-preview-02-05:generateContent?key=${apiKey}`, {
+              const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite-preview-02-05:generateContent?key=${customKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -722,29 +720,31 @@ function initChatbot() {
                 throw new Error('Invalid response payload');
               }
             }
-
-            if (reply) {
-              appendMessage(reply, 'bot');
-              chatHistory.push({ role: 'assistant', content: reply });
-              if (chatHistory.length > 10) chatHistory.splice(0, 2);
-              choicesContainer.innerHTML = ''; // Clear choices
-            }
-          } catch (err) {
-            console.error(err);
-            // Fallback to local keyword agent if API fails
-            const localRes = getLocalNLPResponse(msg);
-            if (localRes) {
-              appendMessage(localRes.text, 'bot');
-              showFollowupChoices(localRes.followups);
-              chatHistory.push({ role: 'assistant', content: localRes.text });
-              if (chatHistory.length > 10) chatHistory.splice(0, 2);
-            } else {
-              appendMessage("Chào bạn! Hiện tại tôi đang hoạt động ở chế độ **Trợ lý tự động** nên chỉ có thể trả lời các chủ đề về Robotics, Đồ án Drone, Script GPM Browser, Thông tin liên hệ, Học tập và Quê quán của Mạnh Hà.\n\nĐể kích hoạt **AI thông minh tự do trò chuyện**, bạn hãy nhấn nút cài đặt **⚙️** ở góc trên ô chat để điền **GitHub PAT** cá nhân nhé! Hoặc chọn nhanh các câu hỏi gợi ý phía dưới:", 'bot');
-              showMainMenu();
-            }
+          } else {
+            // Default free high-intelligence AI engine (Pollinations AI GPT-4, no key required)
+            const response = await fetch("https://text.pollinations.ai/", {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                messages: [
+                  { role: "system", content: systemContext },
+                  ...chatHistory
+                ],
+                model: "openai"
+              })
+            });
+            if (!response.ok) throw new Error('Pollinations AI request failed');
+            reply = await response.text();
           }
-        } else {
-          // OFFLINE FALLBACK MODE: Check local keywords
+
+          if (reply) {
+            appendMessage(reply, 'bot');
+            chatHistory.push({ role: 'assistant', content: reply });
+            if (chatHistory.length > 10) chatHistory.splice(0, 2);
+          }
+        } catch (err) {
+          console.error(err);
+          // Fallback to local keyword agent if API fails
           const localRes = getLocalNLPResponse(msg);
           if (localRes) {
             appendMessage(localRes.text, 'bot');
@@ -752,7 +752,7 @@ function initChatbot() {
             chatHistory.push({ role: 'assistant', content: localRes.text });
             if (chatHistory.length > 10) chatHistory.splice(0, 2);
           } else {
-            appendMessage("Chào bạn! Hiện tại tôi đang hoạt động ở chế độ **Trợ lý tự động** nên chỉ có thể trả lời các chủ đề về Robotics, Đồ án Drone, Script GPM Browser, Thông tin liên hệ, Học tập và Quê quán của Mạnh Hà.\n\nĐể kích hoạt **AI thông minh tự do trò chuyện**, bạn hãy nhấn nút cài đặt **⚙️** ở góc trên ô chat để điền **GitHub PAT** cá nhân nhé! Hoặc chọn nhanh các câu hỏi gợi ý phía dưới:", 'bot');
+            appendMessage("Chào bạn! Hiện tại tôi đang có một chút gián đoạn kết nối. Bạn có thể thử lại sau giây lát hoặc kết nối trực tiếp với Hà qua Zalo **0334383560** nhé!", 'bot');
             showMainMenu();
           }
         }
