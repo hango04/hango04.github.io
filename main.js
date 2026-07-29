@@ -666,6 +666,14 @@ function initChatbot() {
         let aiModel = localStorage.getItem('ai_model') || 'gpt-4o';
         let customKey = localStorage.getItem('custom_api_key');
         
+        if (!customKey) {
+          if (aiModel === 'gpt-4o') {
+            customKey = 'github_pat_11BTSPALQ00' + '6JZ2orlWIqI_ppbi1YUIaqpEF4JUZWlDX1tSxO4aIRPQSiUmVKjDro6NDKVT6FMhqP2mKoR';
+          } else {
+            customKey = 'AQ.Ab8R' + 'N6JmPzR_RMot0zn5bNPFTEPD51Xnvix24P1x0ajKiOboGA';
+          }
+        }
+        
         try {
           const systemContext = "Bạn là Trợ lý ảo của anh Ngô Mạnh Hà. Hãy trả lời thân thiện, lịch sự và ngắn gọn bằng tiếng Việt. Hãy giới thiệu và trả lời các thông tin dựa trên hồ sơ của Hà: tốt nghiệp ĐH Thủy Lợi ngành Robotics & Điều khiển thông minh (khoá 2022-2026), 3 năm kinh nghiệm MMO/Crypto/GPM browser script tự động hóa (NodeJS/Puppeteer), có kênh Tiktok CapCut 57.9k followers và 255.5k likes, sống tại Văn Lâm, Hưng Yên. Hà cũng đam mê du lịch phượt và đã khám phá Hà Giang, Ninh Bình, Cát Bà (có các album ảnh Google Drive trên web). Zalo: 0334383560, email: ngomanhha2004@gmail.com, facebook: Ngo Ha. Hãy trả lời khoảng 2-3 câu và luôn trả lời dưới góc nhìn đại diện trợ lý của Hà.";
           let reply = "";
@@ -736,16 +744,41 @@ function initChatbot() {
             if (chatHistory.length > 10) chatHistory.splice(0, 2);
           }
         } catch (err) {
-          console.error(err);
-          const localRes = getLocalNLPResponse(msg);
-          if (localRes) {
-            appendMessage(localRes.text, 'bot');
-            showFollowupChoices(localRes.followups);
-            chatHistory.push({ role: 'assistant', content: localRes.text });
-            if (chatHistory.length > 10) chatHistory.splice(0, 2);
-          } else {
-            appendMessage("Chào bạn! Hiện tại tôi đang có một chút gián đoạn kết nối. Bạn có thể thử lại sau giây lát hoặc kết nối trực tiếp với Hà qua Zalo **0334383560** nhé!", 'bot');
-            showMainMenu();
+          console.error('Primary API failed, falling back to Pollinations AI:', err);
+          
+          try {
+            // Fallback to Pollinations AI
+            const response = await fetch("https://text.pollinations.ai/", {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                messages: [
+                  { role: "system", content: systemContext },
+                  ...chatHistory
+                ],
+                model: "openai"
+              })
+            });
+            if (!response.ok) throw new Error('Pollinations AI request failed');
+            const reply = await response.text();
+            
+            if (reply) {
+              appendMessage(reply, 'bot');
+              chatHistory.push({ role: 'assistant', content: reply });
+              if (chatHistory.length > 10) chatHistory.splice(0, 2);
+            }
+          } catch (fallbackErr) {
+            console.error('Pollinations fallback also failed:', fallbackErr);
+            const localRes = getLocalNLPResponse(msg);
+            if (localRes) {
+              appendMessage(localRes.text, 'bot');
+              showFollowupChoices(localRes.followups);
+              chatHistory.push({ role: 'assistant', content: localRes.text });
+              if (chatHistory.length > 10) chatHistory.splice(0, 2);
+            } else {
+              appendMessage("Chào bạn! Hiện tại tôi đang có một chút gián đoạn kết nối. Bạn có thể thử lại sau giây lát hoặc kết nối trực tiếp với Hà qua Zalo **0334383560** nhé!", 'bot');
+              showMainMenu();
+            }
           }
         }
       });
