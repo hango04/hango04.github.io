@@ -1583,17 +1583,17 @@ function initThreeJS() {
     requestAnimationFrame(animate);
     const elapsedTime = clock.getElapsedTime();
 
-    // Auto rotation
-    particlesMesh.rotation.y = elapsedTime * 0.05;
-    wireframe.rotation.y = elapsedTime * 0.05;
-    wireframe.rotation.x = elapsedTime * 0.02;
+    // Auto rotation (Increased speed)
+    particlesMesh.rotation.y = elapsedTime * 0.15;
+    wireframe.rotation.y = elapsedTime * 0.15;
+    wireframe.rotation.x = elapsedTime * 0.06;
 
-    // Mouse interaction rotation
-    targetX = mouseX * 0.001;
-    targetY = mouseY * 0.001;
+    // Mouse interaction rotation (Increased speed and sensitivity)
+    targetX = mouseX * 0.0025;
+    targetY = mouseY * 0.0025;
     
-    particlesMesh.rotation.x += 0.05 * (targetY - particlesMesh.rotation.x);
-    particlesMesh.rotation.y += 0.05 * (targetX - particlesMesh.rotation.y);
+    particlesMesh.rotation.x += 0.1 * (targetY - particlesMesh.rotation.x);
+    particlesMesh.rotation.y += 0.1 * (targetX - particlesMesh.rotation.y);
 
     renderer.render(scene, camera);
   }
