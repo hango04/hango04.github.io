@@ -459,8 +459,6 @@ function initChatbot() {
   // New AI integration elements
   const settingsBtn = document.getElementById('chatbot-settings-btn');
   const settingsPanel = document.getElementById('chatbot-settings-panel');
-  const keyInput = document.getElementById('gemini-key-input');
-  const saveKeyBtn = document.getElementById('save-gemini-key');
   const textInput = document.getElementById('chatbot-text-input');
   const sendBtn = document.getElementById('chatbot-send-btn');
   const modelSelect = document.getElementById('ai-model-select');
@@ -506,10 +504,8 @@ function initChatbot() {
       settingsPanel.classList.toggle('hidden');
       if (!settingsPanel.classList.contains('hidden')) {
         if (modelSelect) {
-          modelSelect.value = localStorage.getItem('ai_model') || 'gpt-4o';
+          modelSelect.value = localStorage.getItem('ai_model') || 'openrouter';
         }
-        const savedKey = localStorage.getItem('custom_api_key') || '';
-        keyInput.value = savedKey;
       }
     });
   }
@@ -520,18 +516,6 @@ function initChatbot() {
     });
   }
 
-  // Save API Key
-  if (saveKeyBtn && keyInput) {
-    saveKeyBtn.addEventListener('click', () => {
-      const key = keyInput.value.trim();
-      if (key) {
-        localStorage.setItem('custom_api_key', key);
-        showToast('Đã lưu Token cá nhân thành công!');
-      } else {
-        localStorage.removeItem('custom_api_key');
-        showToast('Đã xóa Token cá nhân.', 'info');
-      }
-      if (settingsPanel) settingsPanel.classList.add('hidden');
     });
   }
 
