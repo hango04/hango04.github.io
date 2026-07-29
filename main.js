@@ -665,26 +665,17 @@ function initChatbot() {
 
         let aiModel = localStorage.getItem('ai_model') || 'gpt-4o';
         let customKey = localStorage.getItem('custom_api_key');
-        let apiKey = '';
         
-        if (customKey) {
-          apiKey = customKey;
-        } else if (aiModel === 'gpt-4o') {
-          apiKey = 'github' + '_pat_11BTSPALQ0WUgxVZpai7WS_m29koSIhFQCvnKYPZGWZaITneAWMbTmhuMozKDY3mvj666IMTZSbeftyomL';
-        } else if (aiModel === 'gemini-flash-lite') {
-          apiKey = 'AQ.Ab' + '8RN6JmPzR_RMot0zn5bNPFTEPD51Xnvix24P1x0ajKiOboGA';
-        }
-
         try {
           const systemContext = "Bạn là Trợ lý ảo của anh Ngô Mạnh Hà. Hãy trả lời thân thiện, lịch sự và ngắn gọn bằng tiếng Việt. Hãy giới thiệu và trả lời các thông tin dựa trên hồ sơ của Hà: tốt nghiệp ĐH Thủy Lợi ngành Robotics & Điều khiển thông minh (khoá 2022-2026), 3 năm kinh nghiệm MMO/Crypto/GPM browser script tự động hóa (NodeJS/Puppeteer), có kênh Tiktok CapCut 57.9k followers và 255.5k likes, sống tại Văn Lâm, Hưng Yên. Hà cũng đam mê du lịch phượt và đã khám phá Hà Giang, Ninh Bình, Cát Bà (có các album ảnh Google Drive trên web). Zalo: 0334383560, email: ngomanhha2004@gmail.com, facebook: Ngo Ha. Hãy trả lời khoảng 2-3 câu và luôn trả lời dưới góc nhìn đại diện trợ lý của Hà.";
           let reply = "";
 
-          if (aiModel === 'gpt-4o') {
+          if (customKey && aiModel === 'gpt-4o') {
             const response = await fetch("https://models.inference.ai.azure.com/chat/completions", {
               method: 'POST',
               headers: { 
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
+                'Authorization': `Bearer ${customKey}`
               },
               body: JSON.stringify({
                 model: "gpt-4o",
@@ -701,13 +692,13 @@ function initChatbot() {
             } else {
               throw new Error('Invalid response payload');
             }
-          } else if (aiModel === 'gemini-flash-lite') {
+          } else if (customKey && aiModel === 'gemini-flash-lite') {
             const geminiHistory = chatHistory.map(m => ({
               role: m.role === 'user' ? 'user' : 'model',
               parts: [{ text: m.content }]
             }));
             
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite-preview-02-05:generateContent?key=${apiKey}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite-preview-02-05:generateContent?key=${customKey}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -722,6 +713,21 @@ function initChatbot() {
             } else {
               throw new Error('Invalid response payload');
             }
+          } else {
+            // No custom key, use Pollinations AI
+            const response = await fetch("https://text.pollinations.ai/", {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                messages: [
+                  { role: "system", content: systemContext },
+                  ...chatHistory
+                ],
+                model: "openai"
+              })
+            });
+            if (!response.ok) throw new Error('Pollinations AI request failed');
+            reply = await response.text();
           }
 
           if (reply) {
@@ -731,7 +737,6 @@ function initChatbot() {
           }
         } catch (err) {
           console.error(err);
-          // Fallback to local keyword agent if API fails
           const localRes = getLocalNLPResponse(msg);
           if (localRes) {
             appendMessage(localRes.text, 'bot');
