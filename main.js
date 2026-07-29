@@ -516,9 +516,6 @@ function initChatbot() {
     });
   }
 
-    });
-  }
-
   // Custom static responses for local fallback NLP mode
   const responses = {
     gpm: {
