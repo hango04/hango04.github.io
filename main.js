@@ -663,13 +663,13 @@ function initChatbot() {
         chatHistory.push({ role: 'user', content: msg });
         if (chatHistory.length > 10) chatHistory.shift();
 
-        let aiModel = localStorage.getItem('ai_model') || 'gpt-4o';
+        let aiModel = localStorage.getItem('ai_model') || 'openrouter';
         let customKey = localStorage.getItem('custom_api_key');
         
         if (!customKey) {
           if (aiModel === 'gpt-4o') {
             customKey = 'github_pat_11BTSPALQ00' + '6JZ2orlWIqI_ppbi1YUIaqpEF4JUZWlDX1tSxO4aIRPQSiUmVKjDro6NDKVT6FMhqP2mKoR';
-          } else {
+          } else if (aiModel === 'gemini-flash-lite') {
             customKey = 'AQ.Ab8R' + 'N6JmPzR_RMot0zn5bNPFTEPD51Xnvix24P1x0ajKiOboGA';
           }
         }
@@ -718,6 +718,30 @@ function initChatbot() {
             const data = await response.json();
             if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
               reply = data.candidates[0].content.parts[0].text;
+            } else {
+              throw new Error('Invalid response payload');
+            }
+          } else if (customKey && aiModel === 'openrouter') {
+            const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+              method: 'POST',
+              headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${customKey}`,
+                'HTTP-Referer': 'https://hango04.github.io',
+                'X-Title': 'Mạnh Hà AI Assistant'
+              },
+              body: JSON.stringify({
+                model: "google/gemini-2.0-flash-lite-preview-02-05:free",
+                messages: [
+                  { role: "system", content: systemContext },
+                  ...chatHistory
+                ]
+              })
+            });
+            if (!response.ok) throw new Error('API request failed');
+            const data = await response.json();
+            if (data.choices && data.choices[0].message && data.choices[0].message.content) {
+              reply = data.choices[0].message.content;
             } else {
               throw new Error('Invalid response payload');
             }
