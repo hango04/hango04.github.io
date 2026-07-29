@@ -776,7 +776,7 @@ function initChatbot() {
               chatHistory.push({ role: 'assistant', content: localRes.text });
               if (chatHistory.length > 10) chatHistory.splice(0, 2);
             } else {
-              appendMessage("Chào bạn! Hiện tại tôi đang có một chút gián đoạn kết nối. Bạn có thể thử lại sau giây lát hoặc kết nối trực tiếp với Hà qua Zalo **0334383560** nhé!", 'bot');
+              appendMessage("⚠️ Xin lỗi bạn, hiện tại AI đang bị lỗi kết nối hoặc **API Key không hợp lệ**.\n\nVui lòng nhấn vào biểu tượng Cài đặt **⚙️** ở góc trên cùng để cập nhật lại API Key chuẩn. \n*(Lưu ý: Gemini Key luôn bắt đầu bằng chữ `AIzaSy...`)*", 'bot');
               showMainMenu();
             }
           }
