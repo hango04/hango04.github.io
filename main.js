@@ -1670,4 +1670,70 @@ async function initGithubProjects() {
   }
 }
 
+/* ---------- COMPOUND INTEREST CALCULATOR ---------- */
+function syncInterest(source) {
+  const principalInput = document.getElementById('ci-principal');
+  const rateInput = document.getElementById('ci-rate');
+  const moneyInput = document.getElementById('ci-interest-money');
+  
+  if (!principalInput || !rateInput || !moneyInput) return;
+  
+  const principal = parseFloat(principalInput.value) || 0;
+  
+  if (principal <= 0) return;
+  
+  if (source === 'rate') {
+    const rate = parseFloat(rateInput.value) || 0;
+    moneyInput.value = Math.round((principal * rate) / 100);
+  } else if (source === 'money') {
+    const money = parseFloat(moneyInput.value) || 0;
+    rateInput.value = ((money / principal) * 100).toFixed(2);
+  } else {
+    // If principal changes
+    const rate = parseFloat(rateInput.value);
+    const money = parseFloat(moneyInput.value);
+    if (!isNaN(rate)) {
+      moneyInput.value = Math.round((principal * rate) / 100);
+    } else if (!isNaN(money)) {
+      rateInput.value = ((money / principal) * 100).toFixed(2);
+    }
+  }
+}
 
+function calculateInterest() {
+  const principal = parseFloat(document.getElementById('ci-principal').value) || 0;
+  const rate = parseFloat(document.getElementById('ci-rate').value) || 0;
+  const years = parseInt(document.getElementById('ci-years').value) || 0;
+  const monthly = parseFloat(document.getElementById('ci-monthly').value) || 0;
+
+  if (principal < 0 || rate < 0 || years <= 0 || monthly < 0) {
+    alert("Vui lòng nhập các giá trị hợp lệ lớn hơn 0.");
+    return;
+  }
+
+  const r = rate / 100 / 12;
+  const n = years * 12;
+  
+  let fvPrincipal = principal * Math.pow(1 + r, n);
+  let fvMonthly = 0;
+  
+  if (r > 0) {
+    fvMonthly = monthly * ((Math.pow(1 + r, n) - 1) / r);
+  } else {
+    fvMonthly = monthly * n;
+  }
+  
+  const totalAmount = fvPrincipal + fvMonthly;
+  const totalPrincipal = principal + (monthly * n);
+  const totalInterest = totalAmount - totalPrincipal;
+
+  // Format currency
+  const formatter = new Intl.NumberFormat('vi-VN');
+
+  document.getElementById('ci-total').textContent = formatter.format(Math.round(totalAmount)) + " VNĐ";
+  document.getElementById('ci-total-principal').textContent = formatter.format(Math.round(totalPrincipal)) + " VNĐ";
+  document.getElementById('ci-total-interest').textContent = formatter.format(Math.round(totalInterest)) + " VNĐ";
+
+  // Show result box
+  document.getElementById('ci-result').classList.remove('hidden');
+}

@@ -771,6 +771,59 @@
     </div>
   </section>
 
+  <!-- TOOLS SECTION: Lãi Suất Kép -->
+  <section id="tools" class="section">
+    <div class="container">
+      <div class="section-title-wrapper reveal">
+        <h2 class="section-title">Công cụ Tính toán</h2>
+        <p class="section-subtitle">Ứng dụng tính lãi suất kép ngân hàng</p>
+      </div>
+      <div class="contact-grid reveal" style="grid-template-columns: 1fr;">
+        <div class="contact-form-card glass-card" style="max-width: 800px; margin: 0 auto; width: 100%;">
+          <form id="compound-interest-form" class="contact-form" onsubmit="event.preventDefault(); calculateInterest();">
+            <div class="form-group">
+              <label for="ci-principal">Số tiền gốc ban đầu (VNĐ)</label>
+              <input type="number" id="ci-principal" class="form-input" placeholder="Ví dụ: 100000000" required oninput="syncInterest()">
+            </div>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+              <div class="form-group" style="flex: 1; min-width: 200px;">
+                <label for="ci-rate">Lãi suất hàng năm (%)</label>
+                <input type="number" step="0.01" id="ci-rate" class="form-input" placeholder="Ví dụ: 7.5" oninput="syncInterest('rate')" required>
+              </div>
+              <div class="form-group" style="flex: 1; min-width: 200px;">
+                <label for="ci-interest-money">Hoặc Tiền lãi 1 năm (VNĐ)</label>
+                <input type="number" id="ci-interest-money" class="form-input" placeholder="Ví dụ: 7500000" oninput="syncInterest('money')">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="ci-years">Số năm gửi</label>
+              <input type="number" id="ci-years" class="form-input" placeholder="Ví dụ: 5" required>
+            </div>
+            <div class="form-group">
+              <label for="ci-monthly">Tiền gửi thêm mỗi tháng (VNĐ) - Tùy chọn</label>
+              <input type="number" id="ci-monthly" class="form-input" placeholder="Ví dụ: 2000000">
+            </div>
+            <div class="form-group form-group-full" style="margin-top: 16px;">
+              <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                <span>Tính Lãi Suất Kép</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+              </button>
+            </div>
+          </form>
+          
+          <div id="ci-result" class="hidden" style="margin-top: 24px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: var(--border-radius-md); border: 1px solid var(--border-color); text-align: center;">
+            <h4 style="color: var(--color-primary); margin-bottom: 16px; font-family: var(--font-heading); font-size: 1.4rem;">Kết Quả Dự Kiến</h4>
+            <p style="margin-bottom: 12px; font-size: 1.1rem;">Tổng số tiền bạn nhận được: <br><strong id="ci-total" style="font-size: 1.8rem; color: #fff;">0 VNĐ</strong></p>
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 16px; font-size: 0.95rem; color: var(--text-secondary);">
+              <p>Tổng gốc đã gửi: <br><strong id="ci-total-principal" style="color: #fff;">0 VNĐ</strong></p>
+              <p>Tổng tiền lãi: <br><strong id="ci-total-interest" style="color: var(--color-secondary);">0 VNĐ</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CONTACT SECTION -->
   <section id="contact" class="section">
     <div class="container">
