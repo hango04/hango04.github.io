@@ -609,6 +609,69 @@
           </div>
         </article>
       </div>
+
+      <!-- INTERACTIVE 3D ROBOT SCARA SIMULATOR -->
+      <div id="robot-simulator-section" class="robot-sim-container glass-card reveal" style="margin-top: 50px;">
+        <div class="robot-sim-header">
+          <div class="robot-sim-title-group">
+            <span class="robot-pulse-indicator"></span>
+            <div>
+              <h3 class="robot-sim-title">Mô Phỏng Cánh Tay Robot SCARA Yamaha 3D</h3>
+              <p class="robot-sim-sub">Ứng dụng công nghệ Three.js / WebGL tái hiện dự án gắp thả phôi tự động tại Autotech</p>
+            </div>
+          </div>
+          <div class="robot-status-badge">
+            <span id="robot-status-text">MANUAL MODE: SẴN SÀNG ĐIỀU KHIỂN</span>
+          </div>
+        </div>
+
+        <div class="robot-sim-body">
+          <div class="robot-canvas-wrapper">
+            <div id="robot-3d-canvas-container"></div>
+            <div class="robot-canvas-hint">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+              Kéo chuột để xoay góc nhìn 360°
+            </div>
+          </div>
+
+          <div class="robot-controls-panel">
+            <h4 class="controls-heading">Bảng Điều Khiển Khớp (Joint Coordinates)</h4>
+
+            <div class="robot-slider-group">
+              <div class="slider-header">
+                <label for="robot-j1">Khớp J1 (Arm 1 Angle):</label>
+                <span id="val-j1" class="slider-val">0°</span>
+              </div>
+              <input type="range" id="robot-j1" min="-120" max="120" value="0" step="1">
+            </div>
+
+            <div class="robot-slider-group">
+              <div class="slider-header">
+                <label for="robot-j2">Khớp J2 (Arm 2 Angle):</label>
+                <span id="val-j2" class="slider-val">0°</span>
+              </div>
+              <input type="range" id="robot-j2" min="-145" max="145" value="0" step="1">
+            </div>
+
+            <div class="robot-slider-group">
+              <div class="slider-header">
+                <label for="robot-z">Trục Z (Stroke Down):</label>
+                <span id="val-z" class="slider-val">0mm</span>
+              </div>
+              <input type="range" id="robot-z" min="0" max="2.8" value="0" step="0.05">
+            </div>
+
+            <div class="robot-btn-actions">
+              <button id="btn-robot-auto" class="btn btn-primary" style="width: 100%; justify-content: center; margin-bottom: 10px;">
+                <span>Chạy Chu Trình Tự Động (Auto Pick & Place)</span>
+              </button>
+              <button id="btn-robot-reset" class="btn btn-secondary" style="width: 100%; justify-content: center;">
+                <span>Về Vị Trí Gốc (Home)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
       
       <!-- Github Open Source Section -->
       <div style="margin-top: 80px;" class="reveal">
@@ -716,6 +779,81 @@
       <div class="section-title-wrapper reveal">
         <h2 class="section-title" data-i18n="travel-title">Hành trình Du lịch</h2>
         <p class="section-subtitle" data-i18n="travel-subtitle">Khám phá vẻ đẹp Việt Nam qua những chuyến đi của tôi</p>
+      </div>
+
+      <!-- VIETNAM INTERACTIVE NEON TRAVEL MAP -->
+      <div id="vietnam-travel-map-container" class="travel-map-wrapper glass-card reveal" style="margin-bottom: 40px;">
+        <div class="travel-map-stats-bar">
+          <div class="stat-badge">
+            <span class="stat-badge-dot"></span>
+            <span>Đã đặt chân: <strong>4 / 63</strong> Tỉnh thành (6.3%)</span>
+          </div>
+          <div class="stat-badge-secondary">
+            <span>Click vào các điểm sáng trên bản đồ để khám phá chuyến đi</span>
+          </div>
+        </div>
+
+        <div class="travel-map-layout">
+          <!-- SVG Vietnam Map Canvas -->
+          <div class="travel-map-canvas-area">
+            <div class="map-inner-container">
+              <!-- Stylized S-curve Vietnam map path -->
+              <svg viewBox="0 0 320 600" class="vietnam-svg-map">
+                <!-- Decorative Grid Lines -->
+                <defs>
+                  <linearGradient id="mapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#0052ff" stop-opacity="0.25"/>
+                    <stop offset="50%" stop-color="#7928ca" stop-opacity="0.3"/>
+                    <stop offset="100%" stop-color="#00f0ff" stop-opacity="0.2"/>
+                  </linearGradient>
+                  <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                  </filter>
+                </defs>
+                
+                <!-- Vietnam Landmass Polyline Path -->
+                <path d="M 120,35 Q 160,20 185,45 Q 210,70 190,95 Q 170,110 175,130 Q 185,155 210,165 Q 195,190 170,220 Q 160,250 175,280 Q 200,320 220,350 Q 240,390 225,430 Q 205,470 175,510 Q 150,540 120,535 Q 90,520 110,490 Q 130,460 145,430 Q 160,390 150,350 Q 135,310 130,270 Q 125,230 110,190 Q 95,160 100,120 Q 105,80 120,35 Z" 
+                      fill="url(#mapGradient)" 
+                      stroke="#00d2ff" 
+                      stroke-width="1.5" 
+                      stroke-dasharray="4 2"
+                      filter="url(#neonGlow)" />
+                
+                <!-- Hoang Sa & Truong Sa Islands symbols -->
+                <g class="islands-group" fill="#00d2ff" opacity="0.8">
+                  <circle cx="260" cy="270" r="3" />
+                  <circle cx="270" cy="280" r="2.5" />
+                  <text x="250" y="260" fill="#00f0ff" font-size="9" font-family="sans-serif">QĐ. Hoàng Sa (VN)</text>
+                  
+                  <circle cx="250" cy="460" r="3" />
+                  <circle cx="265" cy="480" r="2.5" />
+                  <text x="240" y="450" fill="#00f0ff" font-size="9" font-family="sans-serif">QĐ. Trường Sa (VN)</text>
+                </g>
+              </svg>
+
+              <!-- Dynamic Interactive Map Pin Markers -->
+              <div id="travel-map-pins" class="travel-map-pins"></div>
+            </div>
+          </div>
+
+          <!-- Location Info Card -->
+          <div class="travel-map-info-card glass-card">
+            <div class="map-info-badge" id="map-selected-region">Tây Bắc</div>
+            <h3 class="map-info-title" id="map-selected-title">Tà Xùa (Sơn La)</h3>
+            <p class="map-info-desc" id="map-selected-desc">Săn mây trên đỉnh Tà Xùa & Sống lưng khủng long</p>
+
+            <div class="map-info-actions">
+              <a href="#" id="map-selected-drive-btn" target="_blank" class="btn btn-primary" style="flex: 1; justify-content: center; font-size: 0.85rem;">
+                <span>Xem Drive Ảnh</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+              <button id="map-selected-scroll-btn" class="btn btn-secondary" style="font-size: 0.85rem;" title="Cuộn tới bài viết">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       
       <div class="travel-grid">
@@ -1189,6 +1327,8 @@
   <!-- Scripts -->
   <script src="i18n.js?v=1.0"></script>
   <script src="script.js?v=9.7"></script>
+  <script src="robot-simulator.js?v=1.0"></script>
+  <script src="travel-map.js?v=1.0"></script>
   <script src="main.js?v=9.7"></script>
 </body>
 </html>

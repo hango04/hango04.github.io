@@ -10,7 +10,7 @@ if exist "%USERPROFILE%\.gemini\antigravity-ide\brain\36d189c4-1cb7-44b3-9190-8a
 
 echo Dang day code len Github...
 git add .
-git commit -m "Cap nhat: Them chuyen di Ta Xua va kinh nghiem thuc tap Autotech"
+git commit -m "Nang cap Portfolio: Tich hop 3D Robot SCARA Simulator va Ban do du lich Viet Nam Tuong tac"
 git push
 echo.
 echo ==========================================================
