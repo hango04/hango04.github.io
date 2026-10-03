@@ -485,9 +485,9 @@
           sendCharacter('r');
         } else if (text.includes("dừng") || text.includes("phanh") || text.includes("stop") || text.includes("đỗ")) {
           sendCharacter('s');
-        } else if (text.includes("còi") || text.includes("horn") || text.includes("kêu") || text.includes("bíp")) {
+        } else if (text.includes("còi") || text.includes("home") || text.includes("horn") || text.includes("kêu") || text.includes("bíp")) {
           sendCharacter('h');
-        } else if (text.includes("auto") || text.includes("tự động")) {
+        } else if (text.includes("robot") || text.includes("auto") || text.includes("tự động")) {
           sendCharacter('a');
         } else if (text.includes("tay") || text.includes("thủ công") || text.includes("manual")) {
           sendCharacter('m');
@@ -597,9 +597,9 @@
       } else if (gamma > 18) {
         currentCmd = 'r'; // Nghiêng sang phải -> Phải
       } else if (diffBeta > 18) {
-        currentCmd = 'f'; // Chúi đầu máy xuống đất -> TIẾN (theo yêu cầu của bác)
+        currentCmd = 'b'; // Đảo ngược theo yêu cầu của bác: chúi/ngửa đảo chiều
       } else if (diffBeta < -18) {
-        currentCmd = 'b'; // Ngửa máy về người mình -> LÙI
+        currentCmd = 'f';
       } else {
         currentCmd = 's'; // Thẳng máy -> DỪNG
       }
