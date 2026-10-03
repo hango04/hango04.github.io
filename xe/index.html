@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ĐỒ ÁN: XE TỰ HÀNH</title>
+  <title>ĐỒ ÁN: XE TỰ HÀNH & ĐIỀU KHIỂN</title>
   <meta name="theme-color" content="#0f172a">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -35,7 +35,7 @@
     }
     header {
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       width: 100%;
       max-width: 420px;
     }
@@ -61,7 +61,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .status-text {
       font-size: 13px;
@@ -94,11 +94,11 @@
       max-width: 420px;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 14px;
+      gap: 8px;
+      margin-bottom: 10px;
     }
     .btn-mode {
-      padding: 12px;
+      padding: 11px;
       border: none;
       border-radius: 10px;
       font-size: 13px;
@@ -125,8 +125,8 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 14px;
+      gap: 10px;
+      margin-bottom: 10px;
     }
     .ctrl-btn {
       aspect-ratio: 1;
@@ -134,7 +134,7 @@
       border: 2px solid #334155;
       border-radius: 16px;
       color: #38bdf8;
-      font-size: 26px;
+      font-size: 24px;
       font-weight: bold;
       display: flex;
       flex-direction: column;
@@ -166,38 +166,92 @@
       background: #dc2626;
       box-shadow: 0 0 20px #dc2626;
     }
-    /* Còi */
-    .btn-horn {
+    /* Các nút tính năng mới */
+    .action-container {
       width: 100%;
       max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .btn-horn {
       background: linear-gradient(135deg, #eab308, #ca8a04);
       color: #000;
       border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-size: 15px;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 4px 16px rgba(234,179,8,0.4);
+      box-shadow: 0 4px 16px rgba(234,179,8,0.3);
       cursor: pointer;
     }
-    .btn-horn:active {
-      transform: scale(0.96);
-      background: #facc15;
+    .btn-voice {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(6,182,212,0.3);
+      cursor: pointer;
+    }
+    .btn-voice.listening {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+    .btn-tilt {
+      background: #1e293b;
+      border: 2px solid #475569;
+      color: #94a3b8;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-tilt.active {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-color: #34d399;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(16,185,129,0.4);
+    }
+    .btn-horn:active, .btn-voice:active, .btn-tilt:active {
+      transform: scale(0.97);
     }
     .log-box {
       width: 100%;
       max-width: 420px;
-      margin-top: 10px;
-      font-size: 11px;
+      font-size: 12px;
       color: #94a3b8;
       text-align: center;
       background: #1e293b;
-      padding: 6px 10px;
-      border-radius: 6px;
+      border: 1px solid #334155;
+      padding: 8px 12px;
+      border-radius: 8px;
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   </style>
 </head>
@@ -258,9 +312,21 @@
     <div></div>
   </div>
 
-  <button class="btn-horn" onclick="sendCharacter('h')">
-    🔔 BẤM CÒI XE (HORN)
-  </button>
+  <div class="action-container">
+    <button class="btn-horn" onclick="sendCharacter('h')">
+      🔔 BẤM CÒI XE (HORN)
+    </button>
+
+    <!-- Nút Điều khiển Giọng nói -->
+    <button class="btn-voice" id="btnVoice" onclick="toggleVoice()">
+      🎙️ NÓI LỆNH ĐIỀU KHIỂN
+    </button>
+
+    <!-- Nút Lái bằng Nghiêng điện thoại -->
+    <button class="btn-tilt" id="btnTilt" onclick="toggleTilt()">
+      📱 BẬT LÁI NGHIÊNG (CẢM BIẾN)
+    </button>
+  </div>
 
   <div class="log-box" id="logBox">Sẵn sàng kết nối Bluetooth</div>
 
@@ -268,6 +334,7 @@
     let bleDevice = null;
     let writeChar = null;
 
+    // --- KẾT NỐI BLUETOOTH LE ---
     async function toggleConnect() {
       if (bleDevice && bleDevice.gatt.connected) {
         bleDevice.gatt.disconnect();
@@ -275,7 +342,7 @@
         return;
       }
       try {
-        log("Đang mở hộp thoại quét...");
+        log("Đang mở hộp thoại quét BLE...");
         bleDevice = await navigator.bluetooth.requestDevice({
           acceptAllDevices: true,
           optionalServices: [
@@ -298,7 +365,6 @@
         for (const s of services) {
           const chars = await s.getCharacteristics();
           for (const c of chars) {
-            // Tìm characteristic có quyền ghi
             if (c.properties.writeWithoutResponse || c.properties.write) {
               writeChar = c;
               break;
@@ -308,7 +374,6 @@
         }
 
         if (!writeChar) {
-          // Thử lấy cổng FFE1 mặc định nếu duyệt không thấy
           const s = await server.getPrimaryService(0xFFE0);
           writeChar = await s.getCharacteristic(0xFFE1);
         }
@@ -325,14 +390,13 @@
       document.getElementById('statusText').innerText = "Đã kết nối: " + (bleDevice.name || "HC-05");
       document.getElementById('btnConnect').innerText = "NGẮT";
       document.getElementById('btnConnect').style.background = "#ef4444";
-      log("Kết nối thành công! Đang kích hoạt xe...");
-      
-      // Chờ 500ms để ổn định GATT rồi tự động bật chế độ Lái tay và Bíp còi
+      log("✅ Đã kết nối xe thành công!");
+
       setTimeout(async () => {
         await sendCharacter('m'); // Bật lái tay
         await sendCharacter('h'); // Bíp còi chào mừng
         log("Xe đã sẵn sàng lái tay!");
-      }, 600);
+      }, 500);
     }
 
     function onDisconnected() {
@@ -341,6 +405,7 @@
       document.getElementById('btnConnect').innerText = "📶 KẾT NỐI XE";
       document.getElementById('btnConnect').style.background = "#2563eb";
       writeChar = null;
+      if (tiltActive) toggleTilt(); // Tắt lái nghiêng nếu mất kết nối
       log("Đã ngắt kết nối xe.");
     }
 
@@ -357,7 +422,7 @@
         } else {
           await writeChar.writeValue(data);
         }
-        log("Đã gửi lệnh: '" + ch + "'");
+        log("Lệnh: '" + ch + "'");
       } catch (err) {
         log("Lỗi gửi: " + err.message);
       }
@@ -378,6 +443,175 @@
 
     function log(msg) {
       document.getElementById('logBox').innerText = msg;
+    }
+
+    // ============================================================
+    //  TÍNH NĂNG 1: ĐIỀU KHIỂN BẰNG GIỌNG NÓI (VOICE CONTROL)
+    // ============================================================
+    let recognition = null;
+    let isListening = false;
+
+    function initVoice() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Trình duyệt không hỗ trợ nhận diện giọng nói! Bác dùng trình duyệt Chrome nhé.");
+        return null;
+      }
+      const rec = new SpeechRecognition();
+      rec.continuous = false;
+      rec.interimResults = false;
+      rec.lang = 'vi-VN'; // Mặc định tiếng Việt, nhận diện cả từ tiếng Anh
+
+      rec.onstart = () => {
+        isListening = true;
+        document.getElementById('btnVoice').classList.add('listening');
+        document.getElementById('btnVoice').innerText = "🔴 Đang nghe... Hãy nói lệnh!";
+        log("🎙️ Đang nghe giọng nói của bác...");
+        sendCharacter('m'); // Tự động ngắt tự động, chuyển sang lái tay
+      };
+
+      rec.onresult = (event) => {
+        const text = event.results[0][0].transcript.toLowerCase();
+        log("Bạn nói: \"" + text + "\"");
+
+        // Nhận diện Tiếng Việt & Tiếng Anh
+        if (text.includes("tiến") || text.includes("chạy") || text.includes("tới") || text.includes("go") || text.includes("forward")) {
+          sendCharacter('f');
+        } else if (text.includes("lùi") || text.includes("back") || text.includes("backward")) {
+          sendCharacter('b');
+        } else if (text.includes("trái") || text.includes("left")) {
+          sendCharacter('l');
+        } else if (text.includes("phải") || text.includes("right")) {
+          sendCharacter('r');
+        } else if (text.includes("dừng") || text.includes("phanh") || text.includes("stop") || text.includes("đỗ")) {
+          sendCharacter('s');
+        } else if (text.includes("còi") || text.includes("horn") || text.includes("kêu") || text.includes("bíp")) {
+          sendCharacter('h');
+        } else if (text.includes("auto") || text.includes("tự động")) {
+          sendCharacter('a');
+        } else if (text.includes("tay") || text.includes("thủ công") || text.includes("manual")) {
+          sendCharacter('m');
+        } else {
+          log("Không nhận diện được lệnh: \"" + text + "\"");
+        }
+      };
+
+      rec.onerror = (e) => {
+        log("Lỗi giọng nói: " + e.error);
+      };
+
+      rec.onend = () => {
+        isListening = false;
+        document.getElementById('btnVoice').classList.remove('listening');
+        document.getElementById('btnVoice').innerText = "🎙️ NÓI LỆNH ĐIỀU KHIỂN";
+      };
+
+      return rec;
+    }
+
+    function toggleVoice() {
+      if (!writeChar) {
+        alert("Vui lòng bấm 'KẾT NỐI XE' trước khi ra lệnh bằng giọng nói!");
+        return;
+      }
+      if (!recognition) recognition = initVoice();
+      if (!recognition) return;
+
+      if (isListening) {
+        recognition.stop();
+      } else {
+        try {
+          recognition.start();
+        } catch (e) {
+          recognition.stop();
+        }
+      }
+    }
+
+    // ============================================================
+    //  TÍNH NĂNG 2: LÁI BẰNG CẢM BIẾN NGHIÊNG (TILT SENSOR)
+    // ============================================================
+    let tiltActive = false;
+    let lastTiltCmd = 's';
+    let baseBeta = 0;
+
+    async function toggleTilt() {
+      if (!writeChar && !tiltActive) {
+        alert("Vui lòng bấm 'KẾT NỐI XE' trước khi bật lái nghiêng!");
+        return;
+      }
+
+      tiltActive = !tiltActive;
+      const btn = document.getElementById('btnTilt');
+
+      if (tiltActive) {
+        // Cần cấp quyền trên iOS nếu có
+        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+          try {
+            const resp = await DeviceOrientationEvent.requestPermission();
+            if (resp !== 'granted') {
+              alert("Chưa cấp quyền cảm biến nghiêng!");
+              tiltActive = false;
+              return;
+            }
+          } catch (e) {}
+        }
+
+        btn.classList.add('active');
+        btn.innerText = "📱 ĐANG LÁI NGHIÊNG (BẤM ĐỂ TẮT)";
+        baseBeta = null; // Tự động lấy góc cầm tự nhiên của tay
+        lastTiltCmd = 's';
+        sendCharacter('m'); // Chuyển sang lái tay
+        window.addEventListener('deviceorientation', handleOrientation);
+        log("Đã bật lái nghiêng! Giữ điện thoại nghiêng để lái.");
+      } else {
+        btn.classList.remove('active');
+        btn.innerText = "📱 BẬT LÁI NGHIÊNG (CẢM BIẾN)";
+        window.removeEventListener('deviceorientation', handleOrientation);
+        sendCharacter('s'); // Dừng xe ngay lập tức
+        lastTiltCmd = 's';
+        log("Đã tắt lái nghiêng. Xe đã dừng.");
+      }
+    }
+
+    function handleOrientation(e) {
+      if (!tiltActive) return;
+
+      const beta = e.beta;   // Nghiêng chúc trước / ngửa sau [-180, 180]
+      const gamma = e.gamma; // Nghiêng trái / phải [-90, 90]
+
+      if (beta === null || gamma === null) return;
+
+      // Lưu góc cầm ban đầu của tay để không bị mỏi
+      if (baseBeta === null) {
+        baseBeta = beta;
+        return;
+      }
+
+      const diffBeta = beta - baseBeta;
+      let currentCmd = 's';
+
+      // Ngưỡng nghiêng 15 độ
+      if (gamma < -18) {
+        currentCmd = 'l'; // Nghiêng sang trái -> Trái
+      } else if (gamma > 18) {
+        currentCmd = 'r'; // Nghiêng sang phải -> Phải
+      } else if (diffBeta > 18) {
+        currentCmd = 'f'; // Chúi đầu máy xuống đất -> TIẾN (theo yêu cầu của bác)
+      } else if (diffBeta < -18) {
+        currentCmd = 'b'; // Ngửa máy về người mình -> LÙI
+      } else {
+        currentCmd = 's'; // Thẳng máy -> DỪNG
+      }
+
+      // CHỐNG NGHẼN SÓNG: Chỉ gửi khi thay đổi hướng!
+      if (currentCmd !== lastTiltCmd) {
+        lastTiltCmd = currentCmd;
+        sendCharacter(currentCmd);
+
+        const dict = { 'f': 'TIẾN ▲', 'b': 'LÙI ▼', 'l': 'TRÁI ◀', 'r': 'PHẢI ▶', 's': 'DỪNG ■' };
+        log("Lái nghiêng: " + dict[currentCmd]);
+      }
     }
   </script>
 </body>
