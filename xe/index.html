@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ĐỒ ÁN: ĐIỀU KHIỂN XE TỰ HÀNH</title>
-  <meta name="theme-color" content="#121826">
+  <title>ĐỒ ÁN: XE TỰ HÀNH</title>
+  <meta name="theme-color" content="#0f172a">
   <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%C4%90%E1%BB%92%20%C3%81N%3A%20XE%20T%E1%BB%B0%20H%C3%80NH%22%2C%22short_name%22%3A%22Xe%20Robot%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%230f172a%22%7D">
   <style>
     * {
       box-sizing: border-box;
@@ -18,7 +20,7 @@
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #0d1117;
+      background: #0f172a;
       color: #fff;
       display: flex;
       flex-direction: column;
@@ -28,19 +30,19 @@
     }
     header {
       text-align: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       width: 100%;
       max-width: 420px;
     }
     h1 {
-      font-size: 18px;
+      font-size: 17px;
       color: #38bdf8;
       text-transform: uppercase;
       letter-spacing: 1px;
       font-weight: 800;
     }
     .sub-title {
-      font-size: 12px;
+      font-size: 11px;
       color: #94a3b8;
       margin-top: 2px;
     }
@@ -54,7 +56,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .status-text {
       font-size: 13px;
@@ -119,7 +121,7 @@
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
       gap: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .ctrl-btn {
       aspect-ratio: 1;
@@ -168,7 +170,7 @@
       border: none;
       padding: 14px;
       border-radius: 12px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       display: flex;
       align-items: center;
@@ -184,10 +186,13 @@
     .log-box {
       width: 100%;
       max-width: 420px;
-      margin-top: 12px;
+      margin-top: 10px;
       font-size: 11px;
-      color: #64748b;
+      color: #94a3b8;
       text-align: center;
+      background: #1e293b;
+      padding: 6px 10px;
+      border-radius: 6px;
     }
   </style>
 </head>
@@ -217,15 +222,15 @@
   <div class="controller-grid">
     <div></div>
     <button class="ctrl-btn" id="btnForward" 
-      ontouchstart="handleTouch('f', this)" ontouchend="handleTouchEnd(this)"
-      onmousedown="handleTouch('f', this)" onmouseup="handleTouchEnd(this)">
+      ontouchstart="handleTouch('f', this, event)" ontouchend="handleTouchEnd(this, event)"
+      onmousedown="handleTouch('f', this, event)" onmouseup="handleTouchEnd(this, event)">
       ▲<span>TIẾN</span>
     </button>
     <div></div>
 
     <button class="ctrl-btn" id="btnLeft" 
-      ontouchstart="handleTouch('l', this)" ontouchend="handleTouchEnd(this)"
-      onmousedown="handleTouch('l', this)" onmouseup="handleTouchEnd(this)">
+      ontouchstart="handleTouch('l', this, event)" ontouchend="handleTouchEnd(this, event)"
+      onmousedown="handleTouch('l', this, event)" onmouseup="handleTouchEnd(this, event)">
       ◀<span>TRÁI</span>
     </button>
 
@@ -234,15 +239,15 @@
     </button>
 
     <button class="ctrl-btn" id="btnRight" 
-      ontouchstart="handleTouch('r', this)" ontouchend="handleTouchEnd(this)"
-      onmousedown="handleTouch('r', this)" onmouseup="handleTouchEnd(this)">
+      ontouchstart="handleTouch('r', this, event)" ontouchend="handleTouchEnd(this, event)"
+      onmousedown="handleTouch('r', this, event)" onmouseup="handleTouchEnd(this, event)">
       ▶<span>PHẢI</span>
     </button>
 
     <div></div>
     <button class="ctrl-btn" id="btnBackward" 
-      ontouchstart="handleTouch('b', this)" ontouchend="handleTouchEnd(this)"
-      onmousedown="handleTouch('b', this)" onmouseup="handleTouchEnd(this)">
+      ontouchstart="handleTouch('b', this, event)" ontouchend="handleTouchEnd(this, event)"
+      onmousedown="handleTouch('b', this, event)" onmouseup="handleTouchEnd(this, event)">
       ▼<span>LÙI</span>
     </button>
     <div></div>
@@ -252,13 +257,11 @@
     🔔 BẤM CÒI XE (HORN)
   </button>
 
-  <div class="log-box" id="logBox">Hệ thống sẵn sàng kết nối</div>
+  <div class="log-box" id="logBox">Sẵn sàng kết nối Bluetooth</div>
 
   <script>
     let bleDevice = null;
-    let bleCharacteristic = null;
-    const SERVICE_UUID = 0xFFE0;
-    const CHARACTERISTIC_UUID = 0xFFE1;
+    let writeChar = null;
 
     async function toggleConnect() {
       if (bleDevice && bleDevice.gatt.connected) {
@@ -267,50 +270,64 @@
         return;
       }
       try {
-        log("Đang quét thiết bị...");
+        log("Đang mở hộp thoại quét...");
         bleDevice = await navigator.bluetooth.requestDevice({
           acceptAllDevices: true,
           optionalServices: [
-            SERVICE_UUID,
+            0xFFE0,
             '0000ffe0-0000-1000-8000-00805f9b34fb',
-            0xFFE0
+            0xFFF0,
+            '0000fff0-0000-1000-8000-00805f9b34fb'
           ]
         });
 
         bleDevice.addEventListener('gattserverdisconnected', onDisconnected);
 
-        log("Đang kết nối: " + bleDevice.name);
+        log("Đang kết nối: " + bleDevice.name + "...");
         const server = await bleDevice.gatt.connect();
 
-        log("Đang tìm dịch vụ BLE...");
-        let service;
-        try {
-          service = await server.getPrimaryService('0000ffe0-0000-1000-8000-00805f9b34fb');
-        } catch (e) {
-          service = await server.getPrimaryService(SERVICE_UUID);
+        log("Đang tự động dò cổng truyền dữ liệu...");
+        const services = await server.getPrimaryServices();
+        writeChar = null;
+
+        for (const s of services) {
+          const chars = await s.getCharacteristics();
+          for (const c of chars) {
+            // Tìm characteristic có quyền ghi
+            if (c.properties.writeWithoutResponse || c.properties.write) {
+              writeChar = c;
+              break;
+            }
+          }
+          if (writeChar) break;
         }
 
-        try {
-          bleCharacteristic = await service.getCharacteristic('0000ffe1-0000-1000-8000-00805f9b34fb');
-        } catch (e) {
-          bleCharacteristic = await service.getCharacteristic(CHARACTERISTIC_UUID);
+        if (!writeChar) {
+          // Thử lấy cổng FFE1 mặc định nếu duyệt không thấy
+          const s = await server.getPrimaryService(0xFFE0);
+          writeChar = await s.getCharacteristic(0xFFE1);
         }
 
         onConnected();
       } catch (err) {
-        log("Lỗi: " + err.message);
-        alert("Không thể kết nối: " + err.message);
+        log("Lỗi kết nối: " + err.message);
+        alert("Lỗi kết nối: " + err.message);
       }
     }
 
-    function onConnected() {
+    async function onConnected() {
       document.getElementById('statusIndicator').className = 'status-text connected';
-      document.getElementById('statusText').innerText = "Đã kết nối: " + (bleDevice.name || "Xe Robot");
+      document.getElementById('statusText').innerText = "Đã kết nối: " + (bleDevice.name || "HC-05");
       document.getElementById('btnConnect').innerText = "NGẮT";
       document.getElementById('btnConnect').style.background = "#ef4444";
-      log("Kết nối thành công! Sẵn sàng điều khiển.");
-      // Bíp báo hiệu
-      sendCharacter('h');
+      log("Kết nối thành công! Đang kích hoạt xe...");
+      
+      // Chờ 500ms để ổn định GATT rồi tự động bật chế độ Lái tay và Bíp còi
+      setTimeout(async () => {
+        await sendCharacter('m'); // Bật lái tay
+        await sendCharacter('h'); // Bíp còi chào mừng
+        log("Xe đã sẵn sàng lái tay!");
+      }, 600);
     }
 
     function onDisconnected() {
@@ -318,38 +335,40 @@
       document.getElementById('statusText').innerText = "Chưa kết nối";
       document.getElementById('btnConnect').innerText = "📶 KẾT NỐI XE";
       document.getElementById('btnConnect').style.background = "#2563eb";
-      bleCharacteristic = null;
-      log("Đã ngắt kết nối.");
+      writeChar = null;
+      log("Đã ngắt kết nối xe.");
     }
 
     async function sendCharacter(ch) {
-      if (!bleCharacteristic) {
+      if (!writeChar) {
         log("Chưa kết nối xe!");
         return;
       }
       try {
         const encoder = new TextEncoder();
         const data = encoder.encode(ch);
-        if (bleCharacteristic.writeValueWithoutResponse) {
-          await bleCharacteristic.writeValueWithoutResponse(data);
+        if (writeChar.properties.writeWithoutResponse) {
+          await writeChar.writeValueWithoutResponse(data);
         } else {
-          await bleCharacteristic.writeValue(data);
+          await writeChar.writeValue(data);
         }
-        log("Đã gửi: '" + ch + "'");
+        log("Đã gửi lệnh: '" + ch + "'");
       } catch (err) {
-        log("Lỗi gửi lệnh: " + err.message);
+        log("Lỗi gửi: " + err.message);
       }
     }
 
-    function handleTouch(cmd, btn) {
+    function handleTouch(cmd, btn, e) {
+      if (e) e.preventDefault();
       btn.classList.add('active');
       sendCharacter(cmd);
-      if (navigator.vibrate) navigator.vibrate(30); // Rung nhẹ tạo cảm giác
+      if (navigator.vibrate) navigator.vibrate(35);
     }
 
-    function handleTouchEnd(btn) {
+    function handleTouchEnd(btn, e) {
+      if (e) e.preventDefault();
       btn.classList.remove('active');
-      sendCharacter('s'); // Tự phanh dừng khi nhả tay
+      sendCharacter('s'); // Dừng khi nhả ngón tay
     }
 
     function log(msg) {
