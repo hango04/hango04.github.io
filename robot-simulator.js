@@ -252,6 +252,12 @@
       gripper.getWorldPosition(tipWorld);
       workpiece.position.set(tipWorld.x, tipWorld.y - 0.3, tipWorld.z);
     }
+
+    const valGrip = document.getElementById('val-grip');
+    if (valGrip) {
+      valGrip.textContent = jointState.grip ? 'HOLDING' : 'OPEN';
+      valGrip.style.color = jointState.grip ? '#38bdf8' : '#10b981';
+    }
   }
 
   function setupCanvasControls(container) {
@@ -363,6 +369,19 @@
         if (valZ) valZ.textContent = '0mm';
         if (workpiece) workpiece.position.set(-2.5, 1.2, 2.5);
         applyJoints();
+      });
+    }
+
+    const btnEstop = document.getElementById('btn-robot-estop');
+    if (btnEstop) {
+      btnEstop.addEventListener('click', () => {
+        stopAutoCycle();
+        const statusEl = document.getElementById('robot-status-text');
+        if (statusEl) {
+          statusEl.textContent = '🚨 EMERGENCY STOP: HỆ THỐNG ĐÃ DỪNG KHẨN CẤP!';
+          statusEl.style.color = '#ef4444';
+          setTimeout(() => { statusEl.style.color = ''; }, 3000);
+        }
       });
     }
   }

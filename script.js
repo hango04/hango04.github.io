@@ -164,21 +164,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // --- CONTACT FORM SUBMISSION & VALIDATION ---
+  // --- CONTACT FORM SUBMISSION WITH TELEGRAM BOT & FALLBACK ---
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const name = document.getElementById('form-name').value.trim();
       const email = document.getElementById('form-email').value.trim();
+      const phoneInput = document.getElementById('form-phone');
+      const phone = phoneInput ? phoneInput.value.trim() : '';
       const subject = document.getElementById('form-subject').value.trim();
       const message = document.getElementById('form-message').value.trim();
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!name || !email || !subject || !message) {
-        showToast('Vui lòng điền đầy đủ tất cả các trường.', 'error');
+        showToast('Vui lòng điền đầy đủ các trường thông tin.', 'error');
         return;
       }
 
@@ -191,32 +193,92 @@ document.addEventListener('DOMContentLoaded', () => {
       const originalText = submitBtn.innerHTML;
       
       submitBtn.disabled = true;
-      submitBtn.innerHTML = 'Đang gửi...';
+      submitBtn.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="spin-icon" style="animation: spin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg>
+        <span>Đang gửi tin nhắn...</span>
+      `;
 
-      setTimeout(() => {
+      // Save to local inbox backup
+      try {
+        const newMessage = {
+          name,
+          email,
+          phone,
+          subject,
+          message,
+          timestamp: new Date().toLocaleString('vi-VN')
+        };
+        const messages = JSON.parse(localStorage.getItem('contact_messages') || '[]');
+        messages.unshift(newMessage);
+        localStorage.setItem('contact_messages', JSON.stringify(messages));
+        window.dispatchEvent(new Event('contact_message_received'));
+      } catch (err) {
+        console.error('LocalStorage error:', err);
+      }
+
+      // Telegram Bot Dispatch (Đã tích hợp cấu hình bot của Mạnh Hà)
+      const TELEGRAM_BOT_TOKEN = window.TELEGRAM_BOT_TOKEN || localStorage.getItem('telegram_bot_token') || '8588897348:AAHQ9jC9y-Y_Ds7VHkUgTKc2oQIlUmnyy0Q';
+      const TELEGRAM_CHAT_ID   = window.TELEGRAM_CHAT_ID || localStorage.getItem('telegram_chat_id') || '6147568636';
+
+      const telegramText = 
+`🚀 <b>TIN NHẮN MỚI TỪ PORTFOLIO NGOMANHHA.XYZ</b>
+━━━━━━━━━━━━━━━━━━━━
+👤 <b>Họ tên:</b> ${name}
+📧 <b>Email:</b> ${email}
+📞 <b>Số điện thoại / Zalo:</b> ${phone || 'Không cung cấp'}
+📌 <b>Tiêu đề:</b> ${subject}
+💬 <b>Lời nhắn:</b>
+${message}
+━━━━━━━━━━━━━━━━━━━━
+⏰ <b>Thời gian:</b> ${new Date().toLocaleString('vi-VN')}`;
+
+      let sentViaTelegram = false;
+
+      if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
         try {
-          const newMessage = {
-            name,
-            email,
-            subject,
-            message,
-            timestamp: new Date().toLocaleString()
-          };
-          const messages = JSON.parse(localStorage.getItem('contact_messages') || '[]');
-          messages.unshift(newMessage);
-          localStorage.setItem('contact_messages', JSON.stringify(messages));
-          window.dispatchEvent(new Event('contact_message_received'));
-        } catch (err) {
-          console.error(err);
+          const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: TELEGRAM_CHAT_ID,
+              text: telegramText,
+              parse_mode: 'HTML'
+            })
+          });
+          const data = await res.json();
+          if (data.ok) {
+            sentViaTelegram = true;
+          }
+        } catch (fetchErr) {
+          console.warn('Telegram send failed:', fetchErr);
         }
+      }
 
-        showToast('Gửi tin nhắn thành công! Tôi sẽ liên hệ lại sớm.');
-        contactForm.reset();
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
-      }, 1500);
+      // Feedback to User
+      if (sentViaTelegram) {
+        showToast('Gửi tin nhắn thành công! Đã gửi thông báo tức thì đến Telegram của Mạnh Hà.');
+      } else {
+        showToast('Lời nhắn đã được gửi! Tôi sẽ phản hồi bạn qua Email/Zalo sớm nhất.');
+      }
+
+      contactForm.reset();
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalText;
     });
   }
+
+  // Global helper for user to easily set their Telegram Bot Token in browser
+  window.setupTelegramBot = function(token, chatId) {
+    if (token && chatId) {
+      localStorage.setItem('telegram_bot_token', token);
+      localStorage.setItem('telegram_chat_id', chatId);
+      console.log('✅ Đã lưu cấu hình Telegram Bot thành công!');
+      return 'Đã kích hoạt Telegram Bot: ' + chatId;
+    } else {
+      console.log('ℹ️ Cú pháp: setupTelegramBot("BOT_TOKEN", "CHAT_ID")');
+      return 'Vui lòng cung cấp cả BOT_TOKEN và CHAT_ID';
+    }
+  };
 
   // --- CUSTOM TOAST NOTIFICATION SYSTEM ---
   function showToast(message, type = 'success') {

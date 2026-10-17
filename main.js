@@ -897,13 +897,16 @@ function initChatbot() {
   }
 }
 
-/* ---------- 11. INTERACTIVE PROJECT MODAL SHOWCASES ---------- */
+/* ---------- 11. INTERACTIVE PROJECT MODAL SHOWCASES (NHÓM 1 CASE STUDIES) ---------- */
 function initProjectModals() {
-  const droneCard = document.getElementById('project-drone');
-  const gpmCard = document.getElementById('project-gpm');
-  const tiktokCard = document.getElementById('project-tiktok');
-  const modal = document.getElementById('project-modal');
-  const modalBody = document.getElementById('modal-body');
+  const droneCard       = document.getElementById('project-drone');
+  const videoscribeCard = document.getElementById('project-videoscribe');
+  const tiktokCard      = document.getElementById('project-tiktok');
+  const youtubeCard     = document.getElementById('project-youtube');
+  const gpmCard         = document.getElementById('project-gpm');
+  const scaraCard       = document.getElementById('project-scara');
+  const modal           = document.getElementById('project-modal');
+  const modalBody       = document.getElementById('modal-body');
 
   if (!modal || !modalBody) return;
 
@@ -913,32 +916,89 @@ function initProjectModals() {
     document.body.style.overflow = 'hidden';
   }
 
+  // 1. DRONE CASE STUDY
   if (droneCard) {
     droneCard.addEventListener('click', e => {
       if (e.target.closest('.btn-icon, a')) return;
 
       const html = `
-        <div class="project-modal-container">
-          <div class="matlab-sim-window">
-            <div class="sim-header">
-              <span>MATLAB Simulink PID Simulation</span>
-              <span id="sim-status" style="color:#10b981;">RUNNING...</span>
+        <div class="case-study-modal-container">
+          <div class="case-study-header">
+            <div class="case-study-top-meta">
+              <span class="case-study-cat-badge">ROBOTICS & CONTROL</span>
+              <span class="case-study-time">Đồ Án Nghiên Cứu • 2024 - 2025</span>
             </div>
-            <canvas id="sim-canvas" class="sim-grid-canvas"></canvas>
-          </div>
-          <div class="modal-details-col">
-            <h3 class="modal-proj-title">Robot Drone Vận Tải - Thiết Kế Hệ Thống Điều Khiển</h3>
-            <div class="modal-tech-list">
-              <span class="modal-tech-tag">MATLAB</span>
-              <span class="modal-tech-tag">SolidWorks</span>
+            <h2 class="case-study-title">Robot Drone Vận Tải - Thiết Kế Hệ Thống Điều Khiển Vị Trí</h2>
+            <div class="modal-tech-list" style="margin-bottom:0;">
+              <span class="modal-tech-tag">SolidWorks 3D</span>
+              <span class="modal-tech-tag">MATLAB Simulink</span>
               <span class="modal-tech-tag">PID Control</span>
-              <span class="modal-tech-tag">Động lực học</span>
+              <span class="modal-tech-tag">Động Lực Học Euler-Newton</span>
+              <span class="modal-tech-tag">Bài Báo Khoa Học</span>
             </div>
-            <p class="modal-proj-desc">Bài báo nghiên cứu thiết kế mô phỏng Drone vận chuyển hàng hóa tự cân bằng dưới tác động của gió nhiễu. Sử dụng bộ điều khiển phản hồi vị trí PID tối ưu.</p>
-            <div class="modal-action-row">
-              <a href="assets/drone_thesis.pdf" target="_blank" class="btn btn-primary">Đọc Toàn Văn PDF</a>
-              <a href="https://zalo.me/0334383560" target="_blank" class="btn btn-secondary">Trao Đổi Đồ Án</a>
+          </div>
+
+          <div class="case-study-showcase">
+            <div class="matlab-sim-window" style="border:none; box-shadow:none;">
+              <div class="sim-header">
+                <span>MATLAB Simulink PID Real-Time Tracking</span>
+                <span id="sim-status" style="color:#10b981;">SIMULATION RUNNING...</span>
+              </div>
+              <canvas id="sim-canvas" class="sim-grid-canvas"></canvas>
             </div>
+          </div>
+
+          <div class="case-study-sections">
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                Mục Tiêu & Thách Thức
+              </div>
+              <div class="case-study-sec-body">
+                Nghiên cứu thiết kế và mô phỏng hệ thống Drone Quadcopter tải trọng 5kg vận chuyển bưu kiện tự hành. Thách thức cốt lõi là giữ vững cân bằng độ cao và góc nghiêng (Roll, Pitch, Yaw) trước tác động của gió giật phi tuyến.
+              </div>
+            </div>
+
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                Giải Pháp Kỹ Thuật
+              </div>
+              <div class="case-study-sec-body">
+                <ul>
+                  <li>Xây dựng mô hình toán động lực học 6 bậc tự do (6-DOF).</li>
+                  <li>Thiết kế bộ điều khiển PID phân tầng trên MATLAB Simulink.</li>
+                  <li>Mô hình hóa chi tiết khung sợi carbon & giá treo phôi trên SolidWorks.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                Kết Quả & Đóng Góp
+              </div>
+              <div class="case-study-sec-body">
+                <div class="case-study-metric-box">
+                  <div class="case-study-metric-val">&lt; 0.8s</div>
+                  <div class="case-study-metric-lbl">Thời gian xác lập cân bằng</div>
+                </div>
+                <div class="case-study-metric-box">
+                  <div class="case-study-metric-val">&lt; 4.5%</div>
+                  <div class="case-study-metric-lbl">Độ vọt lố (Overshoot)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-study-footer-actions">
+            <a href="assets/drone_thesis.pdf" target="_blank" class="btn btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+              Đọc Toàn Văn Báo Cáo PDF
+            </a>
+            <a href="https://zalo.me/0334383560" target="_blank" class="btn btn-secondary">
+              Trao Đổi Đồ Án / Đặt Hàng
+            </a>
           </div>
         </div>
       `;
@@ -947,38 +1007,349 @@ function initProjectModals() {
     });
   }
 
+  // 2. VIDEOSCRIBE CASE STUDY
+  if (videoscribeCard) {
+    videoscribeCard.addEventListener('click', e => {
+      if (e.target.closest('.btn-icon, a')) return;
+
+      const html = `
+        <div class="case-study-modal-container">
+          <div class="case-study-header">
+            <div class="case-study-top-meta">
+              <span class="case-study-cat-badge">ANIMATION & MARKETING</span>
+              <span class="case-study-time">Freelance Production • 2023 - 2024</span>
+            </div>
+            <h2 class="case-study-title">Video Giới Thiệu Sản Phẩm Vẽ Tay VideoScribe</h2>
+            <div class="modal-tech-list" style="margin-bottom:0;">
+              <span class="modal-tech-tag">VideoScribe</span>
+              <span class="modal-tech-tag">Whiteboard Animation</span>
+              <span class="modal-tech-tag">Adobe Illustrator</span>
+              <span class="modal-tech-tag">Voice & Sound Sync</span>
+              <span class="modal-tech-tag">vLance Platform</span>
+            </div>
+          </div>
+
+          <div class="case-study-showcase" style="padding: 18px; text-align: center;">
+            <img src="assets/project1.png" alt="VideoScribe Preview" style="max-height: 220px; border-radius: 8px; object-fit: contain; margin: 0 auto; display: block;">
+          </div>
+
+          <div class="case-study-sections">
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                Mục Tiêu & Thách Thức
+              </div>
+              <div class="case-study-sec-body">
+                Khách hàng cần truyền tải các thông số và quy trình vận hành sản phẩm kỹ thuật khô khan thành một câu chuyện trực quan, dễ hiểu và giữ chân người xem đến giây cuối cùng.
+              </div>
+            </div>
+
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                Giải Pháp Kỹ Thuật
+              </div>
+              <div class="case-study-sec-body">
+                <ul>
+                  <li>Xây dựng kịch bản Storyboard theo từng khung hình.</li>
+                  <li>Tự vẽ và vector hóa đối tượng SVG trên Illustrator để nét vẽ sắc nét.</li>
+                  <li>Căn chỉnh thời gian vẽ khớp tuyệt đối với giọng đọc và hiệu ứng âm thanh ASMR.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                Kết Quả Đạt Được
+              </div>
+              <div class="case-study-sec-body">
+                <div class="case-study-metric-box">
+                  <div class="case-study-metric-val">10+ Video</div>
+                  <div class="case-study-metric-lbl">Hoàn thành & bàn giao khách hàng</div>
+                </div>
+                <div class="case-study-metric-box">
+                  <div class="case-study-metric-val">100% ★★★★★</div>
+                  <div class="case-study-metric-lbl">Đánh giá 5 sao từ khách hàng</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-study-footer-actions">
+            <a href="https://drive.google.com/drive/u/0/folders/1bWmRbbtenoBenhs_f8C_v5IZssbX8hFo" target="_blank" class="btn btn-primary">
+              Xem Toàn Bộ Folder Drive Sản Phẩm
+            </a>
+            <a href="https://zalo.me/0334383560" target="_blank" class="btn btn-secondary">
+              Thuê Làm Video Vẽ Tay
+            </a>
+          </div>
+        </div>
+      `;
+      openModal(html);
+    });
+  }
+
+  // 3. TIKTOK CASE STUDY
+  if (tiktokCard) {
+    tiktokCard.addEventListener('click', e => {
+      if (e.target.closest('.btn-icon, a')) return;
+
+      const html = `
+        <div class="case-study-modal-container">
+          <div class="case-study-header">
+            <div class="case-study-top-meta">
+              <span class="case-study-cat-badge">CREATOR & SHORT VIDEO</span>
+              <span class="case-study-time">Kênh Cá Nhân • 2023 - Nay</span>
+            </div>
+            <h2 class="case-study-title">Biên Tập Video Ngắn & Xây Dựng Kênh TikTok 57.9K Followers</h2>
+            <div class="modal-tech-list" style="margin-bottom:0;">
+              <span class="modal-tech-tag">CapCut Pro</span>
+              <span class="modal-tech-tag">Keyframe Motion</span>
+              <span class="modal-tech-tag">Sound Design</span>
+              <span class="modal-tech-tag">TikTok Beta Monetization</span>
+              <span class="modal-tech-tag">Thuật Toán Viral</span>
+            </div>
+          </div>
+
+          <div class="case-study-showcase" style="background-color: #0b0214; padding: 20px; border-color: rgba(189,0,255,0.3);">
+            <div class="sim-header" style="margin-bottom: 12px;">
+              <span style="color: var(--color-secondary);">TIKTOK LIVE ANALYTICS DATABASE</span>
+              <span style="color: #10b981;">VERIFIED METRICS</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; text-align: center;">
+              <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(189,0,255,0.25); padding: 14px; border-radius: 8px;">
+                <h3 style="font-size: 2rem; color: #fff; font-family: var(--font-heading); margin-bottom: 2px;">57.9K</h3>
+                <p style="font-size: 0.72rem; color: var(--text-muted); font-weight:700;">NGƯỜI THEO DÕI</p>
+              </div>
+              <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(189,0,255,0.25); padding: 14px; border-radius: 8px;">
+                <h3 style="font-size: 2rem; color: var(--color-primary); font-family: var(--font-heading); margin-bottom: 2px;">255.5K</h3>
+                <p style="font-size: 0.72rem; color: var(--text-muted); font-weight:700;">LƯỢT THÍCH</p>
+              </div>
+              <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(189,0,255,0.25); padding: 14px; border-radius: 8px;">
+                <h3 style="font-size: 2rem; color: #34d399; font-family: var(--font-heading); margin-bottom: 2px;">3.2M+</h3>
+                <p style="font-size: 0.72rem; color: var(--text-muted); font-weight:700;">TỔNG LƯỢT XEM</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-study-sections">
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                Mục Tiêu & Thách Thức
+              </div>
+              <div class="case-study-sec-body">
+                Xây dựng kênh nội dung học tiếng Nhật từ con số 0 trong thị trường bão hòa, yêu cầu tối ưu hóa tốc độ giữ chân người xem (Retention rate &gt; 70%) và đạt tiêu chuẩn bật kiếm tiền Quỹ sáng tạo TikTok Beta.
+              </div>
+            </div>
+
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                Kỹ Năng & Quy Trình
+              </div>
+              <div class="case-study-sec-body">
+                <ul>
+                  <li>Tối ưu 3 giây mở đầu (Visual Hook) bằng kỹ thuật chuyển cảnh tốc độ cao.</li>
+                  <li>Sử dụng Keyframe CapCut làm text động và icon minh họa di chuyển tự nhiên.</li>
+                  <li>Phối hiệu ứng âm thanh (SFX) nhấn mạnh từ vựng trọng tâm.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                Kết Quả & Doanh Thu
+              </div>
+              <div class="case-study-sec-body">
+                Kênh liên tục có nhiều video viral vượt mốc 500k - 1 triệu view, mang lại lượng tương tác organic khổng lồ và nguồn thu nhập ổn định từ Quỹ nhà sáng tạo TikTok Beta.
+              </div>
+            </div>
+          </div>
+
+          <div class="case-study-footer-actions">
+            <a href="https://drive.google.com/drive/u/0/folders/1wolWHnV8Jd8WzyQ_hO02gGZpXkKkeL3V" target="_blank" class="btn btn-primary">
+              Xem Kho Video Drive Mẫu
+            </a>
+            <a href="https://zalo.me/0334383560" target="_blank" class="btn btn-secondary">
+              Thuê Biên Tập Video Short / Reels
+            </a>
+          </div>
+        </div>
+      `;
+      openModal(html);
+    });
+  }
+
+  // 4. YOUTUBE CASE STUDY
+  if (youtubeCard) {
+    youtubeCard.addEventListener('click', e => {
+      if (e.target.closest('.btn-icon, a')) return;
+
+      const html = `
+        <div class="case-study-modal-container">
+          <div class="case-study-header">
+            <div class="case-study-top-meta">
+              <span class="case-study-cat-badge">AUDIO & VISUAL PRODUCTION</span>
+              <span class="case-study-time">Kênh Cá Nhân • 2024</span>
+            </div>
+            <h2 class="case-study-title">Kênh YouTube Âm Nhạc: Harmony in Sound</h2>
+            <div class="modal-tech-list" style="margin-bottom:0;">
+              <span class="modal-tech-tag">Adobe Premiere Pro</span>
+              <span class="modal-tech-tag">Adobe Photoshop</span>
+              <span class="modal-tech-tag">Audio Equalization</span>
+              <span class="modal-tech-tag">Spectrum Visualizer</span>
+              <span class="modal-tech-tag">YouTube CTR Optimization</span>
+            </div>
+          </div>
+
+          <div class="case-study-showcase" style="padding: 16px; text-align: center;">
+            <img src="assets/project3.png" alt="YouTube Preview" style="max-height: 220px; border-radius: 8px; object-fit: contain; margin: 0 auto; display: block;">
+          </div>
+
+          <div class="case-study-sections">
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                Mục Tiêu & Định Hướng
+              </div>
+              <div class="case-study-sec-body">
+                Sản xuất không gian nghe nhìn âm nhạc chất lượng cao, phục vụ đối tượng lập trình viên, designer và người học tập cần sự tập trung sâu (Deep Work).
+              </div>
+            </div>
+
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                Kỹ Thuật Xử Lý
+              </div>
+              <div class="case-study-sec-body">
+                <ul>
+                  <li>Xử lý master audio chống méo tiếng và cân bằng dải tần trầm/bổng.</li>
+                  <li>Dựng hiệu ứng sóng nhạc và ánh sáng ambient đồng điệu theo tempo.</li>
+                  <li>Thiết kế thumbnail phong cách Cyber/Anime tối giản chuẩn CTR.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                Trải Nghiệm Thính Giác
+              </div>
+              <div class="case-study-sec-body">
+                Mang đến thư viện video âm nhạc thư giãn, đồng thời ứng dụng làm danh sách bài hát tích hợp trực tiếp trên widget nghe nhạc lofi của website cá nhân.
+              </div>
+            </div>
+          </div>
+
+          <div class="case-study-footer-actions">
+            <a href="https://www.youtube.com/@Harmony_in_Sound" target="_blank" class="btn btn-primary">
+              Ghé Thăm Kênh YouTube
+            </a>
+            <a href="#contact" class="btn btn-secondary">
+              Hợp Tác Sản Xuất Media
+            </a>
+          </div>
+        </div>
+      `;
+      openModal(html);
+    });
+  }
+
+  // 5. GPM AUTOMATION CASE STUDY
   if (gpmCard) {
     gpmCard.addEventListener('click', e => {
       if (e.target.closest('.btn-icon, a')) return;
 
       const html = `
-        <div class="project-modal-container">
-          <div class="terminal-window">
-            <div class="terminal-header">
-              <div class="terminal-dots">
-                <span class="term-dot term-dot-red"></span>
-                <span class="term-dot term-dot-yellow"></span>
-                <span class="term-dot term-dot-green"></span>
-              </div>
-              <div class="terminal-title">gpm_automation_farm.js</div>
+        <div class="case-study-modal-container">
+          <div class="case-study-header">
+            <div class="case-study-top-meta">
+              <span class="case-study-cat-badge">AUTOMATION & CRYPTO</span>
+              <span class="case-study-time">Thực Chiến MMO • 2023 - Nay</span>
             </div>
-            <div id="modal-terminal-body" class="terminal-body">
-              <div class="terminal-line" style="color:#64748b;">[SYSTEM] Ready. Press key to initialize execution...</div>
+            <h2 class="case-study-title">Tự Động Hóa MMO - Viết Script Điều Khiển GPM Browser Đa Luồng</h2>
+            <div class="modal-tech-list" style="margin-bottom:0;">
+              <span class="modal-tech-tag">GPM Browser API</span>
+              <span class="modal-tech-tag">NodeJS / Puppeteer</span>
+              <span class="modal-tech-tag">Proxy Rotation IPv4/IPv6</span>
+              <span class="modal-tech-tag">Multi-threading</span>
+              <span class="modal-tech-tag">Anti-Detect Fingerprint</span>
             </div>
           </div>
-          <div class="modal-details-col">
-            <h3 class="modal-proj-title">Tự Động Hóa MMO - Viết Script GPM Browser</h3>
-            <div class="modal-tech-list">
-              <span class="modal-tech-tag">GPM Browser API</span>
-              <span class="modal-tech-tag">Puppeteer / JS</span>
-              <span class="modal-tech-tag">Proxy Rotation</span>
-              <span class="modal-tech-tag">Auto Farming</span>
+
+          <div class="case-study-showcase">
+            <div class="terminal-window" style="border:none; box-shadow:none;">
+              <div class="terminal-header">
+                <div class="terminal-dots">
+                  <span class="term-dot term-dot-red"></span>
+                  <span class="term-dot term-dot-yellow"></span>
+                  <span class="term-dot term-dot-green"></span>
+                </div>
+                <div class="terminal-title">gpm_automation_cluster.js // LIVE WORKER EXECUTION</div>
+              </div>
+              <div id="modal-terminal-body" class="terminal-body" style="height: 180px;">
+                <div class="terminal-line" style="color:#64748b;">[SYSTEM] Initializing multi-worker pool...</div>
+              </div>
             </div>
-            <p class="modal-proj-desc">Hệ thống kịch bản lập trình chạy đa luồng điều khiển hàng trăm luồng trình duyệt GPM. Tự động hóa điểm danh, claim token, làm airdrop retroactive và tương tác X kiếm tiền ad revenue.</p>
-            <div class="modal-action-row">
-              <a href="assets/videoscriptgpm.mp4" target="_blank" class="btn btn-primary">Xem Video</a>
-              <a href="https://zalo.me/0334383560" target="_blank" class="btn btn-secondary">Đặt Hàng Code Tool</a>
+          </div>
+
+          <div class="case-study-sections">
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                Mục Tiêu & Thách Thức
+              </div>
+              <div class="case-study-sec-body">
+                Quản lý và vận hành đồng thời 200+ hồ sơ trình duyệt Antidetect Browser độc lập, giải quyết triệt để bài toán rò rỉ WebRTC/Canvas fingerprint và cày cuốc airdrop tự động mà không bị ban tài khoản.
+              </div>
             </div>
+
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                Giải Pháp Kỹ Thuật
+              </div>
+              <div class="case-study-sec-body">
+                <ul>
+                  <li>Viết wrapper kết nối REST API lõi của GPM Browser để khởi tạo & đóng luồng.</li>
+                  <li>Tự động hóa hành vi click chuột human-like (tạo độ trễ ngẫu nhiên).</li>
+                  <li>Hệ thống xoay Proxy tự động kiểm tra ping & blacklist trước khi chạy.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                Hiệu Quả & Doanh Thu
+              </div>
+              <div class="case-study-sec-body">
+                <div class="case-study-metric-box">
+                  <div class="case-study-metric-val">200+ Profiles</div>
+                  <div class="case-study-metric-lbl">Chạy đồng thời với tỉ lệ lỗi &lt; 0.2%</div>
+                </div>
+                <div class="case-study-metric-box">
+                  <div class="case-study-metric-val">51,000+ DOGS</div>
+                  <div class="case-study-metric-lbl">Claim thành công Airdrop retroactive</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-study-footer-actions">
+            <a href="assets/videoscriptgpm.mp4" target="_blank" class="btn btn-primary">
+              Xem Video Chạy Script Thực Tế
+            </a>
+            <a href="assets/mmo_x_payout.png" target="_blank" class="btn btn-secondary">
+              Xem Proof Doanh Thu X
+            </a>
+            <a href="https://zalo.me/0334383560" target="_blank" class="btn btn-cv">
+              Đặt Hàng Code Tool Tự Động Hóa
+            </a>
           </div>
         </div>
       `;
@@ -987,44 +1358,83 @@ function initProjectModals() {
     });
   }
 
-  if (tiktokCard) {
-    tiktokCard.addEventListener('click', e => {
+  // 6. SCARA ROBOT AUTOTECH CASE STUDY
+  if (scaraCard) {
+    scaraCard.addEventListener('click', e => {
       if (e.target.closest('.btn-icon, a')) return;
 
       const html = `
-        <div class="project-modal-container">
-          <div class="matlab-sim-window" style="background-color: #0b0214; border-color: rgba(189,0,255,0.25);">
-            <div class="sim-header">
-              <span style="color: var(--color-secondary);">TikTok Beta Analytics</span>
-              <span style="color: #10b981;">LIVE DATABASE</span>
+        <div class="case-study-modal-container">
+          <div class="case-study-header">
+            <div class="case-study-top-meta">
+              <span class="case-study-cat-badge">ROBOTICS CÔNG NGHIỆP</span>
+              <span class="case-study-time">Thực Tập Tại Autotech • 2025</span>
             </div>
-            <div style="padding: 24px; text-align: center;">
-              <h2 style="font-size: 2.6rem; color: #ffffff; font-family: var(--font-heading); margin-bottom: 4px; text-shadow: 0 0 10px rgba(189,0,255,0.6);">57.9K</h2>
-              <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 24px; letter-spacing: 1px;">FOLLOWERS ĐẠT ĐƯỢC</p>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(189,0,255,0.15); padding: 12px; border-radius: 6px;">
-                  <h4 style="color: var(--color-primary); font-size:1.15rem;">255.5K</h4>
-                  <p style="font-size: 0.7rem; color: var(--text-muted); font-weight:700;">LƯỢT THÍCH</p>
+            <h2 class="case-study-title">Tự Động Hóa Dây Chuyền & Lập Trình Robot SCARA Yamaha</h2>
+            <div class="modal-tech-list" style="margin-bottom:0;">
+              <span class="modal-tech-tag">Yamaha SCARA Robot</span>
+              <span class="modal-tech-tag">Autotech Việt Nam</span>
+              <span class="modal-tech-tag">Cơ Khí Chính Xác</span>
+              <span class="modal-tech-tag">Tủ Điện PLC & Cảm Biến</span>
+              <span class="modal-tech-tag">Pick & Place Tray</span>
+            </div>
+          </div>
+
+          <div class="case-study-showcase" style="padding: 16px; text-align: center;">
+            <img src="assets/autotech_robot.jpg" onerror="this.src='assets/robot_3d.png'" alt="Autotech Robot SCARA" style="max-height: 220px; border-radius: 8px; object-fit: contain; margin: 0 auto; display: block;">
+          </div>
+
+          <div class="case-study-sections">
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                Mục Tiêu & Dự Án
+              </div>
+              <div class="case-study-sec-body">
+                Tham gia trực tiếp vào dự án chế tạo máy tự động hóa công nghiệp tại Công ty CP Chế tạo máy Autotech Việt Nam (KCN Yên Phong), đáp ứng yêu cầu khắt khe về độ chính xác và chu kỳ sản xuất của đối tác.
+              </div>
+            </div>
+
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                Công Việc Thực Tế
+              </div>
+              <div class="case-study-sec-body">
+                <ul>
+                  <li>Lắp ráp cơ khí chính xác cụm gá đặt và khung vỏ bảo vệ (Robot Enclosure).</li>
+                  <li>Đi máng cáp, đấu nối tín hiệu I/O cảm biến quang, van khí nén về PLC.</li>
+                  <li>Dạy điểm (Teaching) và lập trình chu trình gắp - thả phôi (Pick & Place) cho Robot SCARA Yamaha.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="case-study-sec-card">
+              <div class="case-study-sec-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                Độ Chuẩn Xác Đạt Được
+              </div>
+              <div class="case-study-sec-body">
+                <div class="case-study-metric-box">
+                  <div class="case-study-metric-val">± 0.02 mm</div>
+                  <div class="case-study-metric-lbl">Độ lặp lại vị trí cơ khí</div>
                 </div>
-                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(189,0,255,0.15); padding: 12px; border-radius: 6px;">
-                  <h4 style="color: var(--color-primary); font-size:1.15rem;">3.2M+</h4>
-                  <p style="font-size: 0.7rem; color: var(--text-muted); font-weight:700;">TỔNG LƯỢT XEM</p>
+                <div class="case-study-metric-box">
+                  <div class="case-study-metric-val">&lt; 1.2s</div>
+                  <div class="case-study-metric-lbl">Chu kỳ gắp - đặt phôi / chu trình</div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="modal-details-col">
-            <h3 class="modal-proj-title">Biên Tập Video Ngắn & TikTok (57.9K Followers)</h3>
-            <div class="modal-tech-list">
-              <span class="modal-tech-tag">CapCut Keyframes</span>
-              <span class="modal-tech-tag">Video Editing</span>
-              <span class="modal-tech-tag">Algorithm SEO</span>
-              <span class="modal-tech-tag">Beta Monetization</span>
-            </div>
-            <p class="modal-proj-desc">Xây dựng và phát triển kênh sáng tạo video tiếng Nhật đạt 57.9K người theo dõi từ con số 0. Biên tập hiệu ứng keyframe chuyên sâu, phối âm thanh thu hút người nghe.</p>
-            <div class="modal-action-row">
-              <a href="https://drive.google.com/drive/u/0/folders/1wolWHnV8Jd8WzyQ_hO02gGZpXkKkeL3V" target="_blank" class="btn btn-primary">Xem Kho Drive Video</a>
-            </div>
+
+          <div class="case-study-footer-actions">
+            <a href="Ngô Mạnh Hà- 2251283518.pdf" target="_blank" class="btn btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+              Đọc Báo Cáo Thực Tập Chi Tiết
+            </a>
+            <a href="#robot-simulator-section" class="btn btn-cv" onclick="document.getElementById('modal-close').click();">
+              Trải Nghiệm Mô Phỏng SCARA 3D Trên Web
+            </a>
           </div>
         </div>
       `;

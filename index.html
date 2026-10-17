@@ -112,6 +112,7 @@
           <li><a href="#about" class="nav-link" data-i18n="nav-about">Giới thiệu</a></li>
           <li><a href="#skills" class="nav-link" data-i18n="nav-skills">Kỹ năng</a></li>
           <li><a href="#projects" class="nav-link" data-i18n="nav-projects">Dự án</a></li>
+          <li><a href="#robot-simulator-section" class="nav-link" data-i18n="nav-robot">Robot 3D</a></li>
           <li><a href="#experience" class="nav-link" data-i18n="nav-experience">Kinh nghiệm</a></li>
           <li><a href="#travel" class="nav-link" data-i18n="nav-travel">Du lịch</a></li>
           <li><a href="#contact" class="nav-link" data-i18n="nav-contact">Liên hệ</a></li>
@@ -119,6 +120,12 @@
       </nav>
       
       <div class="nav-actions">
+        <!-- Download CV Button -->
+        <a href="Ngô Mạnh Hà- 2251283518.pdf" target="_blank" download="CV_Ngo_Manh_Ha.pdf" class="nav-cv-btn" title="Tải CV (PDF)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span data-i18n="nav-cv">Tải CV</span>
+        </a>
+
         <!-- Language Toggle Button -->
         <button id="lang-toggle-btn" class="theme-toggle-btn" aria-label="Đổi ngôn ngữ" title="Đổi ngôn ngữ">
           <span id="lang-icon">🇻🇳</span>
@@ -207,6 +214,10 @@
         <div class="hero-actions">
           <a href="#projects" class="btn btn-primary">
             <span data-i18n="hero-btn-projects">Khám phá dự án ➔</span>
+          </a>
+          <a href="Ngô Mạnh Hà- 2251283518.pdf" target="_blank" download="CV_Ngo_Manh_Ha.pdf" class="btn btn-cv" id="hero-cv-btn" title="Xem & Tải CV Ngô Mạnh Hà">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span data-i18n="hero-btn-cv">Tải CV (PDF)</span>
           </a>
           <a href="#contact" class="btn btn-secondary" data-i18n="hero-btn-contact">Liên hệ hợp tác</a>
         </div>
@@ -451,6 +462,7 @@
         <!-- Project 1: Drone -->
         <article class="project-card glass-card" data-category="robotics" id="project-drone" style="cursor: pointer;">
           <div class="project-image-wrapper">
+            <div class="case-study-badge"><span>Case Study</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
             <img src="assets/drone.png" alt="Đồ án Robot Drone Vận Tải">
             <div class="project-overlay">
               <a href="assets/drone_thesis.pdf" target="_blank" class="btn-icon" aria-label="Đọc Đồ án PDF">
@@ -475,8 +487,9 @@
         </article>
 
         <!-- Project 2: VideoScribe -->
-        <article class="project-card glass-card" data-category="video">
+        <article class="project-card glass-card" data-category="video" id="project-videoscribe" style="cursor: pointer;">
           <div class="project-image-wrapper">
+            <div class="case-study-badge"><span>Case Study</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
             <img src="assets/project1.png" alt="VideoScribe Product Animation">
             <div class="project-overlay">
               <a href="https://drive.google.com/drive/u/0/folders/1bWmRbbtenoBenhs_f8C_v5IZssbX8hFo" target="_blank" class="btn-icon" aria-label="Xem Drive VideoScribe">
@@ -503,6 +516,7 @@
         <!-- Project 3: TikTok -->
         <article class="project-card glass-card" data-category="video" id="project-tiktok" style="cursor: pointer;">
           <div class="project-image-wrapper">
+            <div class="case-study-badge"><span>Case Study</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
             <img src="assets/mmo_tiktok.png" alt="Kênh TikTok 57.9K followers">
             <div class="project-overlay">
               <a href="https://drive.google.com/drive/u/0/folders/1wolWHnV8Jd8WzyQ_hO02gGZpXkKkeL3V" target="_blank" class="btn-icon" aria-label="Xem Drive TikTok">
@@ -527,8 +541,9 @@
         </article>
 
         <!-- Project 4: YouTube -->
-        <article class="project-card glass-card" data-category="video">
+        <article class="project-card glass-card" data-category="video" id="project-youtube" style="cursor: pointer;">
           <div class="project-image-wrapper">
+            <div class="case-study-badge"><span>Case Study</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
             <img src="assets/project3.png" alt="YouTube Harmony in Sound">
             <div class="project-overlay">
               <a href="https://www.youtube.com/@Harmony_in_Sound" target="_blank" class="btn-icon" aria-label="Xem Kênh YouTube">
@@ -555,6 +570,7 @@
         <!-- Project 5: GPM Automation & Crypto -->
         <article class="project-card glass-card" data-category="crypto" id="project-gpm" style="cursor: pointer;">
           <div class="project-image-wrapper">
+            <div class="case-study-badge"><span>Case Study</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
             <!-- Autoplaying Video for GPM Script Automation -->
             <video src="assets/videoscriptgpm.mp4" muted loop autoplay style="width: 100%; height: 100%; object-fit: cover;"></video>
             <div class="project-overlay">
@@ -581,8 +597,9 @@
         </article>
 
         <!-- Project 6: Autotech SCARA Robot & Automation -->
-        <article class="project-card glass-card" data-category="robotics" style="cursor: pointer;">
+        <article class="project-card glass-card" data-category="robotics" id="project-scara" style="cursor: pointer;">
           <div class="project-image-wrapper">
+            <div class="case-study-badge"><span>Case Study</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
             <img src="assets/autotech_robot.jpg" alt="Thực tập Tự động hóa & Robot SCARA - Autotech" onerror="this.src='assets/robot_3d.png'">
             <div class="project-overlay">
               <a href="Ngô Mạnh Hà- 2251283518.pdf" target="_blank" class="btn-icon" aria-label="Xem Báo Cáo Thực Tập PDF">
@@ -621,6 +638,112 @@
         </div>
       </div>
       
+    </div>
+  </section>
+
+  <!-- ROBOT SCARA 3D SIMULATOR SECTION (HMI SCADA) -->
+  <section id="robot-simulator-section" class="section reveal">
+    <div class="container">
+      <div class="section-title-wrapper reveal">
+        <div class="hero-tagline" style="margin-bottom: 8px;">
+          <span class="hero-tagline-dot" style="background:#10b981;"></span>
+          <span>Web 3D Interactive Robotics</span>
+        </div>
+        <h2 class="section-title">Mô Phỏng 3D Robot SCARA Yamaha</h2>
+        <p class="section-subtitle">Mô hình cánh tay robot công nghiệp 4 trục gắp - đặt phôi tự động (Kinh nghiệm thực tế tại Autotech)</p>
+      </div>
+
+      <div class="robot-scada-container glass-card reveal">
+        <!-- 3D Canvas Viewport -->
+        <div class="robot-viewport-wrapper">
+          <div class="viewport-hud-header">
+            <div class="hud-status-badge">
+              <span class="hud-dot"></span>
+              <span id="robot-status-text">MANUAL MODE: SẴN SÀNG ĐIỀU KHIỂN</span>
+            </div>
+            <div class="hud-hint">Dùng chuột / ngón tay xoay 360°</div>
+          </div>
+          <div id="robot-3d-canvas-container" class="robot-canvas-container"></div>
+          <div class="viewport-hud-footer">
+            <span>MODEL: YAMAHA YK400XG</span>
+            <span>CYCLE TIME: 1.2s</span>
+            <span>REPEATABILITY: ±0.02mm</span>
+          </div>
+        </div>
+
+        <!-- HMI Teach Pendant Control Panel -->
+        <div class="robot-hmi-panel">
+          <div class="hmi-header">
+            <div class="hmi-title-row">
+              <div class="hmi-logo">HMI TEACH PENDANT</div>
+              <div class="hmi-servo-status">SERVO ON</div>
+            </div>
+            <!-- Coordinates readout -->
+            <div class="hmi-coords-grid">
+              <div class="coord-item">
+                <span class="coord-label">JOINT 1</span>
+                <span class="coord-value" id="val-j1">0°</span>
+              </div>
+              <div class="coord-item">
+                <span class="coord-label">JOINT 2</span>
+                <span class="coord-value" id="val-j2">0°</span>
+              </div>
+              <div class="coord-item">
+                <span class="coord-label">AXIS Z</span>
+                <span class="coord-value" id="val-z">0mm</span>
+              </div>
+              <div class="coord-item">
+                <span class="coord-label">GRIPPER</span>
+                <span class="coord-value" id="val-grip" style="color:#10b981;">OPEN</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Joint Jog Sliders -->
+          <div class="hmi-sliders">
+            <div class="slider-control-group">
+              <div class="slider-label-row">
+                <span>Khớp J1 (Base Rotation)</span>
+                <span class="slider-range">-120° ~ +120°</span>
+              </div>
+              <input type="range" id="robot-j1" min="-120" max="120" value="0" step="1" class="hmi-range">
+            </div>
+
+            <div class="slider-control-group">
+              <div class="slider-label-row">
+                <span>Khớp J2 (Forearm)</span>
+                <span class="slider-range">-145° ~ +145°</span>
+              </div>
+              <input type="range" id="robot-j2" min="-145" max="145" value="0" step="1" class="hmi-range">
+            </div>
+
+            <div class="slider-control-group">
+              <div class="slider-label-row">
+                <span>Trục Z (Lên / Xuống)</span>
+                <span class="slider-range">0mm ~ 150mm</span>
+              </div>
+              <input type="range" id="robot-z" min="0" max="3" value="0" step="0.05" class="hmi-range">
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="hmi-actions">
+            <button id="btn-robot-auto" class="btn btn-primary hmi-btn-auto">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              <span>Chạy Chu Trình Tự Động (Auto Pick & Place)</span>
+            </button>
+            <div class="hmi-sub-buttons">
+              <button id="btn-robot-reset" class="btn btn-secondary" style="flex:1;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg>
+                <span>Về Vị Trí Gốc</span>
+              </button>
+              <button id="btn-robot-estop" class="btn btn-estop" title="Dừng khẩn cấp">
+                <span>E-STOP</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -963,25 +1086,35 @@
           <form id="contact-form" class="contact-form" novalidate>
             <div class="form-group">
               <label for="form-name" data-i18n="contact-name-label">Họ và Tên</label>
-              <input type="text" id="form-name" class="form-input" data-i18n="contact-name-label" placeholder="Ví dụ: Nguyễn Văn A" required>
+              <input type="text" id="form-name" class="form-input" placeholder="Ví dụ: Nguyễn Văn A" required>
             </div>
             <div class="form-group">
               <label for="form-email" data-i18n="contact-email-label">Địa chỉ Email</label>
-              <input type="email" id="form-email" class="form-input" data-i18n="contact-email-label" placeholder="Ví dụ: name@gmail.com" required>
+              <input type="email" id="form-email" class="form-input" placeholder="Ví dụ: name@gmail.com" required>
             </div>
-            <div class="form-group form-group-full">
+            <div class="form-group">
+              <label for="form-phone" data-i18n="contact-phone-label">Số điện thoại / Zalo</label>
+              <input type="tel" id="form-phone" class="form-input" placeholder="Ví dụ: 0334383560">
+            </div>
+            <div class="form-group">
               <label for="form-subject" data-i18n="contact-subject-label">Tiêu đề</label>
-              <input type="text" id="form-subject" class="form-input" data-i18n="contact-subject-label" placeholder="Tin nhắn này liên quan đến vấn đề gì?" required>
+              <input type="text" id="form-subject" class="form-input" placeholder="Tin nhắn này liên quan đến vấn đề gì?" required>
             </div>
             <div class="form-group form-group-full">
               <label for="form-message" data-i18n="contact-message-label">Nội dung</label>
-              <textarea id="form-message" class="form-input" data-i18n="contact-message-label" placeholder="Nhập nội dung lời nhắn tại đây..." required></textarea>
+              <textarea id="form-message" class="form-input" placeholder="Nhập nội dung lời nhắn tại đây..." required></textarea>
             </div>
             <div class="form-group form-group-full" style="margin-top: 8px;">
-              <button type="submit" class="btn btn-primary" style="width: auto;">
-                <span data-i18n="contact-submit">Gửi lời nhắn</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-              </button>
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                <button type="submit" class="btn btn-primary" id="contact-submit-btn" style="width: auto;">
+                  <span data-i18n="contact-submit">Gửi lời nhắn</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+                <div class="telegram-badge-notice">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                  <span>Bắn tin nhắn tức thì về Telegram & Zalo</span>
+                </div>
+              </div>
             </div>
           </form>
         </div>
@@ -1186,9 +1319,44 @@
     </div>
   </div>
 
+  <!-- Floating Terminal Toggle Button -->
+  <button id="terminal-toggle-btn" class="terminal-floating-btn" aria-label="Mở Terminal Hacker" title="Bật Terminal (Phím ~)">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="4 17 10 11 4 5"></polyline>
+      <line x1="12" y1="19" x2="20" y2="19"></line>
+    </svg>
+    <span class="terminal-btn-badge">CLI</span>
+  </button>
+
+  <!-- Interactive Hacker Terminal Modal -->
+  <div id="hacker-terminal-modal" class="terminal-modal hidden">
+    <div class="terminal-box glass-card">
+      <div class="terminal-bar">
+        <div class="terminal-bar-dots">
+          <span class="t-dot t-red" id="term-close-btn" title="Đóng"></span>
+          <span class="t-dot t-yellow" id="term-min-btn" title="Thu nhỏ"></span>
+          <span class="t-dot t-green" id="term-max-btn" title="Phóng to"></span>
+        </div>
+        <div class="terminal-bar-title">manhha@system: ~ (bash 5.2)</div>
+        <div class="terminal-bar-hint">Phím [~] để bật/tắt</div>
+      </div>
+      <div class="terminal-screen" id="terminal-screen">
+        <canvas id="matrix-canvas" class="matrix-canvas hidden"></canvas>
+        <div id="terminal-output" class="terminal-output"></div>
+        <div class="terminal-input-row">
+          <span class="terminal-prompt">manhha@system:~$</span>
+          <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" autofocus>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="i18n.js?v=1.0"></script>
   <script src="script.js?v=9.7"></script>
   <script src="main.js?v=9.7"></script>
+  <script src="robot-simulator.js?v=1.0"></script>
+  <script src="terminal.js?v=1.0"></script>
+  <script src="travel-lightbox.js?v=1.0"></script>
 </body>
 </html>
